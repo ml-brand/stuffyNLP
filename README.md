@@ -58,7 +58,6 @@ UI / frontend:
 - `TG_CHANNEL_SPECIFIC_LINK`: override the Subscribe button URL.
 - `PROMO_TEXT`: promo banner HTML/text (shown on index and post pages).
 - `METRIKA_ID`: Yandex Metrika counter id.
-- Feeds/sitemaps/static links derive the base URL from GitHub Pages when available.
 
 Sync tuning:
 - `DOWNLOAD_MEDIA` (`true`/`false`): store media in `docs/assets/media/`.
