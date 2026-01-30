@@ -17,17 +17,21 @@ pip install -r requirements.txt
 PYTHONPATH=. python scripts/create_session.py   # produce TG_SESSION (StringSession)
 ```
 What you need from https://my.telegram.org (API Development Tools):
-- `TG_API_ID`
-- `TG_API_HASH`
-- `TG_SESSION` (output of the script)
-- `TG_CHANNEL` (e.g. `mychannel` or `https://t.me/mychannel`)
+- `TG_API_ID` (GitHub **Secrets**)
+- `TG_API_HASH` (GitHub **Secrets**)
+- `TG_SESSION` (output of the script, GitHub **Secrets**)
+- `TG_CHANNEL` (e.g. `mychannel` or `https://t.me/mychannel`, GitHub **Variables**)
 
 ## Deploy on GitHub
 1) Push the repo.  
-2) Repo → Settings → Secrets and variables → Actions → **Secrets**: add `TG_API_ID`, `TG_API_HASH`, `TG_SESSION`, `TG_CHANNEL`.  
+2) Repo → Settings → Secrets and variables → Actions:  
+   - **Secrets**: add `TG_API_ID`, `TG_API_HASH`, `TG_SESSION`.  
+   - **Variables**: add `TG_CHANNEL`.  
 3) Repo → Settings → Actions → General → Workflow permissions → **Read and write permissions**.  
 4) Repo → Settings → Pages: Source **Deploy from a branch**, branch `main`, folder `/docs`.  
-5) Run the workflow “Sync Telegram channel to GitHub Pages” manually once; then it runs hourly.
+5) Run the workflow “Sync Telegram channel to GitHub Pages” manually once; only after that open the site.  
+   RSS/Atom feeds and `docs/static/` are generated only if the repo variables `FEED` and `GENERATE_STATIC` are enabled.  
+   Make sure required Secrets/Variables are set; otherwise CI will fail.
 
 ## Run locally (sync + serve)
 ```bash
@@ -49,10 +53,10 @@ PYTHONPATH=. python scripts/fetch_telegram.py --dry-run --refresh-last-n 200 --i
 
 ## Config knobs (env or workflow vars)
 Required:
-- `TG_API_ID` (secret): Telegram API ID.
-- `TG_API_HASH` (secret): Telegram API hash.
-- `TG_SESSION` (secret): Telethon `StringSession`.
-- `TG_CHANNEL` (variable): channel username or `https://t.me/<channel>`.
+- `TG_API_ID` (Secrets): Telegram API ID.
+- `TG_API_HASH` (Secrets): Telegram API hash.
+- `TG_SESSION` (Secrets): Telethon `StringSession`.
+- `TG_CHANNEL` (Variables): channel username or `https://t.me/<channel>`.
 
 UI / frontend:
 - `TG_CHANNEL_SPECIFIC_LINK`: override the Subscribe button URL.

@@ -359,7 +359,6 @@ def render_index_page(
   ''' if promo_text else ''}
 
   <main class=\"container\">
-    <div id=\"status\" class=\"status\"></div>
     {pager}
     <div id=\"posts\" class=\"posts\">
       {"".join(cards) if cards else '<p class="muted">Постов пока нет.</p>'}
@@ -556,8 +555,6 @@ def render_post_page(
   ''' if promo_text else ''}
 
   <main class=\"container single-page\">
-    <div id=\"status\" class=\"status\"></div>
-
     <article id=\"postContainer\" class=\"post post-page\" data-post-id=\"{escape_attr(pid)}\">\n      <div class=\"post-header\">\n        <div class=\"right\"><span class=\"post-date\" data-iso-date=\"{escape_attr(date_iso)}\">{date_label}</span></div>\n      </div>\n      <div class=\"post-body\">{body_html}{media_html}</div>\n      <div class=\"actions\">\n        <span>{escape_html(stat_label)}</span>\n        <span class=\"action-links\">{' · '.join(links)}</span>\n      </div>\n    </article>
 
     <div class=\"pager single-nav\">
