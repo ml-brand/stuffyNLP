@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Душный NLP — пост #205</title>
+  <meta name="description" content=" Как заставить reasoning-модели меньше галлюцинировать (часть I)   Авторы  сегодняшней статьи  пытаются ответить на вопрос: можно ли обучить стратегии рассуждения, повышающие фактическую точность (R-)" />
+  <link rel="icon" href="../../favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32.png" />
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png" />
+
+  <link rel="canonical" href="https://ml-brand.github.io/stuffyNLP/static/posts/205.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Душный NLP — пост #205" />
+  <meta property="og:description" content=" Как заставить reasoning-модели меньше галлюцинировать (часть I)   Авторы  сегодняшней статьи  пытаются ответить на вопрос: можно ли обучить стратегии рассуждения, повышающие фактическую точность (R-)" />
+  
+  <meta property="article:published_time" content="2025-11-24T11:03:27+00:00" />
+  <meta property="article:author" content="Душный NLP" />
+  <meta name="twitter:card" content="summary" />
+  
+  <link rel="stylesheet" href="../../style.css" />
+  <script src="../../metrika.js"></script>
+</head>
+<body data-index-href="../index.html">
+  <header class="header">
+    <div class="container">
+      <div class="title-grid single-title">
+        <a class="grid-avatar" href="#" target="_blank" rel="noopener">
+          <img id="channelAvatar" class="channel-avatar" src="../../assets/channel_avatar.jpg" alt="Аватар канала"  />
+        </a>
+        <div class="grid-main">
+          <div class="title-head">
+            <a class="back-link" href="../index.html">← Ко всем постам</a>
+            <a class="badge-chip" id="siteTitleWrap" href="#" target="_blank" rel="noopener"><h1 id="siteTitle">Душный NLP</h1></a>
+            <div class="hero-actions">
+              <a id="subscribeBtn" class="subscribe-btn" href="https://t.me/+1Z41UptsLwszZDE6" target="_blank" rel="noopener" >Подписаться</a>
+              <a class="icon-btn" href="../../post.html?id=205" aria-label="Открыть динамическую страницу поста">↺</a>
+              <button id="themeToggle" class="icon-btn" type="button" aria-label="Переключить тему"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  
+  <div id="promoBanner" class="promo-banner" hidden>
+    <div class="container promo-inner">
+      <span class="promo-text"><a href="https://t.me/addlist/5NH3RoVejEI1MGEy">Подпишись на все наши ML каналы. Они классные, отвечаем!</a></span>
+      <button id="promoClose" class="promo-close" type="button" aria-label="Скрыть плашку">×</button>
+    </div>
+  </div>
+  
+
+  <main class="container single-page">
+    <article id="postContainer" class="post post-page" data-post-id="205">
+      <div class="post-header">
+        <div class="right"><span class="post-date" data-iso-date="2025-11-24T11:03:27+00:00">2025-11-24 11:03 UTC</span></div>
+      </div>
+      <div class="post-body"><strong>Как заставить reasoning-модели меньше галлюцинировать (часть I)</strong><br><br>Авторы <a href="https://arxiv.org/abs/2508.05618v1" rel="nofollow noopener noreferrer">сегодняшней статьи</a> пытаются ответить на вопрос: можно ли обучить стратегии рассуждения, повышающие фактическую точность (R-)LLM? Отмечено, что reasoning-модели решают математические задачи и пишут код, но в длинных фактологических ответах галлюцинируют больше, чем обычные не-reasoning-версии этих же моделей. <br><br>Так, например DeepSeek-R1 и QwQ-32B выдают на 10–13 п.п. больше галлюцинаций, чем соответствующие базовые не-reasoning-версии DeepSeek-V3 и Qwen-2.5-32B на шести датасетах, созданных для проверки фактологичности длинных ответов. В первой части разбора обсудим проблему, заявленную в статье, и метод, предложенный авторами. А во второй — результаты и некоторые выводы. <br><br>Проблема в том, что стандартный RL для reasoning-моделей заточен под верифицируемые задачи, для которых награда вычисляется по заранее определённым правилам и проверку которых можно автоматизировать (математика, код). А для ответов, содержащих фактологическую информацию, не существует ни надёжной автоматической проверки (как в RLVR), ни возможности звать человека для проверки. <br><br>Эти трудности сильно ограничивают использование фактчек-сигнала в алгоритмах online-RL. Попытки автоматизировать фактчек с помощью FActScore/VeriScore в online-RL-сетапе приводят к «хакингу награды»: модель начинает писать слишком кратко (меньше фактов — меньше шансов ошибиться) или выдаёт длинный, но слабо связанный с вопросом поток общих, пусть и верных, сведений.<br><br>Так можно ли обучить стратегии рассуждения, повышающие фактическую точность (R-)LLM? Чтобы ответить на вопрос, авторы используют следующий подход.<br><br>Для получения обучающих промптов предлагают интересный ход: инженеры генерируют промпты с помощью Llama 4, обуславливая её на два множества grounding-промптов. Первый набор — WildChat (разнообразные реальные запросы пользователей), второй — LongFact (запросы, требующие фактологически точных ответов). Таким образом получается собрать порядка 7 тысяч синтетических промптов: 3 тысячи для SFT, 4 тысячи для RL, которые похожи на реальные запросы пользователей и в то же время требуют фактологически точных ответов.<br><br>Затем делают SFT: фью-шотят базовую Llama-3.1-8B-Instruct  для генерации 10 Long-CoT-ответов в формате &lt;think&gt;…&lt;/think&gt;&lt;answer&gt;…&lt;/answer&gt;, их прогоняют через VeriScore и берут ответ с наибольшей наградой за фактологическую точность. <br><br>Затем в качестве бейзлайна используют DPO: для сбора пар для обучения аналогично методу в SFT используется VeriScore c небольшой модификацией — берутся пары ответов с максимальной дельтой награды VeriScore и удовлетворяющие условиям: <br><br>1) дельта награды должна быть выше определённого порога, чтобы фактчек-сигнал был достаточно сильным; <br>2) разность длин ответов должна быть меньше определённого порога, чтобы не было «хакинга длины».<br><br>Для онлайн-RL в качестве нововведения предлагают награду, которая состоит из трёх слагаемых:<br><br>— фактическая точность (Pre): F/(T+1), где F — число подтвержденных фактов, T — всего найденных фактов в ответе (извлекаем их с помощью LLM) (для штрафа за фактологически неверные ответы);<br>— детальность (Dtl): log(1+F) — поощряет больше правильных фактов, но с дисконтированием на длину (для штрафа за слишком короткие ответы);<br>— релевантность/полезность (WR): LLM-as-a-judge-метрика — ответ политики сравнивается с ответам реверенсной модели, если судья считает, что ответ политики лучше, то метрика принимает значение 1, в противном случае — 0 (для штрафа за наличие нерелевантных верных фактов).<br><br>Чтобы такой reward можно было считать в онлайне, сильно оптимизируют VeriScore: батчуют извлечение фактов, параллелят веб-поиск и так же батчуют проверку утверждений поверх поисковой выдачи. Это позволяет сократить время инференса реворда с двух минут (базовый сетап VeriScore) до примерно пяти секунд на один ответ, что уже пригодно для online-RL. Полученный подход уже используют в GRPO-алгоритме в качестве модели награды.<br><br><em>Разбор подготовил </em><em><tg-emoji emoji-id="5224192932302565805">❣</tg-emoji></em><em> Дмитрий Масный</em><br><br><a href="https://t.me/+a7_yct-IlKdhNjdi" rel="nofollow noopener noreferrer">Душный NLP</a></div>
+      <div class="actions">
+        <span>3 055 просмотров · 30 реакций</span>
+        <span class="action-links"><a href="https://t.me/stuffyNLP/205" target="_blank" rel="noopener">Открыть в Telegram</a> · <a href="../index.html">К списку постов</a> · <a href="./205.html">Ссылка на этот пост</a></span>
+      </div>
+    </article>
+
+    <div class="pager single-nav">
+      <a id="prevPost" class="nav-link" href="./206.html" style="visibility:visible">← Более новый</a>
+      <a id="nextPost" class="nav-link" href="./202.html" style="visibility:visible">Более старый →</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <span>based on <a href="https://github.com/ml-brand/tg-to-gh-pages" target="_blank" rel="noopener">tg-to-gh-pages</a> (created by <a href="https://github.com/ml-brand" target="_blank" rel="noopener">ML Brand</a>)</span>
+        <a id="repoLink" href="https://github.com/ml-brand/tg-to-gh-pages" target="_blank" rel="noopener">Do the same with your channel.</a>
+        <span class="footer-links">
+          static copy ·
+          <a href="../../feed.xml" target="_blank" rel="noopener">RSS</a> ·
+          <a href="../../atom.xml" target="_blank" rel="noopener">Atom</a>
+        </span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    window.__STATIC_POSTS = [{"id": 205, "media": []}];
+    window.__STATIC_META = {"title": "Душный NLP", "username": "stuffyNLP", "channel": "stuffyNLP", "last_sync_utc": "2026-01-30T19:53:00Z", "posts_count": 112, "last_seen_message_id": 222, "stats": {"new": 216, "updated": 0, "media_downloaded": 186}, "avatar": "assets/channel_avatar.jpg", "meta_schema_version": "1.0.0", "posts_schema_version": "1.0.0"};
+  </script>
+  <script src="../../common.js"></script>
+  <script src="../../static.js"></script>
+</body>
+</html>

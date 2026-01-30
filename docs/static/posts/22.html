@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Душный NLP — пост #22</title>
+  <meta name="description" content=" SpecExec: cпекулятивное декодирование для запуска больших моделей на потребительских GPU   Генерация текста LLM на GPU потребительского класса — сложная задача. Стандартные алгоритмы требуют исполнен" />
+  <link rel="icon" href="../../favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32.png" />
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png" />
+
+  <link rel="canonical" href="https://ml-brand.github.io/stuffyNLP/static/posts/22.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Душный NLP — пост #22" />
+  <meta property="og:description" content=" SpecExec: cпекулятивное декодирование для запуска больших моделей на потребительских GPU   Генерация текста LLM на GPU потребительского класса — сложная задача. Стандартные алгоритмы требуют исполнен" />
+  
+  <meta property="article:published_time" content="2024-06-27T09:51:40+00:00" />
+  <meta property="article:author" content="Душный NLP" />
+  <meta name="twitter:card" content="summary" />
+  
+  <link rel="stylesheet" href="../../style.css" />
+  <script src="../../metrika.js"></script>
+</head>
+<body data-index-href="../page-4.html">
+  <header class="header">
+    <div class="container">
+      <div class="title-grid single-title">
+        <a class="grid-avatar" href="#" target="_blank" rel="noopener">
+          <img id="channelAvatar" class="channel-avatar" src="../../assets/channel_avatar.jpg" alt="Аватар канала"  />
+        </a>
+        <div class="grid-main">
+          <div class="title-head">
+            <a class="back-link" href="../page-4.html">← Ко всем постам</a>
+            <a class="badge-chip" id="siteTitleWrap" href="#" target="_blank" rel="noopener"><h1 id="siteTitle">Душный NLP</h1></a>
+            <div class="hero-actions">
+              <a id="subscribeBtn" class="subscribe-btn" href="https://t.me/+1Z41UptsLwszZDE6" target="_blank" rel="noopener" >Подписаться</a>
+              <a class="icon-btn" href="../../post.html?id=22" aria-label="Открыть динамическую страницу поста">↺</a>
+              <button id="themeToggle" class="icon-btn" type="button" aria-label="Переключить тему"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  
+  <div id="promoBanner" class="promo-banner" hidden>
+    <div class="container promo-inner">
+      <span class="promo-text"><a href="https://t.me/addlist/5NH3RoVejEI1MGEy">Подпишись на все наши ML каналы. Они классные, отвечаем!</a></span>
+      <button id="promoClose" class="promo-close" type="button" aria-label="Скрыть плашку">×</button>
+    </div>
+  </div>
+  
+
+  <main class="container single-page">
+    <article id="postContainer" class="post post-page" data-post-id="22">
+      <div class="post-header">
+        <div class="right"><span class="post-date" data-iso-date="2024-06-27T09:51:40+00:00">2024-06-27 09:51 UTC</span></div>
+      </div>
+      <div class="post-body"><strong>SpecExec: cпекулятивное декодирование для запуска больших моделей на потребительских GPU</strong><br><br>Генерация текста LLM на GPU потребительского класса — сложная задача. Стандартные алгоритмы требуют исполнения всех слоёв модели для получения каждого токена. Модели размером в 10+B не помещаются в память GPU — приходится прибегать к офлодингу (offloading), поочерёдно подгружая слои из основной памяти в VRAM. Это долго: одна итерация загрузки и генерации одного токена Llama-2-70B в 16-битном режиме с PCIe gen 4 может занять &gt; 5 секунд.<br><br>Спекулятивное декодирование ускоряет генерацию. Это достигается за счёт дополнительной «черновой» модели — более компактной и быстрой. Она предлагает варианты продолжения цепочек токенов. Основная модель проверяет эти варианты, выбирая один с помощью стохастического алгоритма выборки. Производительность измеряется числом токенов, сгенерированных за итерацию.<br><br>SpecExec — самый производительный метод в классе. Он генерирует до 20 токенов за итерацию и достигает ускорения x15 при офлодинге. Вместо стохастического метода, SpecExec создаёт «кеш» в форме дерева продолжений, используя не случайные, а самые вероятные токены из модели-черновика. Целевая модель проверяет их за один проход. <br><br>Алгоритм SpecExec производительнее, т.к. использует высокую пиковость распределений вероятностей токенов в современных LLM. Например, в Llama-2-70B высочайшая вероятность токена составляет более 90%. <br><br><strong>Сравнение производительности</strong><br><br>В выгрузке SpecExec превосходит SpecInfer — особенно с большими бюджетами токенов. в то время как  производительность SpecInfer перестаёт расти с ростом бюджета, наш метод генерирует более 20 токенов за шаг при бюджетах 1000+ токенов.<br><br>В тестах с офлодингом SpecExec показывает стабильный прирост скорости на видеокартах от высококлассных исследовательских GPU A100/H100 до потребительских GPU: 4090 и даже 2080. С квантованными моделями SpecExec достигает ускорения от 4.6x до 10.6x, генерируя от 3 до 6 токенов в секунду.<br><br><strong>***</strong><br><br>SpecExec упрощает доступ к мощным LLM и обеспечивает инференс тяжёлых моделей на оборудовании, считавшемся недостаточно мощным. Узнать о нём больше можно <a href="https://arxiv.org/abs/2406.02532" rel="nofollow noopener noreferrer">в статье</a>, а пощупать — <a href="https://github.com/yandex-research/specexec" rel="nofollow noopener noreferrer">на GitHub</a>.<br><br>Разбор подготовил <tg-emoji emoji-id="5224192932302565805">❣</tg-emoji> Руслан Свирщевский<br><br><a href="https://t.me/+wusTNmGO86Q1ZWIy" rel="nofollow noopener noreferrer">Душный NLP</a></div>
+      <div class="actions">
+        <span>13 018 просмотров · 55 реакций</span>
+        <span class="action-links"><a href="https://t.me/stuffyNLP/22" target="_blank" rel="noopener">Открыть в Telegram</a> · <a href="../page-4.html">К списку постов</a> · <a href="./22.html">Ссылка на этот пост</a></span>
+      </div>
+    </article>
+
+    <div class="pager single-nav">
+      <a id="prevPost" class="nav-link" href="./23.html" style="visibility:visible">← Более новый</a>
+      <a id="nextPost" class="nav-link" href="./21.html" style="visibility:visible">Более старый →</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <span>based on <a href="https://github.com/ml-brand/tg-to-gh-pages" target="_blank" rel="noopener">tg-to-gh-pages</a> (created by <a href="https://github.com/ml-brand" target="_blank" rel="noopener">ML Brand</a>)</span>
+        <a id="repoLink" href="https://github.com/ml-brand/tg-to-gh-pages" target="_blank" rel="noopener">Do the same with your channel.</a>
+        <span class="footer-links">
+          static copy ·
+          <a href="../../feed.xml" target="_blank" rel="noopener">RSS</a> ·
+          <a href="../../atom.xml" target="_blank" rel="noopener">Atom</a>
+        </span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    window.__STATIC_POSTS = [{"id": 22, "media": []}];
+    window.__STATIC_META = {"title": "Душный NLP", "username": "stuffyNLP", "channel": "stuffyNLP", "last_sync_utc": "2026-01-30T19:53:00Z", "posts_count": 112, "last_seen_message_id": 222, "stats": {"new": 216, "updated": 0, "media_downloaded": 186}, "avatar": "assets/channel_avatar.jpg", "meta_schema_version": "1.0.0", "posts_schema_version": "1.0.0"};
+  </script>
+  <script src="../../common.js"></script>
+  <script src="../../static.js"></script>
+</body>
+</html>

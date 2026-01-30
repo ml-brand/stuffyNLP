@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Душный NLP — пост #200</title>
+  <meta name="description" content=" Ещё порция интересных статей с EMNLP 2025   Возвращаемся с очередной пачкой постеров, которые привлекли внимание нашей команды на конференции.     Stepwise Reasoning Checkpoint Analysis: A Test Time " />
+  <link rel="icon" href="../../favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32.png" />
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png" />
+
+  <link rel="canonical" href="https://ml-brand.github.io/stuffyNLP/static/posts/200.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Душный NLP — пост #200" />
+  <meta property="og:description" content=" Ещё порция интересных статей с EMNLP 2025   Возвращаемся с очередной пачкой постеров, которые привлекли внимание нашей команды на конференции.     Stepwise Reasoning Checkpoint Analysis: A Test Time " />
+  <meta property="og:image" content="https://ml-brand.github.io/stuffyNLP/assets/media/thumbs/200_480.webp" />
+  <meta property="og:image:alt" content="Душный NLP" />
+  <meta property="article:published_time" content="2025-11-07T14:19:19+00:00" />
+  <meta property="article:author" content="Душный NLP" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://ml-brand.github.io/stuffyNLP/assets/media/thumbs/200_480.webp" />
+  <link rel="stylesheet" href="../../style.css" />
+  <script src="../../metrika.js"></script>
+</head>
+<body data-index-href="../index.html">
+  <header class="header">
+    <div class="container">
+      <div class="title-grid single-title">
+        <a class="grid-avatar" href="#" target="_blank" rel="noopener">
+          <img id="channelAvatar" class="channel-avatar" src="../../assets/channel_avatar.jpg" alt="Аватар канала"  />
+        </a>
+        <div class="grid-main">
+          <div class="title-head">
+            <a class="back-link" href="../index.html">← Ко всем постам</a>
+            <a class="badge-chip" id="siteTitleWrap" href="#" target="_blank" rel="noopener"><h1 id="siteTitle">Душный NLP</h1></a>
+            <div class="hero-actions">
+              <a id="subscribeBtn" class="subscribe-btn" href="https://t.me/+1Z41UptsLwszZDE6" target="_blank" rel="noopener" >Подписаться</a>
+              <a class="icon-btn" href="../../post.html?id=200" aria-label="Открыть динамическую страницу поста">↺</a>
+              <button id="themeToggle" class="icon-btn" type="button" aria-label="Переключить тему"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  
+  <div id="promoBanner" class="promo-banner" hidden>
+    <div class="container promo-inner">
+      <span class="promo-text"><a href="https://t.me/addlist/5NH3RoVejEI1MGEy">Подпишись на все наши ML каналы. Они классные, отвечаем!</a></span>
+      <button id="promoClose" class="promo-close" type="button" aria-label="Скрыть плашку">×</button>
+    </div>
+  </div>
+  
+
+  <main class="container single-page">
+    <article id="postContainer" class="post post-page" data-post-id="200">
+      <div class="post-header">
+        <div class="right"><span class="post-date" data-iso-date="2025-11-07T14:19:19+00:00">2025-11-07 14:19 UTC</span></div>
+      </div>
+      <div class="post-body"><strong>Ещё порция интересных статей с EMNLP 2025</strong><br><br>Возвращаемся с очередной пачкой постеров, которые привлекли внимание нашей команды на конференции. <br><br><a href="https://arxiv.org/abs/2505.17829" rel="nofollow noopener noreferrer"><strong>Stepwise Reasoning Checkpoint Analysis: A Test Time Scaling Method to Enhance LLMs&#x27; Reasoning</strong></a><strong> </strong><br><br>Хорошо известно, что качество обученных LLM на инференсе улучшается с помощью Chain-of-Thoughts (CoT). Можно пойти ещё дальше и делать многостадийный CoT, применяя при этом beam search или DVTS. Но тут могут возникать очень похожие траектории, а также существует риск игнорирования моделью промежуточных шагов. <br><br>Для решения этих проблем авторы предлагают метод SRCA, который состоит из двух шагов: <br><br>1. заставляем модель после каждого шага выдавать промежуточный результат; <br>2. группируем результаты в кластеры и стартуем следующий шаг из разных кластеров. <br><br>Далее результаты со всех шагов агрегируются в финальный результат.<br><br><a href="https://www.arxiv.org/abs/2509.23395" rel="nofollow noopener noreferrer"><strong>Liaozhai through the Looking-Glass: On Paratextual Explicitation of Culture-Bound Terms in Machine Translation</strong></a><br><br>В статье рассматривается проблема перевода слов или выражений, культурно-специфичных для исходного языка и не существующих на языке перевода. В профессиональном переводе для них часто применяют метод эксплиситации — замены прямого перевода на описательную конструкцию в скобках или в примечании. <br><br>Современные MT-модели (в том числе и LLM) переводят большинство таких фраз буквально или копированием, делая результат непонятным. В статье вводят новую задачу перевода с объяснением и предлагают датасет для оценки качества — выделенные культурно-специфичные выражения и референсные сноски от переводчиков. Сегодняшние LLM плохо справляются с выделением терминов для эксплиситации, но генерируют довольно качественные описания (хоть и хуже переводческих).<br><br><a href="https://arxiv.org/abs/2505.17656" rel="nofollow noopener noreferrer"><strong>Too Consistent to Detect: A Study of Self-Consistent Errors in LLMs</strong></a><br><br>Существующие методы unsupervised-детекции ошибок LLM в большинстве основаны на «мерах разброса» — неопределенности вероятностного распределения, различиях среди diverse-генераций и оценке вероятности модели. <br><br>Авторы рассматривают ошибки в ответах LLM и вводят понятие self-consistent-ошибок, уверенных с согласованными предсказаниями. Такие ошибки плохо распознаются мерами разброса. Вместе с тем при скейлинге модели их количество растет, а число inconsistent ошибок, наоборот, сильно снижается.<br><br>Предлагается использовать пару разных моделей для детекции self-consistent-ошибок. Метрика на основе модели-верификатора принимает на вход активации двух моделей и использует их линейную комбинацию для предсказания QE-метрики. Такая схема распознает намного больше self-consistent-ошибок в небольших версиях Qwen и Llama.<br><br><em>Интересное увидели </em><tg-emoji emoji-id="5224192932302565805">❣</tg-emoji> <em>Александр Шишеня и Николай Карпачёв</em><br><br><a href="https://t.me/+Pi3q8ia1gv4xNWIy" rel="nofollow noopener noreferrer">Душный NLP</a><div class="media"><img class="media-img" loading="lazy" src="../../assets/media/thumbs/200_480.webp" srcset="../../assets/media/thumbs/200_480.webp 480w, ../../assets/media/200.jpg 1200w" sizes="(max-width: 768px) 100vw, 800px" alt="" data-post-id="200" data-image-index="0" /></div></div>
+      <div class="actions">
+        <span>3 326 просмотров · 28 реакций</span>
+        <span class="action-links"><a href="https://t.me/stuffyNLP/200" target="_blank" rel="noopener">Открыть в Telegram</a> · <a href="../index.html">К списку постов</a> · <a href="./200.html">Ссылка на этот пост</a></span>
+      </div>
+    </article>
+
+    <div class="pager single-nav">
+      <a id="prevPost" class="nav-link" href="./201.html" style="visibility:visible">← Более новый</a>
+      <a id="nextPost" class="nav-link" href="./196.html" style="visibility:visible">Более старый →</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <span>based on <a href="https://github.com/ml-brand/tg-to-gh-pages" target="_blank" rel="noopener">tg-to-gh-pages</a> (created by <a href="https://github.com/ml-brand" target="_blank" rel="noopener">ML Brand</a>)</span>
+        <a id="repoLink" href="https://github.com/ml-brand/tg-to-gh-pages" target="_blank" rel="noopener">Do the same with your channel.</a>
+        <span class="footer-links">
+          static copy ·
+          <a href="../../feed.xml" target="_blank" rel="noopener">RSS</a> ·
+          <a href="../../atom.xml" target="_blank" rel="noopener">Atom</a>
+        </span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    window.__STATIC_POSTS = [{"id": 200, "media": [{"kind": "photo", "path": "../../assets/media/200.jpg", "thumb": "../../assets/media/thumbs/200_480.webp", "size": 251929, "mime": "image/jpeg", "name": null}]}];
+    window.__STATIC_META = {"title": "Душный NLP", "username": "stuffyNLP", "channel": "stuffyNLP", "last_sync_utc": "2026-01-30T19:53:00Z", "posts_count": 112, "last_seen_message_id": 222, "stats": {"new": 216, "updated": 0, "media_downloaded": 186}, "avatar": "assets/channel_avatar.jpg", "meta_schema_version": "1.0.0", "posts_schema_version": "1.0.0"};
+  </script>
+  <script src="../../common.js"></script>
+  <script src="../../static.js"></script>
+</body>
+</html>

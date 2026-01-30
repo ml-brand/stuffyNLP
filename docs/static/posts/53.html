@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Душный NLP — пост #53</title>
+  <meta name="description" content=" ToolkenGPT и Toolken+: расширение возможностей языковых моделей за счёт интеграции инструментов   Сегодня разбираем две статьи. Первая описывает парадигму обучения инструментов ToolkenGPT. Вторая пре" />
+  <link rel="icon" href="../../favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32.png" />
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png" />
+
+  <link rel="canonical" href="https://ml-brand.github.io/stuffyNLP/static/posts/53.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Душный NLP — пост #53" />
+  <meta property="og:description" content=" ToolkenGPT и Toolken+: расширение возможностей языковых моделей за счёт интеграции инструментов   Сегодня разбираем две статьи. Первая описывает парадигму обучения инструментов ToolkenGPT. Вторая пре" />
+  <meta property="og:image" content="https://ml-brand.github.io/stuffyNLP/assets/media/thumbs/53_480.webp" />
+  <meta property="og:image:alt" content="Душный NLP" />
+  <meta property="article:published_time" content="2024-12-17T09:40:35+00:00" />
+  <meta property="article:author" content="Душный NLP" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://ml-brand.github.io/stuffyNLP/assets/media/thumbs/53_480.webp" />
+  <link rel="stylesheet" href="../../style.css" />
+  <script src="../../metrika.js"></script>
+</head>
+<body data-index-href="../page-3.html">
+  <header class="header">
+    <div class="container">
+      <div class="title-grid single-title">
+        <a class="grid-avatar" href="#" target="_blank" rel="noopener">
+          <img id="channelAvatar" class="channel-avatar" src="../../assets/channel_avatar.jpg" alt="Аватар канала"  />
+        </a>
+        <div class="grid-main">
+          <div class="title-head">
+            <a class="back-link" href="../page-3.html">← Ко всем постам</a>
+            <a class="badge-chip" id="siteTitleWrap" href="#" target="_blank" rel="noopener"><h1 id="siteTitle">Душный NLP</h1></a>
+            <div class="hero-actions">
+              <a id="subscribeBtn" class="subscribe-btn" href="https://t.me/+1Z41UptsLwszZDE6" target="_blank" rel="noopener" >Подписаться</a>
+              <a class="icon-btn" href="../../post.html?id=53" aria-label="Открыть динамическую страницу поста">↺</a>
+              <button id="themeToggle" class="icon-btn" type="button" aria-label="Переключить тему"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  
+  <div id="promoBanner" class="promo-banner" hidden>
+    <div class="container promo-inner">
+      <span class="promo-text"><a href="https://t.me/addlist/5NH3RoVejEI1MGEy">Подпишись на все наши ML каналы. Они классные, отвечаем!</a></span>
+      <button id="promoClose" class="promo-close" type="button" aria-label="Скрыть плашку">×</button>
+    </div>
+  </div>
+  
+
+  <main class="container single-page">
+    <article id="postContainer" class="post post-page" data-post-id="53">
+      <div class="post-header">
+        <div class="right"><span class="post-date" data-iso-date="2024-12-17T09:40:35+00:00">2024-12-17 09:40 UTC</span></div>
+      </div>
+      <div class="post-body"><strong>ToolkenGPT и Toolken+: расширение возможностей языковых моделей за счёт интеграции инструментов</strong><br><br>Сегодня разбираем две статьи. Первая описывает парадигму обучения инструментов ToolkenGPT. Вторая представляет развитие этой концепции, предложенное Константином Яковлевым, Сергеем Николенко и Андреем Бутом из Яндекса.<br><br><a href="https://arxiv.org/abs/2305.11554v4" rel="nofollow noopener noreferrer">ToolkenGPT: как научить модель напрямую вызывать внешние функции</a><br>В первой работе исследователи предложили представить каждый внешний инструмент в виде токена — toolken (represents each <strong>tool</strong> as a to<strong>ken</strong>) — и выучивать его эмбеддинг. Модель обучается работать с такими токенами так же, как с обычными текстовыми. <br><br>В результате работу модели можно условно разделить на две стадии:<br><br>1) режим “reasoning” — генерация происходит, как обычно, с той лишь разницей, что добавленные toolken тоже рассматриваются в качестве вероятных токенов на каждом шаге генерации;<br>2) режим “tool” — когда следующим предсказанным токеном оказался toolken. В этом случае вызывается соответствующий инструмент в режиме “few-shot”. После того как вызов осуществляется внешним инструментом, модель возвращает ответ и переходит обратно в режим “reasoning”.<br><br>Авторы показали применимость подхода для математических операций на GSM8K-XL и FuncQA. Также рассмотрели задачи knowledge-based QA и генерации плана.<br><br><a href="https://aclanthology.org/2024.findings-emnlp.345.pdf" rel="nofollow noopener noreferrer">Toolken+: ранжирование инструментов и отказ от неподходящих функций</a><br>Концепция Toolken+ решает две проблемы ToolkenGPT. Во-первых, ранее модель не учитывала документацию по инструментам и часто выбирала неподходящий инструмент. Во-вторых, модель иногда стремилась использовать инструмент там, где это не требовалось. <br><br>Toolken+ добавляет два улучшения:<br><br>1) Переранжирование нескольких выбранных инструментов. Модель сначала предлагает k вариантов, потом повторно оценивает и выбирает оптимальный.<br>2) Опцию “reject” для отказа от вызова инструмента. Модель может явно указать, что сейчас не стоит применять никакой инструмент, если вероятность подходящего вызова невысока.<br><br>Эти изменения позволяют минимизировать как ошибки ложноположительных срабатываний при вызове инструментов, так и ошибки неправильной классификации инструментов для ToolkenGPT, что позволяет улучшить робастность модели.<br><br><strong>Результаты</strong><br>Исследователи проверяли Toolken+ на математическом бенчмарке GSM8K, на бенчмарках VirtualHome и MetaTool. Они показали, что добавление переранжирования и опции &quot;reject&quot; улучшает качество конечных ответов. При этом в MetaTool требуется только одна функция для заданного запроса, поэтому опция &quot;reject&quot; не нужна — таким образом, замер служит как аблейшн реранжирования гипотез. <br><br>Расскажите в комментариях, что думаете о подходах ToolkenGPT и Toolken+.<br><em><br>Разбор подготовил </em><tg-emoji emoji-id="5224192932302565805">❣</tg-emoji> <em>Андрей Бут</em><br><a href="https://t.me/+qGlf1dMQe8AyNTEy" rel="nofollow noopener noreferrer">Душный NLP</a><div class="media"><img class="media-img" loading="lazy" src="../../assets/media/thumbs/53_480.webp" srcset="../../assets/media/thumbs/53_480.webp 480w, ../../assets/media/53.jpg 1200w" sizes="(max-width: 768px) 100vw, 800px" alt="" data-post-id="53" data-image-index="0" /><img class="media-img" loading="lazy" src="../../assets/media/thumbs/54_480.webp" srcset="../../assets/media/thumbs/54_480.webp 480w, ../../assets/media/54.jpg 1200w" sizes="(max-width: 768px) 100vw, 800px" alt="" data-post-id="53" data-image-index="1" /><img class="media-img" loading="lazy" src="../../assets/media/thumbs/55_480.webp" srcset="../../assets/media/thumbs/55_480.webp 480w, ../../assets/media/55.jpg 1200w" sizes="(max-width: 768px) 100vw, 800px" alt="" data-post-id="53" data-image-index="2" /><img class="media-img" loading="lazy" src="../../assets/media/thumbs/56_480.webp" srcset="../../assets/media/thumbs/56_480.webp 480w, ../../assets/media/56.jpg 1200w" sizes="(max-width: 768px) 100vw, 800px" alt="" data-post-id="53" data-image-index="3" /><img class="media-img" loading="lazy" src="../../assets/media/thumbs/57_480.webp" srcset="../../assets/media/thumbs/57_480.webp 480w, ../../assets/media/57.jpg 1200w" sizes="(max-width: 768px) 100vw, 800px" alt="" data-post-id="53" data-image-index="4" /></div></div>
+      <div class="actions">
+        <span>3 418 просмотров · 31 реакций</span>
+        <span class="action-links"><a href="https://t.me/stuffyNLP/53" target="_blank" rel="noopener">Открыть в Telegram</a> · <a href="../page-3.html">К списку постов</a> · <a href="./53.html">Ссылка на этот пост</a></span>
+      </div>
+    </article>
+
+    <div class="pager single-nav">
+      <a id="prevPost" class="nav-link" href="./58.html" style="visibility:visible">← Более новый</a>
+      <a id="nextPost" class="nav-link" href="./52.html" style="visibility:visible">Более старый →</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <span>based on <a href="https://github.com/ml-brand/tg-to-gh-pages" target="_blank" rel="noopener">tg-to-gh-pages</a> (created by <a href="https://github.com/ml-brand" target="_blank" rel="noopener">ML Brand</a>)</span>
+        <a id="repoLink" href="https://github.com/ml-brand/tg-to-gh-pages" target="_blank" rel="noopener">Do the same with your channel.</a>
+        <span class="footer-links">
+          static copy ·
+          <a href="../../feed.xml" target="_blank" rel="noopener">RSS</a> ·
+          <a href="../../atom.xml" target="_blank" rel="noopener">Atom</a>
+        </span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    window.__STATIC_POSTS = [{"id": 53, "media": [{"kind": "photo", "path": "../../assets/media/53.jpg", "thumb": "../../assets/media/thumbs/53_480.webp", "size": 76623, "mime": "image/jpeg", "name": null}, {"kind": "photo", "path": "../../assets/media/54.jpg", "thumb": "../../assets/media/thumbs/54_480.webp", "size": 134591, "mime": "image/jpeg", "name": null}, {"kind": "photo", "path": "../../assets/media/55.jpg", "thumb": "../../assets/media/thumbs/55_480.webp", "size": 114870, "mime": "image/jpeg", "name": null}, {"kind": "photo", "path": "../../assets/media/56.jpg", "thumb": "../../assets/media/thumbs/56_480.webp", "size": 103976, "mime": "image/jpeg", "name": null}, {"kind": "photo", "path": "../../assets/media/57.jpg", "thumb": "../../assets/media/thumbs/57_480.webp", "size": 153349, "mime": "image/jpeg", "name": null}]}];
+    window.__STATIC_META = {"title": "Душный NLP", "username": "stuffyNLP", "channel": "stuffyNLP", "last_sync_utc": "2026-01-30T19:53:00Z", "posts_count": 112, "last_seen_message_id": 222, "stats": {"new": 216, "updated": 0, "media_downloaded": 186}, "avatar": "assets/channel_avatar.jpg", "meta_schema_version": "1.0.0", "posts_schema_version": "1.0.0"};
+  </script>
+  <script src="../../common.js"></script>
+  <script src="../../static.js"></script>
+</body>
+</html>

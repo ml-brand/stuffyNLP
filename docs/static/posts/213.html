@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Душный NLP — пост #213</title>
+  <meta name="description" content=" Метод контекстного параллелизма Ulysses   Для обучения моделей на длинный контекст требуется много памяти под активации. Cкажем, чтобы обучить Qwen3-235B на контекст в 131 тысячу токенов, только под " />
+  <link rel="icon" href="../../favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32.png" />
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png" />
+
+  <link rel="canonical" href="https://ml-brand.github.io/stuffyNLP/static/posts/213.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Душный NLP — пост #213" />
+  <meta property="og:description" content=" Метод контекстного параллелизма Ulysses   Для обучения моделей на длинный контекст требуется много памяти под активации. Cкажем, чтобы обучить Qwen3-235B на контекст в 131 тысячу токенов, только под " />
+  <meta property="og:image" content="https://ml-brand.github.io/stuffyNLP/assets/media/thumbs/213_480.webp" />
+  <meta property="og:image:alt" content="Душный NLP" />
+  <meta property="article:published_time" content="2025-12-19T10:47:54+00:00" />
+  <meta property="article:author" content="Душный NLP" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://ml-brand.github.io/stuffyNLP/assets/media/thumbs/213_480.webp" />
+  <link rel="stylesheet" href="../../style.css" />
+  <script src="../../metrika.js"></script>
+</head>
+<body data-index-href="../index.html">
+  <header class="header">
+    <div class="container">
+      <div class="title-grid single-title">
+        <a class="grid-avatar" href="#" target="_blank" rel="noopener">
+          <img id="channelAvatar" class="channel-avatar" src="../../assets/channel_avatar.jpg" alt="Аватар канала"  />
+        </a>
+        <div class="grid-main">
+          <div class="title-head">
+            <a class="back-link" href="../index.html">← Ко всем постам</a>
+            <a class="badge-chip" id="siteTitleWrap" href="#" target="_blank" rel="noopener"><h1 id="siteTitle">Душный NLP</h1></a>
+            <div class="hero-actions">
+              <a id="subscribeBtn" class="subscribe-btn" href="https://t.me/+1Z41UptsLwszZDE6" target="_blank" rel="noopener" >Подписаться</a>
+              <a class="icon-btn" href="../../post.html?id=213" aria-label="Открыть динамическую страницу поста">↺</a>
+              <button id="themeToggle" class="icon-btn" type="button" aria-label="Переключить тему"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  
+  <div id="promoBanner" class="promo-banner" hidden>
+    <div class="container promo-inner">
+      <span class="promo-text"><a href="https://t.me/addlist/5NH3RoVejEI1MGEy">Подпишись на все наши ML каналы. Они классные, отвечаем!</a></span>
+      <button id="promoClose" class="promo-close" type="button" aria-label="Скрыть плашку">×</button>
+    </div>
+  </div>
+  
+
+  <main class="container single-page">
+    <article id="postContainer" class="post post-page" data-post-id="213">
+      <div class="post-header">
+        <div class="right"><span class="post-date" data-iso-date="2025-12-19T10:47:54+00:00">2025-12-19 10:47 UTC</span></div>
+      </div>
+      <div class="post-body"><strong>Метод контекстного параллелизма Ulysses</strong><br><br>Для обучения моделей на длинный контекст требуется много памяти под активации. Cкажем, чтобы обучить Qwen3-235B на контекст в 131 тысячу токенов, только под активации требуется более 100 ГБ, даже при использовании чекпоинтинга. Учитывая, что на карте надо хранить ещё саму модель, состояния оптимизатора и прочее, получается слишком много даже для GPU последних поколений. Что можно с этим сделать?<br><br>Большинство операций в трансформере (нормы, mlp, residual) над одним токеном происходят независимо от других. Это значит, что мы можем разбить нашу последовательность на N частей и обрабатывать каждую на отдельной GPU. Но у нас всё ещё остаётся селф-аттеншн, для подсчёта которого необходима вся последовательность. Так мы подходим к группе sequence- и context-parallel-методов вроде TPSP, Ring/ZigZag, <a href="https://arxiv.org/abs/2309.14509" rel="nofollow noopener noreferrer">Ulysses</a>. Кратко расскажем о последнем.<br><br>В чём заключается идея:<br><br>— каждая GPU внутри context-parallel-группы хранит и обрабатывает только часть последовательности;<br>— перед тем, как зайти в аттеншн, вычисляем QKV-проекции размера [local_seqlen, global_heads, head_dim];<br>— делаем all_to_all QKV-проекций и получаем тензор активаций размера [global_seqlen, local_heads, head_dim]. Таким образом, потребление памяти не изменилось, но теперь каждая GPU может вычислять селф-аттеншн независимо, потому что имеет всю последовательность (но только часть голов);<br>— после вычисления аттеншена и до output-проекции снова делаем all_to_all и снова получаем тензор, разбитый по длине последовательности.<br><br>Этот метод обладает серьёзными преимуществами:<br><br>— очень прост в реализации, но в то же время может быть эффективным при грамотном перекрытии вычислений и коммуникаций;<br>— независим от реализации аттеншна и при небольших модификациях работает в том числе с линейными вариантами. Также подходит для мультимодальных сценариев.<br>Но есть и ограничения. Например, размер CP-группы (Context Parallelism) не может быть больше количества query-голов. В случае GQA требуется копирование KV-голов до размера CP-группы. Кроме того, Ulysses становится довольно дорогим при межхостовых коммуникациях.<br><br>Инженеры Яндекса использовали этот метод в Alice AI. Ulysses позволил провести Midtrain-стадию обучения и увеличить контекст с хорошим ускорением за счёт перебалансировки нагрузки между процессами.<br><br><em>Разбор подготовил </em><em><tg-emoji emoji-id="5224192932302565805">❣</tg-emoji></em><em> Антон Андрющенко</em><br><br><a href="https://t.me/+Pi3q8ia1gv4xNWIy" rel="nofollow noopener noreferrer">Душный NLP</a><div class="media"><img class="media-img" loading="lazy" src="../../assets/media/thumbs/213_480.webp" srcset="../../assets/media/thumbs/213_480.webp 480w, ../../assets/media/213.jpg 1200w" sizes="(max-width: 768px) 100vw, 800px" alt="" data-post-id="213" data-image-index="0" /></div></div>
+      <div class="actions">
+        <span>2 981 просмотров · 27 реакций</span>
+        <span class="action-links"><a href="https://t.me/stuffyNLP/213" target="_blank" rel="noopener">Открыть в Telegram</a> · <a href="../index.html">К списку постов</a> · <a href="./213.html">Ссылка на этот пост</a></span>
+      </div>
+    </article>
+
+    <div class="pager single-nav">
+      <a id="prevPost" class="nav-link" href="./214.html" style="visibility:visible">← Более новый</a>
+      <a id="nextPost" class="nav-link" href="./212.html" style="visibility:visible">Более старый →</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <span>based on <a href="https://github.com/ml-brand/tg-to-gh-pages" target="_blank" rel="noopener">tg-to-gh-pages</a> (created by <a href="https://github.com/ml-brand" target="_blank" rel="noopener">ML Brand</a>)</span>
+        <a id="repoLink" href="https://github.com/ml-brand/tg-to-gh-pages" target="_blank" rel="noopener">Do the same with your channel.</a>
+        <span class="footer-links">
+          static copy ·
+          <a href="../../feed.xml" target="_blank" rel="noopener">RSS</a> ·
+          <a href="../../atom.xml" target="_blank" rel="noopener">Atom</a>
+        </span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    window.__STATIC_POSTS = [{"id": 213, "media": [{"kind": "photo", "path": "../../assets/media/213.jpg", "thumb": "../../assets/media/thumbs/213_480.webp", "size": 62861, "mime": "image/jpeg", "name": null}]}];
+    window.__STATIC_META = {"title": "Душный NLP", "username": "stuffyNLP", "channel": "stuffyNLP", "last_sync_utc": "2026-01-30T19:53:00Z", "posts_count": 112, "last_seen_message_id": 222, "stats": {"new": 216, "updated": 0, "media_downloaded": 186}, "avatar": "assets/channel_avatar.jpg", "meta_schema_version": "1.0.0", "posts_schema_version": "1.0.0"};
+  </script>
+  <script src="../../common.js"></script>
+  <script src="../../static.js"></script>
+</body>
+</html>

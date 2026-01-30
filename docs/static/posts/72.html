@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Душный NLP — пост #72</title>
+  <meta name="description" content=" Технический отчёт DeepSeek-R1   DeepSeek-R1 — опенсорсная модель, которая на равных конкурирует с o1 от OpenAI. Сегодня разберём  технический отчёт  её разработчиков.   Компания DeepSeek сделала став" />
+  <link rel="icon" href="../../favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32.png" />
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png" />
+
+  <link rel="canonical" href="https://ml-brand.github.io/stuffyNLP/static/posts/72.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Душный NLP — пост #72" />
+  <meta property="og:description" content=" Технический отчёт DeepSeek-R1   DeepSeek-R1 — опенсорсная модель, которая на равных конкурирует с o1 от OpenAI. Сегодня разберём  технический отчёт  её разработчиков.   Компания DeepSeek сделала став" />
+  <meta property="og:image" content="https://ml-brand.github.io/stuffyNLP/assets/media/thumbs/72_480.webp" />
+  <meta property="og:image:alt" content="Душный NLP" />
+  <meta property="article:published_time" content="2025-02-13T14:20:41+00:00" />
+  <meta property="article:author" content="Душный NLP" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://ml-brand.github.io/stuffyNLP/assets/media/thumbs/72_480.webp" />
+  <link rel="stylesheet" href="../../style.css" />
+  <script src="../../metrika.js"></script>
+</head>
+<body data-index-href="../page-3.html">
+  <header class="header">
+    <div class="container">
+      <div class="title-grid single-title">
+        <a class="grid-avatar" href="#" target="_blank" rel="noopener">
+          <img id="channelAvatar" class="channel-avatar" src="../../assets/channel_avatar.jpg" alt="Аватар канала"  />
+        </a>
+        <div class="grid-main">
+          <div class="title-head">
+            <a class="back-link" href="../page-3.html">← Ко всем постам</a>
+            <a class="badge-chip" id="siteTitleWrap" href="#" target="_blank" rel="noopener"><h1 id="siteTitle">Душный NLP</h1></a>
+            <div class="hero-actions">
+              <a id="subscribeBtn" class="subscribe-btn" href="https://t.me/+1Z41UptsLwszZDE6" target="_blank" rel="noopener" >Подписаться</a>
+              <a class="icon-btn" href="../../post.html?id=72" aria-label="Открыть динамическую страницу поста">↺</a>
+              <button id="themeToggle" class="icon-btn" type="button" aria-label="Переключить тему"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  
+  <div id="promoBanner" class="promo-banner" hidden>
+    <div class="container promo-inner">
+      <span class="promo-text"><a href="https://t.me/addlist/5NH3RoVejEI1MGEy">Подпишись на все наши ML каналы. Они классные, отвечаем!</a></span>
+      <button id="promoClose" class="promo-close" type="button" aria-label="Скрыть плашку">×</button>
+    </div>
+  </div>
+  
+
+  <main class="container single-page">
+    <article id="postContainer" class="post post-page" data-post-id="72">
+      <div class="post-header">
+        <div class="right"><span class="post-date" data-iso-date="2025-02-13T14:20:41+00:00">2025-02-13 14:20 UTC</span></div>
+      </div>
+      <div class="post-body"><strong>Технический отчёт DeepSeek-R1</strong><br><br>DeepSeek-R1 — опенсорсная модель, которая на равных конкурирует с o1 от OpenAI. Сегодня разберём <a href="https://arxiv.org/abs/2501.12948" rel="nofollow noopener noreferrer">технический отчёт</a> её разработчиков. <br><br>Компания DeepSeek сделала ставку на RL. В качестве инита взяли DeepSeek-V3-Base и применили метод <a href="https://arxiv.org/abs/2402.03300" rel="nofollow noopener noreferrer">Group Relative Policy Optimization (GRPO)</a>. Система наград включала в себя две составляющие: accuracy reward и format reward. В задачах, связанных с математикой и программированием, получившаяся модель DeepSeek-R1-Zero выдаёт ответы, по качеству на бенчмарках сопоставимые с ответами OpenAI-01-0912. <br><br>Однако из-за accuracy reward модель стала тратить больше времени на раздумья. Кроме того, у DeepSeek-R1-Zero возникли способности к рефлексии (reflection) и саморазвитию (self-evolution). Это значит, что модель учится переосмыслять свои генерации и самостоятельно обнаруживать в них ошибки. Разработчики отмечают, что сами не ожидали такого. <br><br>Проблема DeepSeek-R1-Zero заключалась в том, что её ответы были трудночитаемыми — модель могла перескакивать с языка на язык в рамках одной генерации. К тому же, они могли быть очень большими — до 10 тысяч токенов. Плюс из отчёта не очень понятно, как модель показывает себя в задачах, не связанных с математикой и кодом. <br><br>Весь пайплайн создания финальной версии DeepSeek-R1 разделили на четыре этапа. Первый — Cold Start. В его рамках делали SFT, чтобы повысить читаемость (readability) генераций. В SFT-датасет входили в том числе ответы R1-Zero, исправленные людьми — как отметили в DeepSeek, это дало прирост качества по сравнению с R1-Zero. <br><br>Второй этап был аналогичен тому, как обучали R1-Zero, однако здесь к accuracy reward и format reward добавили language consistency reward, чтобы генерации были на одном языке. Качество ответов немного снизилось, однако они больше нравились людям-оценщикам. <br><br>Третий этап — Rejection Fine-Tuning. Авторы генерировали ответы на тщательно отобранный набор инструкций и отбирали лучшие, пользуясь, помимо прочего, генеративными наградами на основе DeepSeek-V3. Отсеивались ответы на нескольких языках, слишком длинные генерации и генерации, содержащие код. В итоге получилось 600 тысяч reasoning-примеров. SFT-датасет DeepSeek-V3 использовали как основу для не-reasoning данных, а для ответов на некоторые инструкции генерировали CoT и добавляли его перед ответом. Всего получилось 200 тысяч non-reasoning-примеров. <br><br>Последний этап — RLHF. Для reasoning-данных применялся тот же алгоритм, что и в R1-Zero. А для общих данных — стандартные reward-модели, которые оценивали полезность по краткому решению задачи и финальному ответу. А для оценки безвредности рассматривали весь ответ, включая процесс рассуждения. <br><br>Получившаяся версия DeepSeek-R1 выигрывает у o1-1217 в пяти из бенчмарках из 11 — в том числе, во всех математических (<em>первая таблица</em>). <br><br>В DeepSeek также взяли SFT с V3, сгенерировали ответы с помощью R1 и дистиллировали полученные данные в открытые модели. RL на них не производился. В результате, например, Qwen-7B стала сопоставима по качеству с GPT-4o-0513 (<em>вторая таблица</em>). Однако стоит учесть, что авторы статьи сообщают только о показателях в математических бенчмарках и бенчмарках, проверяющих способность к генерации кода. <br><br>В целом, исследование показало, что дистилляция даёт лучшие результаты, чем RL (<em>третья таблица</em>). Но и тут есть оговорка, потому что сравнивали дистилляцию из R1, а RL осуществляли методом, как у R1-Zero. <br><br>Авторам статьи не удалось извлечь пользу из метода Process Reward Model (PRM) на этапе обучения. Это было связано со сложностью определения шагов рассуждения их корректности, а также с проблемой «взлома наград». <br><br>Также в DeepSeek безуспешно пробовали использовать в обучении Monte Carlo Tree Search (MCTS), как в AlphaGo и AlphaZero. Здесь препятствием стало огромное пространство поиска, которое несравнимо больше, чем в случае с шахматами. Ограничение по top-k при этом приводит к локальному оптимуму. Кроме того, возникают сложности с обучением Value-модели. Тем не менее MCTS способен повысить качество на инференсе. <br><br><em>Разбор подготовил </em><em><tg-emoji emoji-id="5224192932302565805">❣</tg-emoji></em><em> Дмитрий Мокеев </em><br><br><a href="https://t.me/+vABO5T1rX1AzYzcy" rel="nofollow noopener noreferrer">Душный NLP</a><div class="media"><img class="media-img" loading="lazy" src="../../assets/media/thumbs/72_480.webp" srcset="../../assets/media/thumbs/72_480.webp 480w, ../../assets/media/72.jpg 1200w" sizes="(max-width: 768px) 100vw, 800px" alt="" data-post-id="72" data-image-index="0" /><img class="media-img" loading="lazy" src="../../assets/media/thumbs/73_480.webp" srcset="../../assets/media/thumbs/73_480.webp 480w, ../../assets/media/73.jpg 1200w" sizes="(max-width: 768px) 100vw, 800px" alt="" data-post-id="72" data-image-index="1" /><img class="media-img" loading="lazy" src="../../assets/media/thumbs/74_480.webp" srcset="../../assets/media/thumbs/74_480.webp 480w, ../../assets/media/74.jpg 1200w" sizes="(max-width: 768px) 100vw, 800px" alt="" data-post-id="72" data-image-index="2" /></div></div>
+      <div class="actions">
+        <span>4 196 просмотров · 45 реакций</span>
+        <span class="action-links"><a href="https://t.me/stuffyNLP/72" target="_blank" rel="noopener">Открыть в Telegram</a> · <a href="../page-3.html">К списку постов</a> · <a href="./72.html">Ссылка на этот пост</a></span>
+      </div>
+    </article>
+
+    <div class="pager single-nav">
+      <a id="prevPost" class="nav-link" href="./75.html" style="visibility:visible">← Более новый</a>
+      <a id="nextPost" class="nav-link" href="./68.html" style="visibility:visible">Более старый →</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <span>based on <a href="https://github.com/ml-brand/tg-to-gh-pages" target="_blank" rel="noopener">tg-to-gh-pages</a> (created by <a href="https://github.com/ml-brand" target="_blank" rel="noopener">ML Brand</a>)</span>
+        <a id="repoLink" href="https://github.com/ml-brand/tg-to-gh-pages" target="_blank" rel="noopener">Do the same with your channel.</a>
+        <span class="footer-links">
+          static copy ·
+          <a href="../../feed.xml" target="_blank" rel="noopener">RSS</a> ·
+          <a href="../../atom.xml" target="_blank" rel="noopener">Atom</a>
+        </span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    window.__STATIC_POSTS = [{"id": 72, "media": [{"kind": "photo", "path": "../../assets/media/72.jpg", "thumb": "../../assets/media/thumbs/72_480.webp", "size": 178094, "mime": "image/jpeg", "name": null}, {"kind": "photo", "path": "../../assets/media/73.jpg", "thumb": "../../assets/media/thumbs/73_480.webp", "size": 92990, "mime": "image/jpeg", "name": null}, {"kind": "photo", "path": "../../assets/media/74.jpg", "thumb": "../../assets/media/thumbs/74_480.webp", "size": 41482, "mime": "image/jpeg", "name": null}]}];
+    window.__STATIC_META = {"title": "Душный NLP", "username": "stuffyNLP", "channel": "stuffyNLP", "last_sync_utc": "2026-01-30T19:53:00Z", "posts_count": 112, "last_seen_message_id": 222, "stats": {"new": 216, "updated": 0, "media_downloaded": 186}, "avatar": "assets/channel_avatar.jpg", "meta_schema_version": "1.0.0", "posts_schema_version": "1.0.0"};
+  </script>
+  <script src="../../common.js"></script>
+  <script src="../../static.js"></script>
+</body>
+</html>

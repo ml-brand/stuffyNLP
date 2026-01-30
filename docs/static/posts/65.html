@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Душный NLP — пост #65</title>
+  <meta name="description" content=" Интересные решения из технического отчёта DeepSeek-V3 — часть II   Продолжаем разбираться, как устроена DeepSeek-V3, изучая  технический отчёт её создателей.  В первой части речь шла о MLA и MoE, а с" />
+  <link rel="icon" href="../../favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32.png" />
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png" />
+
+  <link rel="canonical" href="https://ml-brand.github.io/stuffyNLP/static/posts/65.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Душный NLP — пост #65" />
+  <meta property="og:description" content=" Интересные решения из технического отчёта DeepSeek-V3 — часть II   Продолжаем разбираться, как устроена DeepSeek-V3, изучая  технический отчёт её создателей.  В первой части речь шла о MLA и MoE, а с" />
+  <meta property="og:image" content="https://ml-brand.github.io/stuffyNLP/assets/media/thumbs/65_480.webp" />
+  <meta property="og:image:alt" content="Душный NLP" />
+  <meta property="article:published_time" content="2025-01-31T09:46:21+00:00" />
+  <meta property="article:author" content="Душный NLP" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://ml-brand.github.io/stuffyNLP/assets/media/thumbs/65_480.webp" />
+  <link rel="stylesheet" href="../../style.css" />
+  <script src="../../metrika.js"></script>
+</head>
+<body data-index-href="../page-3.html">
+  <header class="header">
+    <div class="container">
+      <div class="title-grid single-title">
+        <a class="grid-avatar" href="#" target="_blank" rel="noopener">
+          <img id="channelAvatar" class="channel-avatar" src="../../assets/channel_avatar.jpg" alt="Аватар канала"  />
+        </a>
+        <div class="grid-main">
+          <div class="title-head">
+            <a class="back-link" href="../page-3.html">← Ко всем постам</a>
+            <a class="badge-chip" id="siteTitleWrap" href="#" target="_blank" rel="noopener"><h1 id="siteTitle">Душный NLP</h1></a>
+            <div class="hero-actions">
+              <a id="subscribeBtn" class="subscribe-btn" href="https://t.me/+1Z41UptsLwszZDE6" target="_blank" rel="noopener" >Подписаться</a>
+              <a class="icon-btn" href="../../post.html?id=65" aria-label="Открыть динамическую страницу поста">↺</a>
+              <button id="themeToggle" class="icon-btn" type="button" aria-label="Переключить тему"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  
+  <div id="promoBanner" class="promo-banner" hidden>
+    <div class="container promo-inner">
+      <span class="promo-text"><a href="https://t.me/addlist/5NH3RoVejEI1MGEy">Подпишись на все наши ML каналы. Они классные, отвечаем!</a></span>
+      <button id="promoClose" class="promo-close" type="button" aria-label="Скрыть плашку">×</button>
+    </div>
+  </div>
+  
+
+  <main class="container single-page">
+    <article id="postContainer" class="post post-page" data-post-id="65">
+      <div class="post-header">
+        <div class="right"><span class="post-date" data-iso-date="2025-01-31T09:46:21+00:00">2025-01-31 09:46 UTC</span></div>
+      </div>
+      <div class="post-body"><strong>Интересные решения из технического отчёта DeepSeek-V3 — часть II</strong><br><br>Продолжаем разбираться, как устроена DeepSeek-V3, изучая <a href="https://arxiv.org/abs/2412.19437" rel="nofollow noopener noreferrer">технический отчёт её создателей.</a> В первой части речь шла о MLA и MoE, а сегодня поговорим о предсказании токенов и квантизации. Ну и, наконец, коснёмся результатов на бенчмарках <br><br><strong>MTP</strong><br><br>Метод Multi-Token Prediction (MTP) предполагает предсказание сразу нескольких токенов на этапе претрейна. В MTP эмбеддинг после всех трансформерных слоёв и перед выходной головой отправляется в дополнительный трансформерный блок (<em>первое изображение</em>). <br><br>Через линейную проекцию формируется новое представление, которое затем обрабатывается этим дополнительным блоком, эквивалентным по архитектуре стандартным слоям трансформера. Итоговое представление используется для предсказания сразу нескольких токенов. <br><br><strong>Pipeline parallelism</strong><br><br>Pipeline parallelism — это метод распределения работы модели, при котором разные слои исполняются на разных устройствах. Такой подход позволяет увеличивать количество шагов аккумуляции градиентов, уменьшая суммарное число коммуникаций. Однако при pipeline parallelism образуются «пузыри» — это периоды времени, когда устройства простаивают в ожидании данных от других устройств. <br><br>В решении этой проблемы создатели DeepSeek-V3 ссылаются на <a href="https://arxiv.org/abs/2401.10241" rel="nofollow noopener noreferrer">статью Zero Bubble.</a> Её идея состоит в разбивании backward на два шага: на ту часть, которая считает сквозные градиенты, и отдельно градиенты на веса. Это полностью решает проблему «пузырей» в случаях, если количество шагов аккумуляции градиента в два раза больше пайплайна. Однако остаётся проблема коммуникаций — простои могут возникать, например, когда одно устройство передаёт другому активации со слоя на слой. Кроме того, в этом методе нужно хранить достаточно много промежуточных градиентов для вычисления градиента по весам.<br><br>В DeepSeek изобрели метод DualPipe (<em>второе изображение</em>). Каждый фрагмент forward и backward делится на четыре части: attention, all-to-all dispatch, MLP и all-to-all combine. Кроме того, вводится компонент коммуникации в рамках pipeline parallelism (PP communication). Создатели меняют местами эти части и вручную регулируют, сколько ресурсов GPU выделять на коммуникации и вычисления. Микробатчи при этом подаются с обоих концов пайплайна одновременно. Всё это позволяет минимизировать задержки, перекрывая коммуникации с вычислениями. «Пузыри» всё равно остаются, но, как отмечают в DeepSeek, они несущественны. <br><br><strong>FP8-квантизация</strong> <br><br>FP8-квантизация не очень подходит для больших моделей из-за широкого диапазона весов, активаций и градиентов. Использование FP8-квантизации в таких условиях может приводить к выбросам, а следовательно, и потере качества. <br><br>Чтобы справиться с выбросами, создатели DeepSeek-V3 применяли блочную квантизацию. Для весов брались блоки 128x128 — и для каждого такого блока вычислялся свой скейл. А для активаций размер блока составлял 1x128, чтобы выбросы, если они происходят, затрагивали лишь небольшую часть активаций. <br><br>Разработчики также выяснили, что GEMM, реализованная на H800, аккумулирует результаты матричного умножения во что-то близкое к 14 битам, хотя должно быть 32 бита. Из-за этого одно матричное умножение может приводить к ошибке в 2%. Нехватку точности вручную добавляли к обычному FP32-регистру. <br><br><strong>Итог</strong><br><br>Благодаря всем сделанным разработчиками трюкам DeepSeek-V3 показывает отличные результаты в бенчмарках (<em>третье изображение</em>). На MMLU модель получает 88,5 процентных пункта, проигрывая лишь Llama 3.1 на 405B с 88,6 пп. На математических задачах (MATH-500, AIME 2024, CNMO 2024) DeepSeek — абсолютный лидер. В части программирования модель незначительно уступает Claude-3.5. Таким образом, DeepSeek-V3 — это одна из лучших опенсорсных моделей прямо сейчас.<br><br><em>Разбор подготовил </em><em><tg-emoji emoji-id="5224192932302565805">❣</tg-emoji></em><em> Михаил Хрущев</em><br><br><a href="https://t.me/+a_C8ULYxmr8yMmMy" rel="nofollow noopener noreferrer">Душный NLP</a><div class="media"><img class="media-img" loading="lazy" src="../../assets/media/thumbs/65_480.webp" srcset="../../assets/media/thumbs/65_480.webp 480w, ../../assets/media/65.jpg 1200w" sizes="(max-width: 768px) 100vw, 800px" alt="" data-post-id="65" data-image-index="0" /><img class="media-img" loading="lazy" src="../../assets/media/thumbs/66_480.webp" srcset="../../assets/media/thumbs/66_480.webp 480w, ../../assets/media/66.jpg 1200w" sizes="(max-width: 768px) 100vw, 800px" alt="" data-post-id="65" data-image-index="1" /><img class="media-img" loading="lazy" src="../../assets/media/thumbs/67_480.webp" srcset="../../assets/media/thumbs/67_480.webp 480w, ../../assets/media/67.jpg 1200w" sizes="(max-width: 768px) 100vw, 800px" alt="" data-post-id="65" data-image-index="2" /></div></div>
+      <div class="actions">
+        <span>4 211 просмотров · 63 реакций</span>
+        <span class="action-links"><a href="https://t.me/stuffyNLP/65" target="_blank" rel="noopener">Открыть в Telegram</a> · <a href="../page-3.html">К списку постов</a> · <a href="./65.html">Ссылка на этот пост</a></span>
+      </div>
+    </article>
+
+    <div class="pager single-nav">
+      <a id="prevPost" class="nav-link" href="./68.html" style="visibility:visible">← Более новый</a>
+      <a id="nextPost" class="nav-link" href="./64.html" style="visibility:visible">Более старый →</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <span>based on <a href="https://github.com/ml-brand/tg-to-gh-pages" target="_blank" rel="noopener">tg-to-gh-pages</a> (created by <a href="https://github.com/ml-brand" target="_blank" rel="noopener">ML Brand</a>)</span>
+        <a id="repoLink" href="https://github.com/ml-brand/tg-to-gh-pages" target="_blank" rel="noopener">Do the same with your channel.</a>
+        <span class="footer-links">
+          static copy ·
+          <a href="../../feed.xml" target="_blank" rel="noopener">RSS</a> ·
+          <a href="../../atom.xml" target="_blank" rel="noopener">Atom</a>
+        </span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    window.__STATIC_POSTS = [{"id": 65, "media": [{"kind": "photo", "path": "../../assets/media/65.jpg", "thumb": "../../assets/media/thumbs/65_480.webp", "size": 110556, "mime": "image/jpeg", "name": null}, {"kind": "photo", "path": "../../assets/media/66.jpg", "thumb": "../../assets/media/thumbs/66_480.webp", "size": 73484, "mime": "image/jpeg", "name": null}, {"kind": "photo", "path": "../../assets/media/67.jpg", "thumb": "../../assets/media/thumbs/67_480.webp", "size": 211681, "mime": "image/jpeg", "name": null}]}];
+    window.__STATIC_META = {"title": "Душный NLP", "username": "stuffyNLP", "channel": "stuffyNLP", "last_sync_utc": "2026-01-30T19:53:00Z", "posts_count": 112, "last_seen_message_id": 222, "stats": {"new": 216, "updated": 0, "media_downloaded": 186}, "avatar": "assets/channel_avatar.jpg", "meta_schema_version": "1.0.0", "posts_schema_version": "1.0.0"};
+  </script>
+  <script src="../../common.js"></script>
+  <script src="../../static.js"></script>
+</body>
+</html>

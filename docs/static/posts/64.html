@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Душный NLP — пост #64</title>
+  <meta name="description" content=" Интересные решения из технического отчёта DeepSeek-V3 — часть I   В конце прошлого года вышел  технический отчёт модели DeepSeek-V3.  У неё 671 миллиардов параметров, из которых активные — 37 миллиар" />
+  <link rel="icon" href="../../favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32.png" />
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png" />
+
+  <link rel="canonical" href="https://ml-brand.github.io/stuffyNLP/static/posts/64.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Душный NLP — пост #64" />
+  <meta property="og:description" content=" Интересные решения из технического отчёта DeepSeek-V3 — часть I   В конце прошлого года вышел  технический отчёт модели DeepSeek-V3.  У неё 671 миллиардов параметров, из которых активные — 37 миллиар" />
+  <meta property="og:image" content="https://ml-brand.github.io/stuffyNLP/assets/media/thumbs/64_480.webp" />
+  <meta property="og:image:alt" content="Душный NLP" />
+  <meta property="article:published_time" content="2025-01-28T11:39:57+00:00" />
+  <meta property="article:author" content="Душный NLP" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://ml-brand.github.io/stuffyNLP/assets/media/thumbs/64_480.webp" />
+  <link rel="stylesheet" href="../../style.css" />
+  <script src="../../metrika.js"></script>
+</head>
+<body data-index-href="../page-3.html">
+  <header class="header">
+    <div class="container">
+      <div class="title-grid single-title">
+        <a class="grid-avatar" href="#" target="_blank" rel="noopener">
+          <img id="channelAvatar" class="channel-avatar" src="../../assets/channel_avatar.jpg" alt="Аватар канала"  />
+        </a>
+        <div class="grid-main">
+          <div class="title-head">
+            <a class="back-link" href="../page-3.html">← Ко всем постам</a>
+            <a class="badge-chip" id="siteTitleWrap" href="#" target="_blank" rel="noopener"><h1 id="siteTitle">Душный NLP</h1></a>
+            <div class="hero-actions">
+              <a id="subscribeBtn" class="subscribe-btn" href="https://t.me/+1Z41UptsLwszZDE6" target="_blank" rel="noopener" >Подписаться</a>
+              <a class="icon-btn" href="../../post.html?id=64" aria-label="Открыть динамическую страницу поста">↺</a>
+              <button id="themeToggle" class="icon-btn" type="button" aria-label="Переключить тему"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  
+  <div id="promoBanner" class="promo-banner" hidden>
+    <div class="container promo-inner">
+      <span class="promo-text"><a href="https://t.me/addlist/5NH3RoVejEI1MGEy">Подпишись на все наши ML каналы. Они классные, отвечаем!</a></span>
+      <button id="promoClose" class="promo-close" type="button" aria-label="Скрыть плашку">×</button>
+    </div>
+  </div>
+  
+
+  <main class="container single-page">
+    <article id="postContainer" class="post post-page" data-post-id="64">
+      <div class="post-header">
+        <div class="right"><span class="post-date" data-iso-date="2025-01-28T11:39:57+00:00">2025-01-28 11:39 UTC</span></div>
+      </div>
+      <div class="post-body"><strong>Интересные решения из технического отчёта DeepSeek-V3 — часть I</strong><br><br>В конце прошлого года вышел <a href="https://arxiv.org/pdf/2412.19437" rel="nofollow noopener noreferrer">технический отчёт модели DeepSeek-V3.</a> У неё 671 миллиардов параметров, из которых активные — 37 миллиардов (то есть меньше 1/16). Обучение длилось два месяца на 2 тысячах GPU H800. Впервые в истории LLM обучали на FP8 и с высокой степенью разреженности (sparsity). Полученная модель вошла в топ-10 на Chatbot Arena. Кроме того, DeepSeek-V3 хорошо показывала себя в бенчмарках. <br><br>Изучили технический отчёт и рассказываем, какие необычные и даже новаторские решения в нём есть. Обзор получился объёмным, поэтому мы поделили его на два поста. <br><br><strong>MLA</strong><br><br>Метод, который называется Multi-head Latent Attention (MLA), используют как альтернативу Grouped Query Attention (GQA) для снижения объёма KV-кэша. Этот подход апробировали ещё в июне 2024 года в DeepSeek-V2. Как утверждают разработчики, по качеству MLA превосходит GQA и Multi-Query Attention и сопоставим с Multi-Head Attention. <br><br>Суть MLA заключается в сжатии скрытого представления в латентные вектора и хранении их на продакшене вместо Key Value. Во время генерации токенов KV восстанавливается из латентных векторов, что требует отдельных, но не слишком затратных вычислений. <br><br>Такой подход позволяет здорово экономить память, однако лишает возможности применять Rotary Position Embedding (RoPE) — способ несовместим с низкоранговым сжатием KV. Чтобы обойти проблему, в DeepSeek прибегли к методу Decoupled Rotary Position Embedding. Он предполагает добавление к каждой голове вектора с RoPE.<br><br>В результате не происходит деградации качества из-за того, что для большей части каждой головы позиционные эмбеддинги не обрабатываются. При этом модель сохраняет способность учитывать очень длинные контексты, так как её производительность не ухудшается даже при значительном удалении токенов от начальной позиции.<br><br>После претрейна разработчики расширили контекст, используя <a href="https://arxiv.org/abs/2309.00071" rel="nofollow noopener noreferrer">YaRN-подход (Yet another RoPE extension)</a> — c 4 тысяч токенов до 128 тысяч. В тесте Needle In A Haystack, по условиям которого нужно найти ответ на вопрос в контексте на 128 тысяч токенов, DeepSeek-V3 в 100% случаев справлялась с задачей. Сама по себе она несложная, но демонстрирует умение модели работать с большими контекстами. <br><br><strong>MoE</strong><br><br>По сравнению с DeepSeek-V2 изменился подход к Mixture-of-Experts. Здесь есть общие эксперты (Shared experts), которые применяются ко всем входным токенам, и маршрутизируемые эксперты (Routed experts), среди которых выбираются лучшие для решения конкретной задачи.<br> <br>Специальный лосс для контроля загруженности экспертов не используется. Вместо этого для каждого эксперта вводится определённый bias, через который и осуществляется балансировка. Если эксперт вызывается слишком часто, то bias уменьшается, слишком редко — увеличивается. Благодаря этому обучение получается более стабильным, чем при использовании лоссов. <br><br>Однако разработчикам всё-таки пришлось ввести балансировочный лосс. Описанный выше способ приводит к тому, что эксперты становятся домен-специфичными. Дополнительный лосс позволяет избежать этого, создавая разнообразие в выдаче. Благодаря хорошей балансировке нагрузки в процессе обучения DeepSeek-V3 не отбрасывает ни одного токена. <br><br>Для снижения затрат на коммуникации использовали метод Node-Limited Routing. Он вводит ограничение на число хостов, куда может быть направлен токен. Сперва выбираются хосты, которые содержат необходимых экспертов, а затем среди них с помощью алгоритма top-K routing выбираются лучшие для конкретного токена. <br><br>Во второй части расскажем о FP8-квантизации, результатах на бенчмарках и не только. Не переключайтесь!<br><br><em>Разбор подготовил </em><em><tg-emoji emoji-id="5224192932302565805">❣</tg-emoji></em><em> Михаил Хрущев</em><br><br><a href="https://t.me/+jC7SNy45dgk1ZmYy" rel="nofollow noopener noreferrer">Душный NLP</a><div class="media"><img class="media-img" loading="lazy" src="../../assets/media/thumbs/64_480.webp" srcset="../../assets/media/thumbs/64_480.webp 480w, ../../assets/media/64.jpg 1200w" sizes="(max-width: 768px) 100vw, 800px" alt="" data-post-id="64" data-image-index="0" /></div></div>
+      <div class="actions">
+        <span>4 609 просмотров · 103 реакций</span>
+        <span class="action-links"><a href="https://t.me/stuffyNLP/64" target="_blank" rel="noopener">Открыть в Telegram</a> · <a href="../page-3.html">К списку постов</a> · <a href="./64.html">Ссылка на этот пост</a></span>
+      </div>
+    </article>
+
+    <div class="pager single-nav">
+      <a id="prevPost" class="nav-link" href="./65.html" style="visibility:visible">← Более новый</a>
+      <a id="nextPost" class="nav-link" href="./63.html" style="visibility:visible">Более старый →</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <span>based on <a href="https://github.com/ml-brand/tg-to-gh-pages" target="_blank" rel="noopener">tg-to-gh-pages</a> (created by <a href="https://github.com/ml-brand" target="_blank" rel="noopener">ML Brand</a>)</span>
+        <a id="repoLink" href="https://github.com/ml-brand/tg-to-gh-pages" target="_blank" rel="noopener">Do the same with your channel.</a>
+        <span class="footer-links">
+          static copy ·
+          <a href="../../feed.xml" target="_blank" rel="noopener">RSS</a> ·
+          <a href="../../atom.xml" target="_blank" rel="noopener">Atom</a>
+        </span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    window.__STATIC_POSTS = [{"id": 64, "media": [{"kind": "photo", "path": "../../assets/media/64.jpg", "thumb": "../../assets/media/thumbs/64_480.webp", "size": 162859, "mime": "image/jpeg", "name": null}]}];
+    window.__STATIC_META = {"title": "Душный NLP", "username": "stuffyNLP", "channel": "stuffyNLP", "last_sync_utc": "2026-01-30T19:53:00Z", "posts_count": 112, "last_seen_message_id": 222, "stats": {"new": 216, "updated": 0, "media_downloaded": 186}, "avatar": "assets/channel_avatar.jpg", "meta_schema_version": "1.0.0", "posts_schema_version": "1.0.0"};
+  </script>
+  <script src="../../common.js"></script>
+  <script src="../../static.js"></script>
+</body>
+</html>

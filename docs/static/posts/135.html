@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Душный NLP — пост #135</title>
+  <meta name="description" content=" ICLR 2025: что нового в мультимодальном ранжировании   На  Хабре вышла статья  Алексея Спасёнова и Кирилла Никорова из Поиска Яндекса по картинкам и видео. Алексей и Кирилл побывали на конференции IC" />
+  <link rel="icon" href="../../favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32.png" />
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png" />
+
+  <link rel="canonical" href="https://ml-brand.github.io/stuffyNLP/static/posts/135.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Душный NLP — пост #135" />
+  <meta property="og:description" content=" ICLR 2025: что нового в мультимодальном ранжировании   На  Хабре вышла статья  Алексея Спасёнова и Кирилла Никорова из Поиска Яндекса по картинкам и видео. Алексей и Кирилл побывали на конференции IC" />
+  
+  <meta property="article:published_time" content="2025-07-03T08:11:14+00:00" />
+  <meta property="article:author" content="Душный NLP" />
+  <meta name="twitter:card" content="summary" />
+  
+  <link rel="stylesheet" href="../../style.css" />
+  <script src="../../metrika.js"></script>
+</head>
+<body data-index-href="../page-2.html">
+  <header class="header">
+    <div class="container">
+      <div class="title-grid single-title">
+        <a class="grid-avatar" href="#" target="_blank" rel="noopener">
+          <img id="channelAvatar" class="channel-avatar" src="../../assets/channel_avatar.jpg" alt="Аватар канала"  />
+        </a>
+        <div class="grid-main">
+          <div class="title-head">
+            <a class="back-link" href="../page-2.html">← Ко всем постам</a>
+            <a class="badge-chip" id="siteTitleWrap" href="#" target="_blank" rel="noopener"><h1 id="siteTitle">Душный NLP</h1></a>
+            <div class="hero-actions">
+              <a id="subscribeBtn" class="subscribe-btn" href="https://t.me/+1Z41UptsLwszZDE6" target="_blank" rel="noopener" >Подписаться</a>
+              <a class="icon-btn" href="../../post.html?id=135" aria-label="Открыть динамическую страницу поста">↺</a>
+              <button id="themeToggle" class="icon-btn" type="button" aria-label="Переключить тему"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  
+  <div id="promoBanner" class="promo-banner" hidden>
+    <div class="container promo-inner">
+      <span class="promo-text"><a href="https://t.me/addlist/5NH3RoVejEI1MGEy">Подпишись на все наши ML каналы. Они классные, отвечаем!</a></span>
+      <button id="promoClose" class="promo-close" type="button" aria-label="Скрыть плашку">×</button>
+    </div>
+  </div>
+  
+
+  <main class="container single-page">
+    <article id="postContainer" class="post post-page" data-post-id="135">
+      <div class="post-header">
+        <div class="right"><span class="post-date" data-iso-date="2025-07-03T08:11:14+00:00">2025-07-03 08:11 UTC</span></div>
+      </div>
+      <div class="post-body"><strong>ICLR 2025: что нового в мультимодальном ранжировании</strong><br><br>На <a href="https://habr.com/ru/companies/yandex/articles/923488/" rel="nofollow noopener noreferrer">Хабре вышла статья</a> Алексея Спасёнова и Кирилла Никорова из Поиска Яндекса по картинкам и видео. Алексей и Кирилл побывали на конференции ICLR, которая прошла в апреле в Сингапуре, и привезли с собой не только впечатления, но и (возможно) загар, и (совершенно точно) подборку интересных статей. Полностью ознакомиться с ней вы можете на Хабре, а здесь расскажем о нескольких работах. <br><br><a href="https://arxiv.org/pdf/2410.20056" rel="nofollow noopener noreferrer"><strong>Multi-Field Adaptive Retrieval</strong></a><br><br>Работа от авторов из Northeastern University, Augment Code и Microsoft посвящена улучшению поиска по структурированным данным с произвольным числом блоков с помощью подхода под названием Multi-Field Adaptive Retrieval (MFAR).<br><br>Авторы комбинируют близость лексикографическую (BM25) и семантическую — на основе векторных представлений. Для вычисления близости между запросом и документом используется скалярное произведение (dot product), а энкодеры дообучаются в контрастивном режиме.<br><br>Также применяется механизм внимания: модель учится определять значимость каждого блока документа относительно запроса. На этапе генерации кандидатов сначала выбираются топ-k документов стандартными методами ретривала, после чего проводится уточнение результатов с помощью MFAR.<br><br><a href="https://arxiv.org/pdf/2402.04416" rel="nofollow noopener noreferrer"><strong>Multimodal Unsupervised Domain Generalization by Retrieving Across the Modality Gap</strong></a><br><br>Авторы из Boston University предлагают подход к задаче Domain Generalization — улучшение обобщающей способности моделей без доступа к целевому домену.<br><br>Они улучшают качество поиска с использованием Approximate Nearest Neighbor (ANN) за счёт уточнённых эмбеддингов объектов. Для этого используется аугментация текстовых описаний классов: к каждому классу генерируется набор вариантов запросов, после чего вычисляются эмбеддинги этих текстов.<br><br>Центроиды изображений смещаются в сторону усреднённых позиций, рассчитанных относительно эмбеддингов аугментированных текстов. Полученные представления используются для дообучения CLIP — таким образом модель становится более устойчивой к вариативности запросов и доменных сдвигов.<br><br><a href="https://arxiv.org/pdf/2409.01156" rel="nofollow noopener noreferrer"><strong>TempMe: Video Temporal Token Merging for Efficient Text-Video Retrieval</strong></a><strong> </strong><br><br>В этой статье авторы предлагают новую архитектуру для ранжирования видео по текстовому запросу. Temporal Token Merging (<a href="https://github.com/LunarShen/TempMe" rel="nofollow noopener noreferrer">TempMe</a>) — эффективная в вычислительном плане архитектура с небольшим количеством параметров. Основа архитектуры — text-video-CLIP-модель. <br>Выигрыш в вычислительном плане достигается благодаря так называемым блокам Intra- и Cross-clip Merging. В них происходят агрегации эмбеддингов похожих кадров и патчей. Тем самым от слоя к слою уменьшается не только пространственная размерность, но и временная.<br><br>Авторы получают ускорение в 1,8 раза и улучшение качества ранжирования видео на 4,4% (в терминах mAR@10), по сравнению с предыдущими вычислительно эффективными методами text-video retrieval. В данных использовались как очень короткие видео по 4–5 секунд (датасет LSMDC), так и довольно продолжительные — вплоть до 20 минут (датасет ActivityNet). Однако домен всех датасетов, конечно же, сильно смещён относительно стандартного поискового потока.<br><br>#YaICLR<br><br><a href="https://t.me/+bA9RnvyroYRmNjUy" rel="nofollow noopener noreferrer">Душный NLP</a></div>
+      <div class="actions">
+        <span>3 689 просмотров · 13 реакций</span>
+        <span class="action-links"><a href="https://t.me/stuffyNLP/135" target="_blank" rel="noopener">Открыть в Telegram</a> · <a href="../page-2.html">К списку постов</a> · <a href="./135.html">Ссылка на этот пост</a></span>
+      </div>
+    </article>
+
+    <div class="pager single-nav">
+      <a id="prevPost" class="nav-link" href="./136.html" style="visibility:visible">← Более новый</a>
+      <a id="nextPost" class="nav-link" href="./134.html" style="visibility:visible">Более старый →</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <span>based on <a href="https://github.com/ml-brand/tg-to-gh-pages" target="_blank" rel="noopener">tg-to-gh-pages</a> (created by <a href="https://github.com/ml-brand" target="_blank" rel="noopener">ML Brand</a>)</span>
+        <a id="repoLink" href="https://github.com/ml-brand/tg-to-gh-pages" target="_blank" rel="noopener">Do the same with your channel.</a>
+        <span class="footer-links">
+          static copy ·
+          <a href="../../feed.xml" target="_blank" rel="noopener">RSS</a> ·
+          <a href="../../atom.xml" target="_blank" rel="noopener">Atom</a>
+        </span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    window.__STATIC_POSTS = [{"id": 135, "media": []}];
+    window.__STATIC_META = {"title": "Душный NLP", "username": "stuffyNLP", "channel": "stuffyNLP", "last_sync_utc": "2026-01-30T19:53:00Z", "posts_count": 112, "last_seen_message_id": 222, "stats": {"new": 216, "updated": 0, "media_downloaded": 186}, "avatar": "assets/channel_avatar.jpg", "meta_schema_version": "1.0.0", "posts_schema_version": "1.0.0"};
+  </script>
+  <script src="../../common.js"></script>
+  <script src="../../static.js"></script>
+</body>
+</html>

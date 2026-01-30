@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Душный NLP — пост #33</title>
+  <meta name="description" content=" REST — метод ускорения генерации токенов    Сегодняшняя статья  посвящена методу Retrieval-Based Speculative Decoding (REST). По словам авторов, он позволяет ускорить генерацию токенов более чем в дв" />
+  <link rel="icon" href="../../favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32.png" />
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png" />
+
+  <link rel="canonical" href="https://ml-brand.github.io/stuffyNLP/static/posts/33.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Душный NLP — пост #33" />
+  <meta property="og:description" content=" REST — метод ускорения генерации токенов    Сегодняшняя статья  посвящена методу Retrieval-Based Speculative Decoding (REST). По словам авторов, он позволяет ускорить генерацию токенов более чем в дв" />
+  <meta property="og:image" content="https://ml-brand.github.io/stuffyNLP/assets/media/thumbs/33_480.webp" />
+  <meta property="og:image:alt" content="Душный NLP" />
+  <meta property="article:published_time" content="2024-09-13T08:37:57+00:00" />
+  <meta property="article:author" content="Душный NLP" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://ml-brand.github.io/stuffyNLP/assets/media/thumbs/33_480.webp" />
+  <link rel="stylesheet" href="../../style.css" />
+  <script src="../../metrika.js"></script>
+</head>
+<body data-index-href="../page-4.html">
+  <header class="header">
+    <div class="container">
+      <div class="title-grid single-title">
+        <a class="grid-avatar" href="#" target="_blank" rel="noopener">
+          <img id="channelAvatar" class="channel-avatar" src="../../assets/channel_avatar.jpg" alt="Аватар канала"  />
+        </a>
+        <div class="grid-main">
+          <div class="title-head">
+            <a class="back-link" href="../page-4.html">← Ко всем постам</a>
+            <a class="badge-chip" id="siteTitleWrap" href="#" target="_blank" rel="noopener"><h1 id="siteTitle">Душный NLP</h1></a>
+            <div class="hero-actions">
+              <a id="subscribeBtn" class="subscribe-btn" href="https://t.me/+1Z41UptsLwszZDE6" target="_blank" rel="noopener" >Подписаться</a>
+              <a class="icon-btn" href="../../post.html?id=33" aria-label="Открыть динамическую страницу поста">↺</a>
+              <button id="themeToggle" class="icon-btn" type="button" aria-label="Переключить тему"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  
+  <div id="promoBanner" class="promo-banner" hidden>
+    <div class="container promo-inner">
+      <span class="promo-text"><a href="https://t.me/addlist/5NH3RoVejEI1MGEy">Подпишись на все наши ML каналы. Они классные, отвечаем!</a></span>
+      <button id="promoClose" class="promo-close" type="button" aria-label="Скрыть плашку">×</button>
+    </div>
+  </div>
+  
+
+  <main class="container single-page">
+    <article id="postContainer" class="post post-page" data-post-id="33">
+      <div class="post-header">
+        <div class="right"><span class="post-date" data-iso-date="2024-09-13T08:37:57+00:00">2024-09-13 08:37 UTC</span></div>
+      </div>
+      <div class="post-body"><strong>REST — метод ускорения генерации токенов</strong><br><br><a href="https://arxiv.org/abs/2311.08252" rel="nofollow noopener noreferrer">Сегодняшняя статья</a> посвящена методу Retrieval-Based Speculative Decoding (REST). По словам авторов, он позволяет ускорить генерацию токенов более чем в два раза. А в основе подхода лежит спекулятивное декодирование. О нём сперва коротко и расскажем. <br><br>Спекулятивное декодирование (Speculative Decoding) — это метод, который направлен на ускорение генерации за счёт использования дополнительной, более компактной и быстрой модели. Она предлагает варианты продолжения цепочек токенов, которые затем проверяются основной моделью. Если предсказания обеих моделей совпадают, токены принимаются, в противном случае — отбрасываются. <br><br>Однако у этого метода есть ограничения и недостатки. Необходимо найти такую вспомогательную модель, которая обладала бы высокой точностью, но при этом не тратила слишком много вычислительных ресурсов. Кроме того, малые модели требуют дополнительного обучения.<br><br>Авторы статьи предлагают использовать вместо меньшей модели базу данных, построенную на суффиксном массиве и включающую корпусы кодов и текстов — например, диалогов UltraChat. Из базы извлекаются:<br><br><strong>Контексты (contexts) </strong>— последовательности токенов, которые служат отправной точкой для поиска продолжений.<br><strong>Продолжения (continuations)</strong> — следующие за контекстом токены,  представляющие возможные варианты развития текста или кода. <br><br>Подходящие продолжения организуются в древовидную Trie-структуру, где каждый узел — это токен. Далее выбираются те последовательности токенов, которые повторяются чаще всего. Их называют кандидатами (candidates).<br><br>Кандидаты проверяются с помощью маски Tree Attention. Её особенность состоит в том, что всё осуществляется всего за один проход трансформера. Оптимизация достигается за счёт того, что у многих продолжений одинаковые префиксы. <br><br>Модель принимает все токены, которые успешно прошли проверку с самого начала, а то, что следует за первой ошибкой — отбрасывает. После этого процесс начинается снова для оставшихся токенов.<br><br>Результаты тестов на CodeLlama и Vicuna показали прирост в скорости генерации токенов с использованием REST в 1,62–2,36 раза. Однако методу ещё есть, куда развиваться. Так, авторы отмечают, что результат сильно зависит от полноты и качества базы данных, и рекомендуют собирать её, используя LLM. Кроме того, возникают трудности с пониманием контекста — например, при генерации персонализированных названий переменных в программировании. <br><br>Рассказывайте в комментариях, а что вы думаете о REST?<br><br><em>Разбор подготовил </em><em><tg-emoji emoji-id="5224192932302565805">❣</tg-emoji></em><em> Дмитрий Васильев</em><br><br><a href="https://t.me/+iqcQY1lZ0RBkOGYy" rel="nofollow noopener noreferrer">Душный NLP</a><div class="media"><img class="media-img" loading="lazy" src="../../assets/media/thumbs/33_480.webp" srcset="../../assets/media/thumbs/33_480.webp 480w, ../../assets/media/33.jpg 1200w" sizes="(max-width: 768px) 100vw, 800px" alt="" data-post-id="33" data-image-index="0" /><img class="media-img" loading="lazy" src="../../assets/media/thumbs/34_480.webp" srcset="../../assets/media/thumbs/34_480.webp 480w, ../../assets/media/34.jpg 1200w" sizes="(max-width: 768px) 100vw, 800px" alt="" data-post-id="33" data-image-index="1" /></div></div>
+      <div class="actions">
+        <span>5 584 просмотров · 52 реакций</span>
+        <span class="action-links"><a href="https://t.me/stuffyNLP/33" target="_blank" rel="noopener">Открыть в Telegram</a> · <a href="../page-4.html">К списку постов</a> · <a href="./33.html">Ссылка на этот пост</a></span>
+      </div>
+    </article>
+
+    <div class="pager single-nav">
+      <a id="prevPost" class="nav-link" href="./35.html" style="visibility:visible">← Более новый</a>
+      <a id="nextPost" class="nav-link" href="./32.html" style="visibility:visible">Более старый →</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <span>based on <a href="https://github.com/ml-brand/tg-to-gh-pages" target="_blank" rel="noopener">tg-to-gh-pages</a> (created by <a href="https://github.com/ml-brand" target="_blank" rel="noopener">ML Brand</a>)</span>
+        <a id="repoLink" href="https://github.com/ml-brand/tg-to-gh-pages" target="_blank" rel="noopener">Do the same with your channel.</a>
+        <span class="footer-links">
+          static copy ·
+          <a href="../../feed.xml" target="_blank" rel="noopener">RSS</a> ·
+          <a href="../../atom.xml" target="_blank" rel="noopener">Atom</a>
+        </span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    window.__STATIC_POSTS = [{"id": 33, "media": [{"kind": "photo", "path": "../../assets/media/33.jpg", "thumb": "../../assets/media/thumbs/33_480.webp", "size": 84341, "mime": "image/jpeg", "name": null}, {"kind": "photo", "path": "../../assets/media/34.jpg", "thumb": "../../assets/media/thumbs/34_480.webp", "size": 204016, "mime": "image/jpeg", "name": null}]}];
+    window.__STATIC_META = {"title": "Душный NLP", "username": "stuffyNLP", "channel": "stuffyNLP", "last_sync_utc": "2026-01-30T19:53:00Z", "posts_count": 112, "last_seen_message_id": 222, "stats": {"new": 216, "updated": 0, "media_downloaded": 186}, "avatar": "assets/channel_avatar.jpg", "meta_schema_version": "1.0.0", "posts_schema_version": "1.0.0"};
+  </script>
+  <script src="../../common.js"></script>
+  <script src="../../static.js"></script>
+</body>
+</html>

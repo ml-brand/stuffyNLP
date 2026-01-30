@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Душный NLP — пост #132</title>
+  <meta name="description" content=" Параллельная генерация с Hogwild! Inference   Сегодня —  статья  инженеров Yandex Research, HSE и IST Austria. Речь в публикации идёт о Hogwild! Inference — движке параллельного инференса для LLM.  А" />
+  <link rel="icon" href="../../favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32.png" />
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png" />
+
+  <link rel="canonical" href="https://ml-brand.github.io/stuffyNLP/static/posts/132.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Душный NLP — пост #132" />
+  <meta property="og:description" content=" Параллельная генерация с Hogwild! Inference   Сегодня —  статья  инженеров Yandex Research, HSE и IST Austria. Речь в публикации идёт о Hogwild! Inference — движке параллельного инференса для LLM.  А" />
+  <meta property="og:image" content="https://ml-brand.github.io/stuffyNLP/assets/media/thumbs/132_480.webp" />
+  <meta property="og:image:alt" content="Душный NLP" />
+  <meta property="article:published_time" content="2025-06-17T12:16:48+00:00" />
+  <meta property="article:author" content="Душный NLP" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://ml-brand.github.io/stuffyNLP/assets/media/thumbs/132_480.webp" />
+  <link rel="stylesheet" href="../../style.css" />
+  <script src="../../metrika.js"></script>
+</head>
+<body data-index-href="../page-2.html">
+  <header class="header">
+    <div class="container">
+      <div class="title-grid single-title">
+        <a class="grid-avatar" href="#" target="_blank" rel="noopener">
+          <img id="channelAvatar" class="channel-avatar" src="../../assets/channel_avatar.jpg" alt="Аватар канала"  />
+        </a>
+        <div class="grid-main">
+          <div class="title-head">
+            <a class="back-link" href="../page-2.html">← Ко всем постам</a>
+            <a class="badge-chip" id="siteTitleWrap" href="#" target="_blank" rel="noopener"><h1 id="siteTitle">Душный NLP</h1></a>
+            <div class="hero-actions">
+              <a id="subscribeBtn" class="subscribe-btn" href="https://t.me/+1Z41UptsLwszZDE6" target="_blank" rel="noopener" >Подписаться</a>
+              <a class="icon-btn" href="../../post.html?id=132" aria-label="Открыть динамическую страницу поста">↺</a>
+              <button id="themeToggle" class="icon-btn" type="button" aria-label="Переключить тему"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  
+  <div id="promoBanner" class="promo-banner" hidden>
+    <div class="container promo-inner">
+      <span class="promo-text"><a href="https://t.me/addlist/5NH3RoVejEI1MGEy">Подпишись на все наши ML каналы. Они классные, отвечаем!</a></span>
+      <button id="promoClose" class="promo-close" type="button" aria-label="Скрыть плашку">×</button>
+    </div>
+  </div>
+  
+
+  <main class="container single-page">
+    <article id="postContainer" class="post post-page" data-post-id="132">
+      <div class="post-header">
+        <div class="right"><span class="post-date" data-iso-date="2025-06-17T12:16:48+00:00">2025-06-17 12:16 UTC</span></div>
+      </div>
+      <div class="post-body"><strong>Параллельная генерация с Hogwild! Inference</strong><br><br>Сегодня — <a href="https://arxiv.org/abs/2504.06261" rel="nofollow noopener noreferrer">статья</a> инженеров Yandex Research, HSE и IST Austria. Речь в публикации идёт о Hogwild! Inference — движке параллельного инференса для LLM.<br><br>Авторы задались целью ускорить выполнение задачи одной моделью за счёт параллельной генерации. При этом инференс должен был оставаться интуитивно простым, а фреймворк — достаточно гибким, чтобы сделать эффективной коммуникацию между параллельными ветками генерации. Наконец, авторы стремились к тому, чтобы характер взаимодействия инстансов зависел в первую очередь от самой модели, а не от фреймворка параллельной генерации, то есть оставить принцип параллельной работы на откуп самим моделям.<br><br>Метод Hogwild! Inference предполагает использование нескольких экземпляров LLM — они называются «рабочими» (workers), — которые выполняют одну задачу параллельно, синхронизируясь через общий KV-кэш. Это позволяет им видеть и учитывать генерации друг друга в реальном времени. Идея в том, чтобы дать моделям возможность самим организовывать координацию без заранее заданных правил взаимодействия.<br><br>В этот общий KV-кэш каждый рабочий добавляет свои токены, которые затем дополняют общий контекст. Кэш организован как чат: завершённые абзацы reasoning каждого рабочего перемещаются в «историю», а текущие абзацы остаются в отдельном сегменте. При этом каждый рабочий видит текущую работу других — всё благодаря разделённым KV-блокам. <br><br>Чтобы избежать повторной обработки представлений на каждом шаге, авторы предлагают использовать свойства RoPE: для генерации нового токена каждым из рабочих блоки KV-кэша упорядочиваются по-разному для каждого рабочего (см. изображение). При этом сдвиг осуществляется не над всем блоком, а над query-токенами, что резко снижает вычислительные издержки. Таким образом, каждый рабочий может видеть новые токены других рабочих сразу после их генерации.<br><br>Система использует zero-shot prompting: рабочим предлагается обсуждать решение задачи, разделять работу между собой, не дублировать друг друга. Также авторы используют специальные интервенции в процесс генерации, чтобы сократить случаи, когда несколько рабочих совершают одну и ту же работу. Каждую N токенов одному из агентов подсовывается промпт вида «Делаю ли я лишнюю работу?» и предлагается ответить «да» или «нет». Эксперименты показывают, что такая вставка часто позволяет рабочему понять, что его работа уже сделана другим и можно двигаться дальше, либо изменить свою стратегию решения задачи. <br><br>Авторы оценивают Hogwild! Inference на задачах, требующих длительных рассуждений и предполагающих тривиального разбиения на независимые подзадачи: LIMO, LiveCodeBench, OlympiadBench, AIME. Эксперименты на разных моделях (Qwen3, QwQ, Deepseek R1, Phi4-R) показывают, что метод позволяет решать задачи за меньшее число последовательных шагов, чем обычная генерация. Например, QwQ-32B в LIMO (817 задач на математику) c использованием Hogwild! даёт прирост точности до 0,6 при 4000 токенах, в то время как бейзлайн — на уровне 0,4. Эксперименты также подтверждают масштабируемость: при двух рабочих генерация ускоряется в 1,8 раза, при четырёх — в 3,4.<br><br><em>Разбор подготовил </em><tg-emoji emoji-id="5224192932302565805">❣</tg-emoji> <em>Глеб Родионов</em><br><br><a href="https://t.me/+_UgXDlenCHw0OWRi" rel="nofollow noopener noreferrer">Душный NLP</a><div class="media"><img class="media-img" loading="lazy" src="../../assets/media/thumbs/132_480.webp" srcset="../../assets/media/thumbs/132_480.webp 480w, ../../assets/media/132.jpg 1200w" sizes="(max-width: 768px) 100vw, 800px" alt="" data-post-id="132" data-image-index="0" /></div></div>
+      <div class="actions">
+        <span>3 232 просмотров · 43 реакций</span>
+        <span class="action-links"><a href="https://t.me/stuffyNLP/132" target="_blank" rel="noopener">Открыть в Telegram</a> · <a href="../page-2.html">К списку постов</a> · <a href="./132.html">Ссылка на этот пост</a></span>
+      </div>
+    </article>
+
+    <div class="pager single-nav">
+      <a id="prevPost" class="nav-link" href="./133.html" style="visibility:visible">← Более новый</a>
+      <a id="nextPost" class="nav-link" href="./131.html" style="visibility:visible">Более старый →</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <span>based on <a href="https://github.com/ml-brand/tg-to-gh-pages" target="_blank" rel="noopener">tg-to-gh-pages</a> (created by <a href="https://github.com/ml-brand" target="_blank" rel="noopener">ML Brand</a>)</span>
+        <a id="repoLink" href="https://github.com/ml-brand/tg-to-gh-pages" target="_blank" rel="noopener">Do the same with your channel.</a>
+        <span class="footer-links">
+          static copy ·
+          <a href="../../feed.xml" target="_blank" rel="noopener">RSS</a> ·
+          <a href="../../atom.xml" target="_blank" rel="noopener">Atom</a>
+        </span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    window.__STATIC_POSTS = [{"id": 132, "media": [{"kind": "photo", "path": "../../assets/media/132.jpg", "thumb": "../../assets/media/thumbs/132_480.webp", "size": 73109, "mime": "image/jpeg", "name": null}]}];
+    window.__STATIC_META = {"title": "Душный NLP", "username": "stuffyNLP", "channel": "stuffyNLP", "last_sync_utc": "2026-01-30T19:53:00Z", "posts_count": 112, "last_seen_message_id": 222, "stats": {"new": 216, "updated": 0, "media_downloaded": 186}, "avatar": "assets/channel_avatar.jpg", "meta_schema_version": "1.0.0", "posts_schema_version": "1.0.0"};
+  </script>
+  <script src="../../common.js"></script>
+  <script src="../../static.js"></script>
+</body>
+</html>

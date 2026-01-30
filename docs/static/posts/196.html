@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Душный NLP — пост #196</title>
+  <meta name="description" content=" Интересное с EMNLP 2025   В Сучжоу в эти дни проходит конференция Conference on Empirical Methods in Natural Language Processing, а мы, как и прежде, рассказываем, об интересных постерах, которые там" />
+  <link rel="icon" href="../../favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32.png" />
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png" />
+
+  <link rel="canonical" href="https://ml-brand.github.io/stuffyNLP/static/posts/196.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Душный NLP — пост #196" />
+  <meta property="og:description" content=" Интересное с EMNLP 2025   В Сучжоу в эти дни проходит конференция Conference on Empirical Methods in Natural Language Processing, а мы, как и прежде, рассказываем, об интересных постерах, которые там" />
+  <meta property="og:image" content="https://ml-brand.github.io/stuffyNLP/assets/media/thumbs/196_480.webp" />
+  <meta property="og:image:alt" content="Душный NLP" />
+  <meta property="article:published_time" content="2025-11-06T09:43:05+00:00" />
+  <meta property="article:author" content="Душный NLP" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://ml-brand.github.io/stuffyNLP/assets/media/thumbs/196_480.webp" />
+  <link rel="stylesheet" href="../../style.css" />
+  <script src="../../metrika.js"></script>
+</head>
+<body data-index-href="../index.html">
+  <header class="header">
+    <div class="container">
+      <div class="title-grid single-title">
+        <a class="grid-avatar" href="#" target="_blank" rel="noopener">
+          <img id="channelAvatar" class="channel-avatar" src="../../assets/channel_avatar.jpg" alt="Аватар канала"  />
+        </a>
+        <div class="grid-main">
+          <div class="title-head">
+            <a class="back-link" href="../index.html">← Ко всем постам</a>
+            <a class="badge-chip" id="siteTitleWrap" href="#" target="_blank" rel="noopener"><h1 id="siteTitle">Душный NLP</h1></a>
+            <div class="hero-actions">
+              <a id="subscribeBtn" class="subscribe-btn" href="https://t.me/+1Z41UptsLwszZDE6" target="_blank" rel="noopener" >Подписаться</a>
+              <a class="icon-btn" href="../../post.html?id=196" aria-label="Открыть динамическую страницу поста">↺</a>
+              <button id="themeToggle" class="icon-btn" type="button" aria-label="Переключить тему"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  
+  <div id="promoBanner" class="promo-banner" hidden>
+    <div class="container promo-inner">
+      <span class="promo-text"><a href="https://t.me/addlist/5NH3RoVejEI1MGEy">Подпишись на все наши ML каналы. Они классные, отвечаем!</a></span>
+      <button id="promoClose" class="promo-close" type="button" aria-label="Скрыть плашку">×</button>
+    </div>
+  </div>
+  
+
+  <main class="container single-page">
+    <article id="postContainer" class="post post-page" data-post-id="196">
+      <div class="post-header">
+        <div class="right"><span class="post-date" data-iso-date="2025-11-06T09:43:05+00:00">2025-11-06 09:43 UTC</span></div>
+      </div>
+      <div class="post-body"><strong>Интересное с EMNLP 2025</strong><br><br>В Сучжоу в эти дни проходит конференция Conference on Empirical Methods in Natural Language Processing, а мы, как и прежде, рассказываем, об интересных постерах, которые там увидели. <br><br><a href="https://arxiv.org/abs/2505.19060" rel="nofollow noopener noreferrer"><strong>UNCERTAINTY-LINE: Length-Invariant Estimation of Uncertainty for Large Language Models</strong></a><br><br>Очень простая идея, но при этом, кажется, вполне полезная. Странно, что такого никто не делал. <br><br>Хотим оценить качество ответа модели на запрос с помощью того, насколько она уверена в том, что пишет. Считаем uncertainty — неуверенность модели в предсказании — как нам нравится (можно перплексию, можно вероятность всего текста, как произведение вероятностей токенов). Получаем величину, которая может зависеть от длины ответа. Утверждается, что это плохое качество метрики, так как у ответов разной длины может быть разное качество. <br><br>Авторы строят зависимость uncertainty от длины ответа, аппроксимируют прямой и вычитают полученный линейный тренд из всех значений. Утверждают, что теперь скорректированная uncertainty-метрика лучше коррелирует с качеством ответа. Тестирование проводилось на заданиях WMT (машинный перевод), XSUM (суммаризация), GSM8k (математика, оценивали длину рассуждений). Корреляция тут sample-wise, то есть примеры в бенче ранжируются друг относительно друга правильно.<br><br><a href="https://arxiv.org/abs/2511.01568" rel="nofollow noopener noreferrer"><strong>ECO Decoding: Entropy-Based Control for Controllability and Fluency in Controllable Dialogue Generation</strong></a><br><br>Авторы рассматривают controllable-диалоги с LLM, то есть такие, в которых пользователь задаёт вопрос, а ответить нужно с определённым ограничением: радостно, с удивлением и так далее. Есть LLM, которая отвечает за генерацию ответа, но рядом сидит ещё и классификатор, который определяет ограничение и изменяет распределение вероятностей выходных токенов при генерации, чтобы оно лучше подходило под ограничение.<br><br>Существуют разные способы этого влияния классификатора на распределение выходных токенов. Авторы придумали свой, назвали его ECO. Утверждают, что качество выросло на некоторых бенчмарках, при этом без потерь в грамматике.<br><br><a href="https://arxiv.org/abs/2507.22968" rel="nofollow noopener noreferrer"><strong>C3: A Bilingual Benchmark for Spoken Dialogue Models Exploring Challenges in Complex Conversations</strong></a><br><br>Авторы собрали датасет из голосовых фраз и диалогов, в которых что-то неоднозначно: интонация (из-за чего непонятно, это вопрос или утверждение), двусмысленность (Mr. Smith loves music more than his wife — «больше, чем его жена любит музыку» или «больше, чем свою жену»?), пропуски слов и так далее. Датасет на английском и китайском, примеры независимые, так как сложно повторить одно и то же на разных языках. Метрика — процент правильно угаданных смыслов. Из всех опробованных авторами моделей лучше всего себя показывает GPT-4o Audio.<br><br><a href="https://arxiv.org/abs/2502.11460" rel="nofollow noopener noreferrer"><strong>UnitCoder: Scalable Iterative Code Synthesis with Unit Test Guidance</strong></a><br><br>Авторы хотят обучить модель на коде. Есть два стула: либо супергрязный, но при этом большой разнообразный датасет из данных, которые просто выгрузили отовсюду; либо написать хорошие данные с помощью людей или умных моделей, — но это менее разнообразно, и получается не очень много данных. <br><br>Авторы захотели сесть между двух стульев и придумали следующий пайплайн генерации данных. Берём просто сырой код из большого разнообразного датасета. Далее вытаскиваем из кодовых документов отделяемые куски кода, которые можно независимо вызывать. Затем на вызываемую функцию пишем тесты с помощью Llama3-70B-Instruct, запускаем тесты этого куска кода в специальной среде, если тесты не проходятся, фиксим код с помощью той же Llama 70B и повторяем пайплайн. <br><br>Когда всё стало хорошо, подчищаем код: пишем docstring, вставляем inline-комментарии, улучшаем стиль. В итоге — хороший датасет.<br><br>Проблема в том, что тесты пишет и код исправляет умная большая модель, а датасет используется для обучения маленьких (до 7B). По сути, это дистилляция. Автор говорит, что, наверное, достаточно умная Qwen3 сможет сама учиться на своих данных — звучит сомнительно, так что применимость работы к большим моделям под вопросом. Тем не менее идея может быть полезна как ещё один способ дистилляции кодовых навыков.<br><br><em>Интересное увидел </em><em><tg-emoji emoji-id="5224192932302565805">❣</tg-emoji></em><em> Владислав Негодин</em><br><br><a href="https://t.me/+Ko1OBmoEKXxjN2Yy" rel="nofollow noopener noreferrer">Душный NLP</a><div class="media"><img class="media-img" loading="lazy" src="../../assets/media/thumbs/196_480.webp" srcset="../../assets/media/thumbs/196_480.webp 480w, ../../assets/media/196.jpg 1200w" sizes="(max-width: 768px) 100vw, 800px" alt="" data-post-id="196" data-image-index="0" /><img class="media-img" loading="lazy" src="../../assets/media/thumbs/197_480.webp" srcset="../../assets/media/thumbs/197_480.webp 480w, ../../assets/media/197.jpg 1200w" sizes="(max-width: 768px) 100vw, 800px" alt="" data-post-id="196" data-image-index="1" /><img class="media-img" loading="lazy" src="../../assets/media/thumbs/198_480.webp" srcset="../../assets/media/thumbs/198_480.webp 480w, ../../assets/media/198.jpg 1200w" sizes="(max-width: 768px) 100vw, 800px" alt="" data-post-id="196" data-image-index="2" /><img class="media-img" loading="lazy" src="../../assets/media/thumbs/199_480.webp" srcset="../../assets/media/thumbs/199_480.webp 480w, ../../assets/media/199.jpg 1200w" sizes="(max-width: 768px) 100vw, 800px" alt="" data-post-id="196" data-image-index="3" /></div></div>
+      <div class="actions">
+        <span>2 493 просмотров · 35 реакций</span>
+        <span class="action-links"><a href="https://t.me/stuffyNLP/196" target="_blank" rel="noopener">Открыть в Telegram</a> · <a href="../index.html">К списку постов</a> · <a href="./196.html">Ссылка на этот пост</a></span>
+      </div>
+    </article>
+
+    <div class="pager single-nav">
+      <a id="prevPost" class="nav-link" href="./200.html" style="visibility:visible">← Более новый</a>
+      <a id="nextPost" class="nav-link" href="./194.html" style="visibility:visible">Более старый →</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <span>based on <a href="https://github.com/ml-brand/tg-to-gh-pages" target="_blank" rel="noopener">tg-to-gh-pages</a> (created by <a href="https://github.com/ml-brand" target="_blank" rel="noopener">ML Brand</a>)</span>
+        <a id="repoLink" href="https://github.com/ml-brand/tg-to-gh-pages" target="_blank" rel="noopener">Do the same with your channel.</a>
+        <span class="footer-links">
+          static copy ·
+          <a href="../../feed.xml" target="_blank" rel="noopener">RSS</a> ·
+          <a href="../../atom.xml" target="_blank" rel="noopener">Atom</a>
+        </span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    window.__STATIC_POSTS = [{"id": 196, "media": [{"kind": "photo", "path": "../../assets/media/196.jpg", "thumb": "../../assets/media/thumbs/196_480.webp", "size": 183466, "mime": "image/jpeg", "name": null}, {"kind": "photo", "path": "../../assets/media/197.jpg", "thumb": "../../assets/media/thumbs/197_480.webp", "size": 184030, "mime": "image/jpeg", "name": null}, {"kind": "photo", "path": "../../assets/media/198.jpg", "thumb": "../../assets/media/thumbs/198_480.webp", "size": 145674, "mime": "image/jpeg", "name": null}, {"kind": "photo", "path": "../../assets/media/199.jpg", "thumb": "../../assets/media/thumbs/199_480.webp", "size": 204922, "mime": "image/jpeg", "name": null}]}];
+    window.__STATIC_META = {"title": "Душный NLP", "username": "stuffyNLP", "channel": "stuffyNLP", "last_sync_utc": "2026-01-30T19:53:00Z", "posts_count": 112, "last_seen_message_id": 222, "stats": {"new": 216, "updated": 0, "media_downloaded": 186}, "avatar": "assets/channel_avatar.jpg", "meta_schema_version": "1.0.0", "posts_schema_version": "1.0.0"};
+  </script>
+  <script src="../../common.js"></script>
+  <script src="../../static.js"></script>
+</body>
+</html>

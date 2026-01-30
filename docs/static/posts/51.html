@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Душный NLP — пост #51</title>
+  <meta name="description" content=" Впечатления от туториала об оценке моделей на NeurIPS   На повестке — туториал  Evaluating Large Language Models — Principles, Approaches, and Applications.  Он был посвящён оценке больших языковых м" />
+  <link rel="icon" href="../../favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32.png" />
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png" />
+
+  <link rel="canonical" href="https://ml-brand.github.io/stuffyNLP/static/posts/51.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Душный NLP — пост #51" />
+  <meta property="og:description" content=" Впечатления от туториала об оценке моделей на NeurIPS   На повестке — туториал  Evaluating Large Language Models — Principles, Approaches, and Applications.  Он был посвящён оценке больших языковых м" />
+  <meta property="og:image" content="https://ml-brand.github.io/stuffyNLP/assets/media/thumbs/51_480.webp" />
+  <meta property="og:image:alt" content="Душный NLP" />
+  <meta property="article:published_time" content="2024-12-13T08:57:19+00:00" />
+  <meta property="article:author" content="Душный NLP" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://ml-brand.github.io/stuffyNLP/assets/media/thumbs/51_480.webp" />
+  <link rel="stylesheet" href="../../style.css" />
+  <script src="../../metrika.js"></script>
+</head>
+<body data-index-href="../page-3.html">
+  <header class="header">
+    <div class="container">
+      <div class="title-grid single-title">
+        <a class="grid-avatar" href="#" target="_blank" rel="noopener">
+          <img id="channelAvatar" class="channel-avatar" src="../../assets/channel_avatar.jpg" alt="Аватар канала"  />
+        </a>
+        <div class="grid-main">
+          <div class="title-head">
+            <a class="back-link" href="../page-3.html">← Ко всем постам</a>
+            <a class="badge-chip" id="siteTitleWrap" href="#" target="_blank" rel="noopener"><h1 id="siteTitle">Душный NLP</h1></a>
+            <div class="hero-actions">
+              <a id="subscribeBtn" class="subscribe-btn" href="https://t.me/+1Z41UptsLwszZDE6" target="_blank" rel="noopener" >Подписаться</a>
+              <a class="icon-btn" href="../../post.html?id=51" aria-label="Открыть динамическую страницу поста">↺</a>
+              <button id="themeToggle" class="icon-btn" type="button" aria-label="Переключить тему"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  
+  <div id="promoBanner" class="promo-banner" hidden>
+    <div class="container promo-inner">
+      <span class="promo-text"><a href="https://t.me/addlist/5NH3RoVejEI1MGEy">Подпишись на все наши ML каналы. Они классные, отвечаем!</a></span>
+      <button id="promoClose" class="promo-close" type="button" aria-label="Скрыть плашку">×</button>
+    </div>
+  </div>
+  
+
+  <main class="container single-page">
+    <article id="postContainer" class="post post-page" data-post-id="51">
+      <div class="post-header">
+        <div class="right"><span class="post-date" data-iso-date="2024-12-13T08:57:19+00:00">2024-12-13 08:57 UTC</span></div>
+      </div>
+      <div class="post-body"><strong>Впечатления от туториала об оценке моделей на NeurIPS</strong><br><br>На повестке — туториал <a href="https://neurips.cc/virtual/2024/tutorial/99524" rel="nofollow noopener noreferrer">Evaluating Large Language Models — Principles, Approaches, and Applications.</a> Он был посвящён оценке больших языковых моделей (LLMs). Руководитель группы аналитики в Яндексе Анастасия Беззубцева посетила туториал и рассказала, что интересного отметила для себя. <br><br>Первую часть представляла продакт-менеджер Google Ирина Сиглер. Она ввела общие понятия и объяснила базовые моменты. Например, о важности валидации на датасете, который репрезентативен реальной бизнес-задаче. Есть три способа собрать валидационное множество заданий для оценки модели:<br><br>— Manual — написание промптов вручную;<br>— Synthetic — генерация промптов с помощью LLM;<br>— Traffic — использовать продуктовый поток.<br><br>По словам Сиглер, важно оценивать систему полностью, а не только LLM под капотом. Сама модель — это всего лишь один кирпичик в общей структуре.<br><br>Со второй частью выступала исследовательница и член консультативного совета Центра инноваций в области искусственного интеллекта (CAII) в университете Иллинойса Бо Ли. Она выделила три метода оценки:<br><br>— Computation — расчёт схожести между данным ответом и референсным;<br>— Human — оценка человеком;<br>— LLM-as-Judge или AutoRater — оценка с помощью модели.<br><br>Ли Бо рассказала, что автоматические методы оценки не слишком хорошо коррелируют с <a href="https://arxiv.org/pdf/2303.16634" rel="nofollow noopener noreferrer">человеческими суждениями.</a> Модели могут ошибаться, отдавая предпочтение, например, собственным или самым длинным ответам. Однако использование LLM для оценки становится всё более частым явлением — главное, чтобы полученные результаты валидировали люди. Чтобы нивелировать недостатки способа, на туториале предлагали переставлять опции и искать консенсус между несколькими ответами одной модели или ответами разных. <br><br>Этим туториал не ограничился — были еще практическая часть и часть, посвященная соответствию этическим нормам. С презентацией туториала вы можете ознакомиться <a href="https://neurips.cc/media/neurips-2024/Slides/99524.pdf" rel="nofollow noopener noreferrer">по этой ссылке. </a><br><br>#YaNeurIPS<br><br><a href="https://t.me/+qGlf1dMQe8AyNTEy" rel="nofollow noopener noreferrer">Душный NLP</a><div class="media"><img class="media-img" loading="lazy" src="../../assets/media/thumbs/51_480.webp" srcset="../../assets/media/thumbs/51_480.webp 480w, ../../assets/media/51.jpg 1200w" sizes="(max-width: 768px) 100vw, 800px" alt="" data-post-id="51" data-image-index="0" /></div></div>
+      <div class="actions">
+        <span>4 187 просмотров · 31 реакций</span>
+        <span class="action-links"><a href="https://t.me/stuffyNLP/51" target="_blank" rel="noopener">Открыть в Telegram</a> · <a href="../page-3.html">К списку постов</a> · <a href="./51.html">Ссылка на этот пост</a></span>
+      </div>
+    </article>
+
+    <div class="pager single-nav">
+      <a id="prevPost" class="nav-link" href="./52.html" style="visibility:visible">← Более новый</a>
+      <a id="nextPost" class="nav-link" href="./49.html" style="visibility:visible">Более старый →</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <span>based on <a href="https://github.com/ml-brand/tg-to-gh-pages" target="_blank" rel="noopener">tg-to-gh-pages</a> (created by <a href="https://github.com/ml-brand" target="_blank" rel="noopener">ML Brand</a>)</span>
+        <a id="repoLink" href="https://github.com/ml-brand/tg-to-gh-pages" target="_blank" rel="noopener">Do the same with your channel.</a>
+        <span class="footer-links">
+          static copy ·
+          <a href="../../feed.xml" target="_blank" rel="noopener">RSS</a> ·
+          <a href="../../atom.xml" target="_blank" rel="noopener">Atom</a>
+        </span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    window.__STATIC_POSTS = [{"id": 51, "media": [{"kind": "photo", "path": "../../assets/media/51.jpg", "thumb": "../../assets/media/thumbs/51_480.webp", "size": 83334, "mime": "image/jpeg", "name": null}]}];
+    window.__STATIC_META = {"title": "Душный NLP", "username": "stuffyNLP", "channel": "stuffyNLP", "last_sync_utc": "2026-01-30T19:53:00Z", "posts_count": 112, "last_seen_message_id": 222, "stats": {"new": 216, "updated": 0, "media_downloaded": 186}, "avatar": "assets/channel_avatar.jpg", "meta_schema_version": "1.0.0", "posts_schema_version": "1.0.0"};
+  </script>
+  <script src="../../common.js"></script>
+  <script src="../../static.js"></script>
+</body>
+</html>

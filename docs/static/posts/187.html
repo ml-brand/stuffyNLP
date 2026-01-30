@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Душный NLP — пост #187</title>
+  <meta name="description" content=" Как обучить одну модель и получить несколько   Сегодня расскажем о методе, который позволяет обучить одну модель, а затем извлечь из неё несколько других «подмоделей». Подобным подходам посвящено нес" />
+  <link rel="icon" href="../../favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32.png" />
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png" />
+
+  <link rel="canonical" href="https://ml-brand.github.io/stuffyNLP/static/posts/187.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Душный NLP — пост #187" />
+  <meta property="og:description" content=" Как обучить одну модель и получить несколько   Сегодня расскажем о методе, который позволяет обучить одну модель, а затем извлечь из неё несколько других «подмоделей». Подобным подходам посвящено нес" />
+  <meta property="og:image" content="https://ml-brand.github.io/stuffyNLP/assets/media/thumbs/187_480.webp" />
+  <meta property="og:image:alt" content="Душный NLP" />
+  <meta property="article:published_time" content="2025-09-25T11:01:34+00:00" />
+  <meta property="article:author" content="Душный NLP" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://ml-brand.github.io/stuffyNLP/assets/media/thumbs/187_480.webp" />
+  <link rel="stylesheet" href="../../style.css" />
+  <script src="../../metrika.js"></script>
+</head>
+<body data-index-href="../index.html">
+  <header class="header">
+    <div class="container">
+      <div class="title-grid single-title">
+        <a class="grid-avatar" href="#" target="_blank" rel="noopener">
+          <img id="channelAvatar" class="channel-avatar" src="../../assets/channel_avatar.jpg" alt="Аватар канала"  />
+        </a>
+        <div class="grid-main">
+          <div class="title-head">
+            <a class="back-link" href="../index.html">← Ко всем постам</a>
+            <a class="badge-chip" id="siteTitleWrap" href="#" target="_blank" rel="noopener"><h1 id="siteTitle">Душный NLP</h1></a>
+            <div class="hero-actions">
+              <a id="subscribeBtn" class="subscribe-btn" href="https://t.me/+1Z41UptsLwszZDE6" target="_blank" rel="noopener" >Подписаться</a>
+              <a class="icon-btn" href="../../post.html?id=187" aria-label="Открыть динамическую страницу поста">↺</a>
+              <button id="themeToggle" class="icon-btn" type="button" aria-label="Переключить тему"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  
+  <div id="promoBanner" class="promo-banner" hidden>
+    <div class="container promo-inner">
+      <span class="promo-text"><a href="https://t.me/addlist/5NH3RoVejEI1MGEy">Подпишись на все наши ML каналы. Они классные, отвечаем!</a></span>
+      <button id="promoClose" class="promo-close" type="button" aria-label="Скрыть плашку">×</button>
+    </div>
+  </div>
+  
+
+  <main class="container single-page">
+    <article id="postContainer" class="post post-page" data-post-id="187">
+      <div class="post-header">
+        <div class="right"><span class="post-date" data-iso-date="2025-09-25T11:01:34+00:00">2025-09-25 11:01 UTC</span></div>
+      </div>
+      <div class="post-body"><strong>Как обучить одну модель и получить несколько</strong><br><br>Сегодня расскажем о методе, который позволяет обучить одну модель, а затем извлечь из неё несколько других «подмоделей». Подобным подходам посвящено несколько статей. Разберём <a href="https://arxiv.org/abs/2310.07707" rel="nofollow noopener noreferrer">одну из них</a>, о методе MatFormer от инженеров из Google.<br><br>Идея статьи заключается в том, чтобы вкладывать разные варианты слоёв друг в друга. Как в матрёшке: параметры трансформера поменьше используются в трансформере побольше. Метод фокусируется на FFN-слоях и только в dense-архитектурах, где до 60% параметров как раз и находятся в FFN-слоях. <br><br>Суть в том, чтобы брать не все нейроны скрытого слоя в полносвязных слоях, а а только некоторый набор первых (<em>m_i</em> в формуле выше). При этом у разных слоёв могут быть разные <em>m_i</em>.<br><br>Обучение осуществляется как обычно, но со случайным и равномерным сэмплингом <em>m_i  = g_i d_ff</em>, где <em>g_i</em>  — гранулярность, случайно сэмплируемая из {0.5, 1, 2, 4}, а <em>d_ff</em> — это размер скрытого представления модели. Таким образом обучаются все подмодели. На инференсе используется процедура Mix’n’Match — для разных слоёв подбираются свои <em>m_i</em> так, чтобы размер слоёв увеличивался постепенно, без резких скачков. <br><br>Результаты показывают, что модель, полученная с помощью метода MatFormer, показывает лучшие результаты, чем модель, обученная с нуля. Интересно ещё и то, что «модели из матрёшки» демонстрируют значительную согласованность с большой моделью, из которой произошли. Это полезно, потому что открывает возможность для использования маленьких моделей, например, в качестве draft-моделей при спекулятивном декодинге. <br><br>Разбор подготовил <em><tg-emoji emoji-id="5224192932302565805">❣</tg-emoji></em> Артём Соболев<br><br><a href="https://t.me/+LyTVbRrnDxw5Mzcy" rel="nofollow noopener noreferrer">Душный NLP</a><div class="media"><img class="media-img" loading="lazy" src="../../assets/media/thumbs/187_480.webp" srcset="../../assets/media/thumbs/187_480.webp 480w, ../../assets/media/187.jpg 1200w" sizes="(max-width: 768px) 100vw, 800px" alt="" data-post-id="187" data-image-index="0" /><img class="media-img" loading="lazy" src="../../assets/media/thumbs/188_480.webp" srcset="../../assets/media/thumbs/188_480.webp 480w, ../../assets/media/188.jpg 1200w" sizes="(max-width: 768px) 100vw, 800px" alt="" data-post-id="187" data-image-index="1" /></div></div>
+      <div class="actions">
+        <span>4 302 просмотров · 43 реакций</span>
+        <span class="action-links"><a href="https://t.me/stuffyNLP/187" target="_blank" rel="noopener">Открыть в Telegram</a> · <a href="../index.html">К списку постов</a> · <a href="./187.html">Ссылка на этот пост</a></span>
+      </div>
+    </article>
+
+    <div class="pager single-nav">
+      <a id="prevPost" class="nav-link" href="./189.html" style="visibility:visible">← Более новый</a>
+      <a id="nextPost" class="nav-link" href="./186.html" style="visibility:visible">Более старый →</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <span>based on <a href="https://github.com/ml-brand/tg-to-gh-pages" target="_blank" rel="noopener">tg-to-gh-pages</a> (created by <a href="https://github.com/ml-brand" target="_blank" rel="noopener">ML Brand</a>)</span>
+        <a id="repoLink" href="https://github.com/ml-brand/tg-to-gh-pages" target="_blank" rel="noopener">Do the same with your channel.</a>
+        <span class="footer-links">
+          static copy ·
+          <a href="../../feed.xml" target="_blank" rel="noopener">RSS</a> ·
+          <a href="../../atom.xml" target="_blank" rel="noopener">Atom</a>
+        </span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    window.__STATIC_POSTS = [{"id": 187, "media": [{"kind": "photo", "path": "../../assets/media/187.jpg", "thumb": "../../assets/media/thumbs/187_480.webp", "size": 14765, "mime": "image/jpeg", "name": null}, {"kind": "photo", "path": "../../assets/media/188.jpg", "thumb": "../../assets/media/thumbs/188_480.webp", "size": 73252, "mime": "image/jpeg", "name": null}]}];
+    window.__STATIC_META = {"title": "Душный NLP", "username": "stuffyNLP", "channel": "stuffyNLP", "last_sync_utc": "2026-01-30T19:53:00Z", "posts_count": 112, "last_seen_message_id": 222, "stats": {"new": 216, "updated": 0, "media_downloaded": 186}, "avatar": "assets/channel_avatar.jpg", "meta_schema_version": "1.0.0", "posts_schema_version": "1.0.0"};
+  </script>
+  <script src="../../common.js"></script>
+  <script src="../../static.js"></script>
+</body>
+</html>

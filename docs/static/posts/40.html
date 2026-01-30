@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Душный NLP — пост #40</title>
+  <meta name="description" content=" Алаймент LlaMA 3.1   Возвращаемся к LlaMA 3.1 и продолжаем разбираться, как она устроена. В этот раз речь пойдёт  об алайменте модели.    По сравнению с LLaMA 2 у третьей версии изменилась разметка п" />
+  <link rel="icon" href="../../favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32.png" />
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png" />
+
+  <link rel="canonical" href="https://ml-brand.github.io/stuffyNLP/static/posts/40.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Душный NLP — пост #40" />
+  <meta property="og:description" content=" Алаймент LlaMA 3.1   Возвращаемся к LlaMA 3.1 и продолжаем разбираться, как она устроена. В этот раз речь пойдёт  об алайменте модели.    По сравнению с LLaMA 2 у третьей версии изменилась разметка п" />
+  <meta property="og:image" content="https://ml-brand.github.io/stuffyNLP/assets/media/thumbs/40_480.webp" />
+  <meta property="og:image:alt" content="Душный NLP" />
+  <meta property="article:published_time" content="2024-11-01T13:51:48+00:00" />
+  <meta property="article:author" content="Душный NLP" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://ml-brand.github.io/stuffyNLP/assets/media/thumbs/40_480.webp" />
+  <link rel="stylesheet" href="../../style.css" />
+  <script src="../../metrika.js"></script>
+</head>
+<body data-index-href="../page-3.html">
+  <header class="header">
+    <div class="container">
+      <div class="title-grid single-title">
+        <a class="grid-avatar" href="#" target="_blank" rel="noopener">
+          <img id="channelAvatar" class="channel-avatar" src="../../assets/channel_avatar.jpg" alt="Аватар канала"  />
+        </a>
+        <div class="grid-main">
+          <div class="title-head">
+            <a class="back-link" href="../page-3.html">← Ко всем постам</a>
+            <a class="badge-chip" id="siteTitleWrap" href="#" target="_blank" rel="noopener"><h1 id="siteTitle">Душный NLP</h1></a>
+            <div class="hero-actions">
+              <a id="subscribeBtn" class="subscribe-btn" href="https://t.me/+1Z41UptsLwszZDE6" target="_blank" rel="noopener" >Подписаться</a>
+              <a class="icon-btn" href="../../post.html?id=40" aria-label="Открыть динамическую страницу поста">↺</a>
+              <button id="themeToggle" class="icon-btn" type="button" aria-label="Переключить тему"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  
+  <div id="promoBanner" class="promo-banner" hidden>
+    <div class="container promo-inner">
+      <span class="promo-text"><a href="https://t.me/addlist/5NH3RoVejEI1MGEy">Подпишись на все наши ML каналы. Они классные, отвечаем!</a></span>
+      <button id="promoClose" class="promo-close" type="button" aria-label="Скрыть плашку">×</button>
+    </div>
+  </div>
+  
+
+  <main class="container single-page">
+    <article id="postContainer" class="post post-page" data-post-id="40">
+      <div class="post-header">
+        <div class="right"><span class="post-date" data-iso-date="2024-11-01T13:51:48+00:00">2024-11-01 13:51 UTC</span></div>
+      </div>
+      <div class="post-body"><strong>Алаймент LlaMA 3.1</strong><br><br>Возвращаемся к LlaMA 3.1 и продолжаем разбираться, как она устроена. В этот раз речь пойдёт <a href="https://arxiv.org/abs/2407.21783" rel="nofollow noopener noreferrer">об алайменте модели.</a> <br><br>По сравнению с LLaMA 2 у третьей версии изменилась разметка пар. Помимо стандартных chosen и rejected добавилась ещё метка edited. Она ставится в тех случаях, когда победивший объект не слишком хорош и его переписывают. Ответы оцениваются по семибалльной шкале.<br><br>SFT происходит в шесть раундов. Если в LLaMA 2 использовался PPO, то в LlaMA 3 — DPO. Разработчики отмечают, что это связано с тем, что PPO требует больше вычислительных ресурсов, а качество выходит хуже.<br><br>Ещё одно важное отличие — это специализация. На претрейне модель доучивают для решения специальных задач. Потом делают отдельный алаймент, полученную специализированную модель используют для генерации новых обучающих данных стадии алайнмента, а также мержат веса нескольких специализированных модель в единую модель.  <br><br>Reward-модель обучается над претрейном. Margin term, который был в Llama 2, в третьей версии отсутствует, так как, по словам разработчиков, он не даёт никакого прироста в качестве. Как и в DPO, оставляют только те ответы, которые помечены как «сильно лучше» и «лучше». Кроме того, в reward-модели есть отдельные награды для полезности и безопасности.<br><br>За один раунд SFT 405B-модель суммарно проходит 576 тысяч сэмплов. В DPO используют сэмплы от моделей с последних раундов (а в reward-модели — все). Служебные токены, такие как EOS или токены для вызовов функций, маскируют для стабилизации обучения. Кроме того, к DPO добавляют NLL (CE) с коэффициентом 0,2. Это нужно, чтобы повысить вероятность chosen-ответов. Промпты для обучения пишут люди, а ответы — модели. На один промпт выбирают лучший ответ из 10-30 поступивших. <br><br>В LlaMA 3.1 есть четыре уровня фильтрации данных:<br><br><strong>1. Rule-based </strong>— удаляет дисклеймеры, смайлики и восклицания;<br><br><strong>2. Quality</strong> — качественными считаются 25% ответов с наибольшим скором. Кроме того, используется LLM-as-judge. Ответы оцениваются по трём критериям для обычных данных и двум — для кодинга. Ответ считается качественным, если все критерии выполнены. Сэмпл попадает в обучение, если хотя бы один из методов показал, что ответ качественный;<br><br><strong>3. Difficulty </strong>— оценивается по числу интентов в запросе: чем их больше, тем сложнее запрос. Также модель оценивает сложность по трёхбальной шкале;<br><br><strong>4. SemDedup</strong> — этот метод используется для удаления похожих данных, при отборе отдается предпочтение семплам с максимальным значением quality * difficulty.<br><br>Алаймент для каждой из функциональных возможностей (Capabilities) LLaMA 3.1 имеет свои особенности. Например, в коде есть много синтетических данных, используется execution feedback и перевод на редкие языки программирования. А для математики берут тексты из претрейна и уже к ним генерируют инстракты.<br><br>Что касается фактологичности, то разработчики не добавляют новых знаний поверх претрейна. Для этого модель обучают отвечать только на те вопросы, на которые она может выдать ответ, согласованный с документом из претрейна. А для чувствительных тем, по которым в датасете много некорректной информации, используют ручную разметку. <br><br><em>Разбор подготовил </em><em><tg-emoji emoji-id="5224192932302565805">❣</tg-emoji></em><em> Алексей Зотов</em><br><br><a href="https://t.me/+rKa608VzQuozODEy" rel="nofollow noopener noreferrer">Душный NLP</a><div class="media"><img class="media-img" loading="lazy" src="../../assets/media/thumbs/40_480.webp" srcset="../../assets/media/thumbs/40_480.webp 480w, ../../assets/media/40.jpg 1200w" sizes="(max-width: 768px) 100vw, 800px" alt="" data-post-id="40" data-image-index="0" /></div></div>
+      <div class="actions">
+        <span>5 372 просмотров · 60 реакций</span>
+        <span class="action-links"><a href="https://t.me/stuffyNLP/40" target="_blank" rel="noopener">Открыть в Telegram</a> · <a href="../page-3.html">К списку постов</a> · <a href="./40.html">Ссылка на этот пост</a></span>
+      </div>
+    </article>
+
+    <div class="pager single-nav">
+      <a id="prevPost" class="nav-link" href="./41.html" style="visibility:visible">← Более новый</a>
+      <a id="nextPost" class="nav-link" href="./39.html" style="visibility:visible">Более старый →</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <span>based on <a href="https://github.com/ml-brand/tg-to-gh-pages" target="_blank" rel="noopener">tg-to-gh-pages</a> (created by <a href="https://github.com/ml-brand" target="_blank" rel="noopener">ML Brand</a>)</span>
+        <a id="repoLink" href="https://github.com/ml-brand/tg-to-gh-pages" target="_blank" rel="noopener">Do the same with your channel.</a>
+        <span class="footer-links">
+          static copy ·
+          <a href="../../feed.xml" target="_blank" rel="noopener">RSS</a> ·
+          <a href="../../atom.xml" target="_blank" rel="noopener">Atom</a>
+        </span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    window.__STATIC_POSTS = [{"id": 40, "media": [{"kind": "photo", "path": "../../assets/media/40.jpg", "thumb": "../../assets/media/thumbs/40_480.webp", "size": 44632, "mime": "image/jpeg", "name": null}]}];
+    window.__STATIC_META = {"title": "Душный NLP", "username": "stuffyNLP", "channel": "stuffyNLP", "last_sync_utc": "2026-01-30T19:53:00Z", "posts_count": 112, "last_seen_message_id": 222, "stats": {"new": 216, "updated": 0, "media_downloaded": 186}, "avatar": "assets/channel_avatar.jpg", "meta_schema_version": "1.0.0", "posts_schema_version": "1.0.0"};
+  </script>
+  <script src="../../common.js"></script>
+  <script src="../../static.js"></script>
+</body>
+</html>
