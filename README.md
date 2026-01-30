@@ -1,7 +1,6 @@
 # Душный NLP (@stuffyNLP)
 
 [![Telegram](https://img.shields.io/badge/Telegram-@stuffyNLP-2CA5E0?logo=telegram&logoColor=white)](https://t.me/stuffyNLP)
-[![Channel](https://img.shields.io/badge/t.me%2FstuffyNLP-канал-2CA5E0)](https://t.me/stuffyNLP)
 
 > Про современный NLP и LLM без рекламы и без “магии”: только то, что происходит под капотом моделей.
 
