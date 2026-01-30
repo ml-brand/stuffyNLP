@@ -47,7 +47,7 @@ The most common failure mode for automated edits is **accidentally regenerating 
 ### Automation
 
 - `.github/workflows/sync.yml` — scheduled sync (fetch → detect changes → build static → commit)
-- `.github/workflows/quality.yml` — Ruff + MyPy + Pytest (Python 3.12)
+- `.github/workflows/quality.yml` — Ruff + MyPy (Python 3.12)
 
 ---
 
