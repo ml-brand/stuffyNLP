@@ -1,4 +1,6 @@
 # Душный NLP (@stuffyNLP)
+Работает на базе [tg-to-gh-pages](https://github.com/ml-brand/tg-to-gh-pages)
+
 [Читать](https://ml-brand.github.io/stuffyNLP/) web-версию Душного NLP
 
 [![Telegram](https://img.shields.io/badge/Telegram-@stuffyNLP-2CA5E0?logo=telegram&logoColor=white)](https://t.me/stuffyNLP)
