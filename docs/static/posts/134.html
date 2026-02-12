@@ -60,7 +60,7 @@
       </div>
       <div class="post-body"><strong>SRPO — альтернатива DPO</strong><br><br>Сегодняшняя <a href="https://arxiv.org/abs/2406.01660" rel="nofollow noopener noreferrer">статья</a> о Self-Improving Robust Preference Optimization (SRPO). Это алгоритм оффлайн-RLHF, подобный DPO, но более подходящий для off-policy датасета ранжирования. Кроме того, SRPO лучше переносится на OOD-задачи. <br><br>Основная идея метода заключается в состязательном обучении двух политик: генерирующей и улучшающей. Задача улучшающей политики — на основании запроса и имеющегося ответа создать улучшенную версию этого ответа; задача генерирующей — научиться создавать ответы, которые нельзя значительно улучшить. <br><br>Обе политики обучаются на парах предпочтений, полученных от людей. Решение состязательной задачи сводится к минимизации линейной комбинации из двух сонаправленных функций потерь. В работе показано, что оптимальное решение этой задачи не зависит от политики, из которой был собран датасет предпочтений. Благодаря этому SRPO оказывается более устойчивым к изменению в распределении данных.<br><br>Метод можно реализовать с помощью одной LLM, которая выступает и в качестве генератора, и в качестве «улучшатора». Обученную модель можно применять итеративно, каждый раз корректируя ответ, полученный на предыдущем шаге, чего не предполагают методы вроде DPO или IPO.<br><br>Даже без итераций, SRPO выигрывает у DPO и IPO: на сложных Arena-Hard-промптах метод показывает 56% win-rate. На задаче суммаризации Reddit TL;DR SRPO на 4-й итерации SRPO достигает максимального качества. <br><br><em>Разбор подготовил </em><em><tg-emoji emoji-id="5224192932302565805">❣</tg-emoji></em><em> Алексей Зотов</em><br><br><a href="https://t.me/+PKgx81sjtfA2Y2E6" rel="nofollow noopener noreferrer">Душный NLP</a><div class="media"><img class="media-img" loading="lazy" src="../../assets/media/thumbs/134_480.webp" srcset="../../assets/media/thumbs/134_480.webp 480w, ../../assets/media/134.jpg 1200w" sizes="(max-width: 768px) 100vw, 800px" alt="" data-post-id="134" data-image-index="0" /></div></div>
       <div class="actions">
-        <span>3 301 просмотров · 26 реакций</span>
+        <span>3 302 просмотров · 26 реакций</span>
         <span class="action-links"><a href="https://t.me/stuffyNLP/134" target="_blank" rel="noopener">Открыть в Telegram</a> · <a href="../page-2.html">К списку постов</a> · <a href="./134.html">Ссылка на этот пост</a></span>
       </div>
     </article>
@@ -87,7 +87,7 @@
 
   <script>
     window.__STATIC_POSTS = [{"id": 134, "media": [{"kind": "photo", "path": "../../assets/media/134.jpg", "thumb": "../../assets/media/thumbs/134_480.webp", "size": 100023, "mime": "image/jpeg", "name": null}]}];
-    window.__STATIC_META = {"title": "Душный NLP", "username": "stuffyNLP", "channel": "stuffyNLP", "last_sync_utc": "2026-02-12T11:28:26Z", "posts_count": 114, "last_seen_message_id": 226, "stats": {"new": 106, "updated": 37, "media_downloaded": 106}, "avatar": "assets/channel_avatar.jpg", "meta_schema_version": "1.0.0", "posts_schema_version": "1.0.0"};
+    window.__STATIC_META = {"title": "Душный NLP", "username": "stuffyNLP", "channel": "stuffyNLP", "last_sync_utc": "2026-02-12T12:29:35Z", "posts_count": 114, "last_seen_message_id": 226, "stats": {"new": 105, "updated": 28, "media_downloaded": 105}, "avatar": "assets/channel_avatar.jpg", "meta_schema_version": "1.0.0", "posts_schema_version": "1.0.0"};
   </script>
   <script src="../../common.js"></script>
   <script src="../../static.js"></script>
