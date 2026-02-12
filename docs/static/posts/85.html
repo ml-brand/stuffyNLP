@@ -60,7 +60,7 @@
       </div>
       <div class="post-body"><strong>SpinQuant: LLM quantization with learned rotations. Часть 1/2</strong><br><br>Решение из <a href="https://arxiv.org/abs/2405.16406" rel="nofollow noopener noreferrer">сегодняшней статьи</a> от Meta* — конкурент другой разработки по квантизации в низкую битность, <a href="https://arxiv.org/abs/2404.00456" rel="nofollow noopener noreferrer">QuaRot.</a> Но в SpinQuant, кроме весов и активаций, квантуется ещё и KV-кэш. Иными словами, это SOTA-результат w4a4kv4-квантизации, который показывает очень хороший перфоманс даже на «макбуках». <br><br>Главная идея — победить проблемы выбросов (поканальных отклонений в активациях attention), добавив матрицы поворота до и после каждого линейного слоя модели. После этого квантизация проводится как обычно, но без потери качества — спасибо обучаемым, а не случайным, как в QuaRot, матрицам вращения (розовые R₁ на рисунке).<br><br>Но ничего не бывает бесплатно: умножение — отдельная операция, которая требует дополнительных ресурсов. Чтобы сэкономить в момент инференса, матрицы вращения R₁ вмёрживаются в матрицы весов W умножением. Но так получается сделать не для всех вращений: например, матрицы R₃ и R₄ вставляют в слой отдельной операцией и, как в статье QuaRot, — используют случайные матрицы Адамара. <br><br><em>*Компания Meta признана экстремистской организацией в России. </em><br><br><em>Разбор подготовил </em><em><tg-emoji emoji-id="5224192932302565805">❣</tg-emoji></em><em> Роман Горб</em> <br><br><a href="https://t.me/+rGYdUleMERVkZTUy" rel="nofollow noopener noreferrer">Душный NLP</a><div class="media"><img class="media-img" loading="lazy" src="../../assets/media/thumbs/85_480.webp" srcset="../../assets/media/thumbs/85_480.webp 480w, ../../assets/media/85.jpg 1200w" sizes="(max-width: 768px) 100vw, 800px" alt="" data-post-id="85" data-image-index="0" /></div></div>
       <div class="actions">
-        <span>4 539 просмотров · 35 реакций</span>
+        <span>4 540 просмотров · 35 реакций</span>
         <span class="action-links"><a href="https://t.me/stuffyNLP/85" target="_blank" rel="noopener">Открыть в Telegram</a> · <a href="../page-3.html">К списку постов</a> · <a href="./85.html">Ссылка на этот пост</a></span>
       </div>
     </article>
@@ -87,7 +87,7 @@
 
   <script>
     window.__STATIC_POSTS = [{"id": 85, "media": [{"kind": "photo", "path": "../../assets/media/85.jpg", "thumb": "../../assets/media/thumbs/85_480.webp", "size": 144180, "mime": "image/jpeg", "name": null}]}];
-    window.__STATIC_META = {"title": "Душный NLP", "username": "stuffyNLP", "channel": "stuffyNLP", "last_sync_utc": "2026-02-12T10:29:37Z", "posts_count": 113, "last_seen_message_id": 225, "stats": {"new": 105, "updated": 4, "media_downloaded": 105}, "avatar": "assets/channel_avatar.jpg", "meta_schema_version": "1.0.0", "posts_schema_version": "1.0.0"};
+    window.__STATIC_META = {"title": "Душный NLP", "username": "stuffyNLP", "channel": "stuffyNLP", "last_sync_utc": "2026-02-12T11:28:26Z", "posts_count": 114, "last_seen_message_id": 226, "stats": {"new": 106, "updated": 37, "media_downloaded": 106}, "avatar": "assets/channel_avatar.jpg", "meta_schema_version": "1.0.0", "posts_schema_version": "1.0.0"};
   </script>
   <script src="../../common.js"></script>
   <script src="../../static.js"></script>
