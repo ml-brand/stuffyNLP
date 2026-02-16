@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Душный NLP — пост #227</title>
+  <meta name="description" content=" Как заставить агентов делать работу над ошибками   Сегодня разбираем  статью  об обучении агентов. Проблема такая: реворд-модели оценивают только результат в конце траектории, а если агент сделал оши" />
+  <link rel="icon" href="../../favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32.png" />
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png" />
+
+  <link rel="canonical" href="https://ml-brand.github.io/stuffyNLP/static/posts/227.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Душный NLP — пост #227" />
+  <meta property="og:description" content=" Как заставить агентов делать работу над ошибками   Сегодня разбираем  статью  об обучении агентов. Проблема такая: реворд-модели оценивают только результат в конце траектории, а если агент сделал оши" />
+  <meta property="og:image" content="https://ml-brand.github.io/stuffyNLP/assets/media/thumbs/227_480.webp" />
+  <meta property="og:image:alt" content="Душный NLP" />
+  <meta property="article:published_time" content="2026-02-16T13:40:56+00:00" />
+  <meta property="article:author" content="Душный NLP" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://ml-brand.github.io/stuffyNLP/assets/media/thumbs/227_480.webp" />
+  <link rel="stylesheet" href="../../style.css" />
+  <script src="../../metrika.js"></script>
+</head>
+<body data-index-href="../index.html">
+  <header class="header">
+    <div class="container">
+      <div class="title-grid single-title">
+        <a class="grid-avatar" href="#" target="_blank" rel="noopener">
+          <img id="channelAvatar" class="channel-avatar" src="../../assets/channel_avatar.jpg" alt="Аватар канала"  />
+        </a>
+        <div class="grid-main">
+          <div class="title-head">
+            <a class="back-link" href="../index.html">← Ко всем постам</a>
+            <a class="badge-chip" id="siteTitleWrap" href="#" target="_blank" rel="noopener"><h1 id="siteTitle">Душный NLP</h1></a>
+            <div class="hero-actions">
+              <a id="subscribeBtn" class="subscribe-btn" href="https://t.me/+1Z41UptsLwszZDE6" target="_blank" rel="noopener" >Подписаться</a>
+              <a class="icon-btn" href="../../post.html?id=227" aria-label="Открыть динамическую страницу поста">↺</a>
+              <button id="themeToggle" class="icon-btn" type="button" aria-label="Переключить тему"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  
+  <div id="promoBanner" class="promo-banner" hidden>
+    <div class="container promo-inner">
+      <span class="promo-text"><a href="https://t.me/addlist/5NH3RoVejEI1MGEy">Подпишись на все наши ML каналы. Они классные, отвечаем!</a></span>
+      <button id="promoClose" class="promo-close" type="button" aria-label="Скрыть плашку">×</button>
+    </div>
+  </div>
+  
+
+  <main class="container single-page">
+    <article id="postContainer" class="post post-page" data-post-id="227">
+      <div class="post-header">
+        <div class="right"><span class="post-date" data-iso-date="2026-02-16T13:40:56+00:00">2026-02-16 13:40 UTC</span></div>
+      </div>
+      <div class="post-body"><strong>Как заставить агентов делать работу над ошибками</strong><br><br>Сегодня разбираем <a href="https://arxiv.org/abs/2501.11425" rel="nofollow noopener noreferrer">статью</a> об обучении агентов. Проблема такая: реворд-модели оценивают только результат в конце траектории, а если агент сделал ошибку и исправил её, нельзя сказать, когда это произошло. Если бы у нас была такая возможность, то мы могли бы раньше направить обучаемую LLM по нужному пути. Есть способы фиксировать ошибки и делать реворд по шагам, но это дорого и сложно в реализации.<br><br>Авторы предлагают метод Agent-R, суть которого заключается в обучении агентов не на правильных траекториях, а на тех, где есть явная ошибка и её исправление. Такие траектории получаются через Monte Carlo Tree Search. Берутся пары из одной стартовой точки (инструкции): одна траектория успешная, а другая — нет. На инференсе момент расхождения должна определить сама модель, а при обучении к началу провальной траектории добавляется фраза-рефлексия, которую генерирует агент, понимая, что он ошибся (CoT). Следом «приклеивается» хвост удачной траектории и на всём этом делают SFT. Такой подход, соединеняющий рефлексии и «хороший» хвост, снижает риск склейки не связанных траекторий. <br><br>В статье выводят следующие типы траекторий:<br><br><strong>Initial Trajectory</strong> — общий начальный префикс.<br><strong>Bad Trajectory</strong> — субоптимальные действия c низкой наградой.<br><strong>﻿﻿Good Trajectory</strong> — оптимальные действия с высокой наградой.<br><strong>Revision Trajectory</strong> — траектория, в которой агент совершил ошибку и исправил её. <br><br>Для получения Revision Trajectory можно брать плохие траектории, дожидаться их финала и переписывать. Однако так не получится обучить агента ловить ошибки на лету. Вместо этого авторы заставляют модель самостоятельно анализировать траектории и пытаться определить первый шаг, где совершена ошибка. На этом месте траектория обрезается, вставляется этап рефлексии и следом — правильная траектория. <br><br>Monte Carlo Tree Search позволяет собрать много разных траекторий с одним началом. Это удобно, так как можно сравнивать хорошие и плохие продолжения. Финальный реворд используется не для обучения напрямую, а для классификации траекторий по качеству — то есть, по сути, чтобы понять, что пойдёт в SFT-датасет. У реворда есть два порога: один отделяет плохие траектории от хороших, а другой выбирает уже из хороших лучшие. <br><br>Авторы отмечают, что обучаться только на Revision Trajectory нельзя — это мешает агенту определять правильные траектории. Поэтому изначально в датасет добавляют много ﻿﻿Good Trajectory и постепенно в процессе SFT повышают порог реворда оптимальных решений, чтобы в конце оставались только лучшие из них. Кроме того, в датасет подмешивают обычные языковые данные, что помогает агенту не забывать, чему он обучался ранее. <br><br>Эксперименты проводили на Llama-3.1-8B, которую обучили на собранных Revision Trajectory. Результаты можно посмотреть в таблице, приложенной к посту. Авторы заявляют, что исправленные траектории оказываются даже лучше идеальных. <br><br><em>Разбор подготовила </em><tg-emoji emoji-id="5224192932302565805">❣</tg-emoji> <em>Карина Романова</em><br><br><strong>Подписывайтесь на канал Карины </strong><a href="https://t.me/nadlskom" rel="nofollow noopener noreferrer"><strong>«что-то на DL-ском»</strong></a><strong> — там познавательно и можно ставить реакт кота в парике. </strong><br><br><a href="https://t.me/+RJOXcbwLdG80YmUy" rel="nofollow noopener noreferrer">Душный NLP</a><div class="media"><img class="media-img" loading="lazy" src="../../assets/media/thumbs/227_480.webp" srcset="../../assets/media/thumbs/227_480.webp 480w, ../../assets/media/227.jpg 1200w" sizes="(max-width: 768px) 100vw, 800px" alt="" data-post-id="227" data-image-index="0" /><img class="media-img" loading="lazy" src="../../assets/media/thumbs/228_480.webp" srcset="../../assets/media/thumbs/228_480.webp 480w, ../../assets/media/228.jpg 1200w" sizes="(max-width: 768px) 100vw, 800px" alt="" data-post-id="227" data-image-index="1" /></div></div>
+      <div class="actions">
+        <span>402 просмотров · 8 реакций</span>
+        <span class="action-links"><a href="https://t.me/stuffyNLP/227" target="_blank" rel="noopener">Открыть в Telegram</a> · <a href="../index.html">К списку постов</a> · <a href="./227.html">Ссылка на этот пост</a></span>
+      </div>
+    </article>
+
+    <div class="pager single-nav">
+      <a id="prevPost" class="nav-link disabled" href="#" style="visibility:hidden">← Более новый</a>
+      <a id="nextPost" class="nav-link" href="./226.html" style="visibility:visible">Более старый →</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <span>based on <a href="https://github.com/ml-brand/tg-to-gh-pages" target="_blank" rel="noopener">tg-to-gh-pages</a> (created by <a href="https://github.com/ml-brand" target="_blank" rel="noopener">ML Brand</a>)</span>
+        <a id="repoLink" href="https://github.com/ml-brand/tg-to-gh-pages" target="_blank" rel="noopener">Do the same with your channel.</a>
+        <span class="footer-links">
+          static copy ·
+          <a href="../../feed.xml" target="_blank" rel="noopener">RSS</a> ·
+          <a href="../../atom.xml" target="_blank" rel="noopener">Atom</a>
+        </span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    window.__STATIC_POSTS = [{"id": 227, "media": [{"kind": "photo", "path": "../../assets/media/227.jpg", "thumb": "../../assets/media/thumbs/227_480.webp", "size": 126413, "mime": "image/jpeg", "name": null}, {"kind": "photo", "path": "../../assets/media/228.jpg", "thumb": "../../assets/media/thumbs/228_480.webp", "size": 148679, "mime": "image/jpeg", "name": null}]}];
+    window.__STATIC_META = {"title": "Душный NLP", "username": "stuffyNLP", "channel": "stuffyNLP", "last_sync_utc": "2026-02-16T13:54:16Z", "posts_count": 115, "last_seen_message_id": 228, "stats": {"new": 107, "updated": 32, "media_downloaded": 107}, "avatar": "assets/channel_avatar.jpg", "meta_schema_version": "1.0.0", "posts_schema_version": "1.0.0"};
+  </script>
+  <script src="../../common.js"></script>
+  <script src="../../static.js"></script>
+</body>
+</html>
