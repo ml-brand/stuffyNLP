@@ -60,7 +60,7 @@
       </div>
       <div class="post-body"><strong>Large Language Diffusion Models. Часть 1/2</strong><br><br>Сегодня разберём <a href="https://arxiv.org/abs/2502.09992" rel="nofollow noopener noreferrer">статью</a> о новой диффузионной модели от китайских коллег. Модель относится к классу так называемых дискретных диффузий и очень похожа на BERT в режиме Masked Language Modelling. <br><br>Авторы называют свою разработку LLaDA. На графике — диаграмма сравнения новой модели (<em>красная кривая</em>) с LLaMA 3 8B (<em>фиолетовая кривая</em>) и LLaMA 2 7B (<em>синяя кривая</em>). К скейлу осей есть вопросы: <br><br>∙ там, где LLaDA показывает лучшие результаты — разница выглядит значительной;<br>∙ там, где LLaDA хуже, — различия выглядят несущественными. <br><br>Возможно, на площади под кривыми смотреть бессмысленно и график не очень репрезентативный. Но с долей критики по нему вполне можно ориентироваться в сильных и слабых сторонах новой модели.<br><br>В языковом моделировании уже давно правит бал классическая авторегрессия, где каждый последующий токен моделируется вероятностным распределением и обусловлен на контекст. Но такой подход не лишён недостатков: если первый токен, который породила модель, оказался не самым удачным, исправить ошибку уже не получится — модель продолжит генерировать следующие токены, оглядываясь на первый, и испортит весь ответ. <br><br>Бороться с этой проблемой можно, например, с помощью chain-of-thoughts. Но существует и ортогональное решение — использовать диффузионный подход с некаузальной маской аттеншна.<br><br>Как? Читайте в следующей части разбора. <br><br>Разбор подготовил <tg-emoji emoji-id="5224192932302565805">❣</tg-emoji> Cydoroga<br><br><a href="https://t.me/+rGYdUleMERVkZTUy" rel="nofollow noopener noreferrer">Душный NLP</a><div class="media"><img class="media-img" loading="lazy" src="../../assets/media/thumbs/96_480.webp" srcset="../../assets/media/thumbs/96_480.webp 480w, ../../assets/media/96.jpg 1200w" sizes="(max-width: 768px) 100vw, 800px" alt="" data-post-id="96" data-image-index="0" /></div></div>
       <div class="actions">
-        <span>4 337 просмотров · 47 реакций</span>
+        <span>4 338 просмотров · 47 реакций</span>
         <span class="action-links"><a href="https://t.me/stuffyNLP/96" target="_blank" rel="noopener">Открыть в Telegram</a> · <a href="../page-2.html">К списку постов</a> · <a href="./96.html">Ссылка на этот пост</a></span>
       </div>
     </article>
@@ -87,7 +87,7 @@
 
   <script>
     window.__STATIC_POSTS = [{"id": 96, "media": [{"kind": "photo", "path": "../../assets/media/96.jpg", "thumb": "../../assets/media/thumbs/96_480.webp", "size": 95788, "mime": "image/jpeg", "name": null}]}];
-    window.__STATIC_META = {"title": "Душный NLP", "username": "stuffyNLP", "channel": "stuffyNLP", "last_sync_utc": "2026-02-18T08:28:17Z", "posts_count": 115, "last_seen_message_id": 228, "stats": {"new": 106, "updated": 4, "media_downloaded": 106}, "avatar": "assets/channel_avatar.jpg", "meta_schema_version": "1.0.0", "posts_schema_version": "1.0.0"};
+    window.__STATIC_META = {"title": "Душный NLP", "username": "stuffyNLP", "channel": "stuffyNLP", "last_sync_utc": "2026-02-18T09:31:38Z", "posts_count": 115, "last_seen_message_id": 228, "stats": {"new": 106, "updated": 10, "media_downloaded": 106}, "avatar": "assets/channel_avatar.jpg", "meta_schema_version": "1.0.0", "posts_schema_version": "1.0.0"};
   </script>
   <script src="../../common.js"></script>
   <script src="../../static.js"></script>
