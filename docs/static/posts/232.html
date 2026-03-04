@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Душный NLP — пост #232</title>
+  <meta name="description" content=" Mercury — диффузионная модель для написания кода   Сегодня разберём  статью  о диффузионной модели Mercury. На Copilot Arena она занимала второе место по качеству и первое — по скорости.  Диффузионны" />
+  <link rel="icon" href="../../favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32.png" />
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png" />
+
+  <link rel="canonical" href="https://ml-brand.github.io/stuffyNLP/static/posts/232.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Душный NLP — пост #232" />
+  <meta property="og:description" content=" Mercury — диффузионная модель для написания кода   Сегодня разберём  статью  о диффузионной модели Mercury. На Copilot Arena она занимала второе место по качеству и первое — по скорости.  Диффузионны" />
+  <meta property="og:image" content="https://ml-brand.github.io/stuffyNLP/assets/media/thumbs/232_480.webp" />
+  <meta property="og:image:alt" content="Душный NLP" />
+  <meta property="article:published_time" content="2026-03-04T11:04:02+00:00" />
+  <meta property="article:author" content="Душный NLP" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://ml-brand.github.io/stuffyNLP/assets/media/thumbs/232_480.webp" />
+  <link rel="stylesheet" href="../../style.css" />
+  <script src="../../metrika.js"></script>
+</head>
+<body data-index-href="../index.html">
+  <header class="header">
+    <div class="container">
+      <div class="title-grid single-title">
+        <a class="grid-avatar" href="#" target="_blank" rel="noopener">
+          <img id="channelAvatar" class="channel-avatar" src="../../assets/channel_avatar.jpg" alt="Аватар канала"  />
+        </a>
+        <div class="grid-main">
+          <div class="title-head">
+            <a class="back-link" href="../index.html">← Ко всем постам</a>
+            <a class="badge-chip" id="siteTitleWrap" href="#" target="_blank" rel="noopener"><h1 id="siteTitle">Душный NLP</h1></a>
+            <div class="hero-actions">
+              <a id="subscribeBtn" class="subscribe-btn" href="https://t.me/+1Z41UptsLwszZDE6" target="_blank" rel="noopener" >Подписаться</a>
+              <a class="icon-btn" href="../../post.html?id=232" aria-label="Открыть динамическую страницу поста">↺</a>
+              <button id="themeToggle" class="icon-btn" type="button" aria-label="Переключить тему"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  
+  <div id="promoBanner" class="promo-banner" hidden>
+    <div class="container promo-inner">
+      <span class="promo-text"><a href="https://t.me/addlist/5NH3RoVejEI1MGEy">Подпишись на все наши ML каналы. Они классные, отвечаем!</a></span>
+      <button id="promoClose" class="promo-close" type="button" aria-label="Скрыть плашку">×</button>
+    </div>
+  </div>
+  
+
+  <main class="container single-page">
+    <article id="postContainer" class="post post-page" data-post-id="232">
+      <div class="post-header">
+        <div class="right"><span class="post-date" data-iso-date="2026-03-04T11:04:02+00:00">2026-03-04 11:04 UTC</span></div>
+      </div>
+      <div class="post-body"><strong>Mercury — диффузионная модель для написания кода</strong><br><br>Сегодня разберём <a href="https://arxiv.org/abs/2506.17298" rel="nofollow noopener noreferrer">статью</a> о диффузионной модели Mercury. На Copilot Arena она занимала второе место по качеству и первое — по скорости.<br><br>Диффузионные модели уже зарекомендовали себя в сфере генерации изображений. Авторы сегодняшней работы, в свою очередь, предлагают модель, ориентированную на решение задач программирования. Это объяснимо: диффузионные модели не очень хорошо подходят для генерации свободных коротких текстов, а код структурирован, в нём как правило много токенов.<br><br>Существует две версии Mercury Coder — Mini и Small. Подробности о них в публикации не раскрываются: мы не знаем их параметры и размеры. Заявлено, что Mini способна обрабатывать более 1100 токенов в секунду, а Small — 700. На претрейне использовали датасет объёмом в триллионы токенов, состоящий из интернет-данных, а также реальных и синтетических данных из проприетарных источников. <br><br>Что касается архитектуры, то, по сути — это трасформер, но с иным подходом к генерации. Модель стартует с зашумлённой версии ответа и на каждом шаге параллельно поправляет много позиций, постепенно «денойзя» последовательность. Длинны контекста модели — 32 тысячи токенов с расширением до 128 тысяч.<br><br>В большинстве бенчмарков Mercury Coder показывает себя лучше опенсорсных моделей, но уступает самым крупным и известным конкурентам вроде DeepSeek, GPT и Claude (<em>таблица 1</em>). То же самое касается и знания разных языков программирования — Mercury лучше опенсорсных решений, но хуже закрытых (<em>таблица 2</em>). При этом в плане скорости и при оценке fill-in-the-middle Mercury обходит даже именитых соперников (<em>таблица 3)</em>. <br><br><em>Разбор подготовил </em><em><tg-emoji emoji-id="5224192932302565805">❣</tg-emoji></em><em> Павел Темирчев</em><br><br><a href="https://t.me/+WN9QJcHKaspkNWIy" rel="nofollow noopener noreferrer">Душный NLP</a><div class="media"><img class="media-img" loading="lazy" src="../../assets/media/thumbs/232_480.webp" srcset="../../assets/media/thumbs/232_480.webp 480w, ../../assets/media/232.jpg 1200w" sizes="(max-width: 768px) 100vw, 800px" alt="" data-post-id="232" data-image-index="0" /><img class="media-img" loading="lazy" src="../../assets/media/thumbs/233_480.webp" srcset="../../assets/media/thumbs/233_480.webp 480w, ../../assets/media/233.jpg 1200w" sizes="(max-width: 768px) 100vw, 800px" alt="" data-post-id="232" data-image-index="1" /><img class="media-img" loading="lazy" src="../../assets/media/thumbs/234_480.webp" srcset="../../assets/media/thumbs/234_480.webp 480w, ../../assets/media/234.jpg 1200w" sizes="(max-width: 768px) 100vw, 800px" alt="" data-post-id="232" data-image-index="2" /></div></div>
+      <div class="actions">
+        <span>413 просмотров · 11 реакций</span>
+        <span class="action-links"><a href="https://t.me/stuffyNLP/232" target="_blank" rel="noopener">Открыть в Telegram</a> · <a href="../index.html">К списку постов</a> · <a href="./232.html">Ссылка на этот пост</a></span>
+      </div>
+    </article>
+
+    <div class="pager single-nav">
+      <a id="prevPost" class="nav-link disabled" href="#" style="visibility:hidden">← Более новый</a>
+      <a id="nextPost" class="nav-link" href="./229.html" style="visibility:visible">Более старый →</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <span>based on <a href="https://github.com/ml-brand/tg-to-gh-pages" target="_blank" rel="noopener">tg-to-gh-pages</a> (created by <a href="https://github.com/ml-brand" target="_blank" rel="noopener">ML Brand</a>)</span>
+        <a id="repoLink" href="https://github.com/ml-brand/tg-to-gh-pages" target="_blank" rel="noopener">Do the same with your channel.</a>
+        <span class="footer-links">
+          static copy ·
+          <a href="../../feed.xml" target="_blank" rel="noopener">RSS</a> ·
+          <a href="../../atom.xml" target="_blank" rel="noopener">Atom</a>
+        </span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    window.__STATIC_POSTS = [{"id": 232, "media": [{"kind": "photo", "path": "../../assets/media/232.jpg", "thumb": "../../assets/media/thumbs/232_480.webp", "size": 159839, "mime": "image/jpeg", "name": null}, {"kind": "photo", "path": "../../assets/media/233.jpg", "thumb": "../../assets/media/thumbs/233_480.webp", "size": 118320, "mime": "image/jpeg", "name": null}, {"kind": "photo", "path": "../../assets/media/234.jpg", "thumb": "../../assets/media/thumbs/234_480.webp", "size": 75378, "mime": "image/jpeg", "name": null}]}];
+    window.__STATIC_META = {"title": "Душный NLP", "username": "stuffyNLP", "channel": "stuffyNLP", "last_sync_utc": "2026-03-04T11:17:39Z", "posts_count": 117, "last_seen_message_id": 234, "stats": {"new": 111, "updated": 41, "media_downloaded": 111}, "avatar": "assets/channel_avatar.jpg", "meta_schema_version": "1.0.0", "posts_schema_version": "1.0.0"};
+  </script>
+  <script src="../../common.js"></script>
+  <script src="../../static.js"></script>
+</body>
+</html>
