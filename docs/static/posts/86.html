@@ -60,7 +60,7 @@
       </div>
       <div class="post-body"><strong>SpinQuant: LLM quantization with learned rotations. Часть 2/2</strong><br><br><a href="https://t.me/stuffyNLP/85" rel="nofollow noopener noreferrer">Продолжаем</a> рассказывать о <a href="https://arxiv.org/abs/2405.16406" rel="nofollow noopener noreferrer">SpinQuant</a> — SOTA-результате w4a4kv4-квантизации, который показывает очень хороший перфоманс даже на «макбуках».<br><br>Убедиться в том, что вращение работает, авторы предлагают двумя способами: <br><br><strong>— Визуально. </strong>Попарное сравнение тензоров до и после вращения — верхний ряд иллюстраций. <br><br><strong>— Статистически. </strong>В качестве метрики количества выбросов авторы выбрали эксцесс (или 𝛋), который оценивают по моментным статистикам распределений — нижний ряд иллюстраций. После вращения метрика становится стабильнее по всем слоям, а её величина уменьшается. <br><br>По словам авторов, метод не отстаёт в производительности от других современных решений и уже внедрён разработчиками. E2E-измерение скорости модели LLaMA-3 8B с конфигурациями W16A16 и W4A8 на процессоре MacBook M1 Pro показало, что 4-битное квантование дает примерно трёхкратный прирост скорости по сравнению с 16-битной моделью. <br><br>Похожего ускорения можно (и нужно) добиться и на GPU, но есть важный нюанс: видеокарта должна поддерживать быстрое вычисление 4-битного GeMM на тензорных ядрах. Однако NVIDIA не предоставляет такую функциональность на архитектуре Hopper, хотя на всех остальных архитектурах она есть.<br><br><em>Разбор подготовил </em><em><tg-emoji emoji-id="5224192932302565805">❣</tg-emoji></em><em> Роман Горб </em><br><br><a href="https://t.me/+ZGV6YF8jPlBlYjQy" rel="nofollow noopener noreferrer">Душный NLP</a><div class="media"><img class="media-img" loading="lazy" src="../../assets/media/thumbs/86_480.webp" srcset="../../assets/media/thumbs/86_480.webp 480w, ../../assets/media/86.jpg 1200w" sizes="(max-width: 768px) 100vw, 800px" alt="" data-post-id="86" data-image-index="0" /></div></div>
       <div class="actions">
-        <span>4 558 просмотров · 23 реакций</span>
+        <span>4 559 просмотров · 23 реакций</span>
         <span class="action-links"><a href="https://t.me/stuffyNLP/86" target="_blank" rel="noopener">Открыть в Telegram</a> · <a href="../page-3.html">К списку постов</a> · <a href="./86.html">Ссылка на этот пост</a></span>
       </div>
     </article>
@@ -87,7 +87,7 @@
 
   <script>
     window.__STATIC_POSTS = [{"id": 86, "media": [{"kind": "photo", "path": "../../assets/media/86.jpg", "thumb": "../../assets/media/thumbs/86_480.webp", "size": 158695, "mime": "image/jpeg", "name": null}]}];
-    window.__STATIC_META = {"title": "Душный NLP", "username": "stuffyNLP", "channel": "stuffyNLP", "last_sync_utc": "2026-03-08T14:58:39Z", "posts_count": 117, "last_seen_message_id": 234, "stats": {"new": 110, "updated": 5, "media_downloaded": 110}, "avatar": "assets/channel_avatar.jpg", "meta_schema_version": "1.0.0", "posts_schema_version": "1.0.0"};
+    window.__STATIC_META = {"title": "Душный NLP", "username": "stuffyNLP", "channel": "stuffyNLP", "last_sync_utc": "2026-03-08T15:57:21Z", "posts_count": 117, "last_seen_message_id": 234, "stats": {"new": 110, "updated": 27, "media_downloaded": 110}, "avatar": "assets/channel_avatar.jpg", "meta_schema_version": "1.0.0", "posts_schema_version": "1.0.0"};
   </script>
   <script src="../../common.js"></script>
   <script src="../../static.js"></script>
