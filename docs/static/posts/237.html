@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Душный NLP — пост #237</title>
+  <meta name="description" content=" Bridging the Gap Between Promise and Performance for Microscaling FP4 Quantization   Новые 4-битные форматы с плавающей точкой для хранения весов и активаций, которые на уровне железа поддерживают гр" />
+  <link rel="icon" href="../../favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32.png" />
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png" />
+
+  <link rel="canonical" href="https://ml-brand.github.io/stuffyNLP/static/posts/237.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Душный NLP — пост #237" />
+  <meta property="og:description" content=" Bridging the Gap Between Promise and Performance for Microscaling FP4 Quantization   Новые 4-битные форматы с плавающей точкой для хранения весов и активаций, которые на уровне железа поддерживают гр" />
+  
+  <meta property="article:published_time" content="2026-03-26T10:49:15+00:00" />
+  <meta property="article:author" content="Душный NLP" />
+  <meta name="twitter:card" content="summary" />
+  
+  <link rel="stylesheet" href="../../style.css" />
+  <script src="../../metrika.js"></script>
+</head>
+<body data-index-href="../index.html">
+  <header class="header">
+    <div class="container">
+      <div class="title-grid single-title">
+        <a class="grid-avatar" href="#" target="_blank" rel="noopener">
+          <img id="channelAvatar" class="channel-avatar" src="../../assets/channel_avatar.jpg" alt="Аватар канала"  />
+        </a>
+        <div class="grid-main">
+          <div class="title-head">
+            <a class="back-link" href="../index.html">← Ко всем постам</a>
+            <a class="badge-chip" id="siteTitleWrap" href="#" target="_blank" rel="noopener"><h1 id="siteTitle">Душный NLP</h1></a>
+            <div class="hero-actions">
+              <a id="subscribeBtn" class="subscribe-btn" href="https://t.me/+1Z41UptsLwszZDE6" target="_blank" rel="noopener" >Подписаться</a>
+              <a class="icon-btn" href="../../post.html?id=237" aria-label="Открыть динамическую страницу поста">↺</a>
+              <button id="themeToggle" class="icon-btn" type="button" aria-label="Переключить тему"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  
+  <div id="promoBanner" class="promo-banner" hidden>
+    <div class="container promo-inner">
+      <span class="promo-text"><a href="https://t.me/addlist/5NH3RoVejEI1MGEy">Подпишись на все наши ML каналы. Они классные, отвечаем!</a></span>
+      <button id="promoClose" class="promo-close" type="button" aria-label="Скрыть плашку">×</button>
+    </div>
+  </div>
+  
+
+  <main class="container single-page">
+    <article id="postContainer" class="post post-page" data-post-id="237">
+      <div class="post-header">
+        <div class="right"><span class="post-date" data-iso-date="2026-03-26T10:49:15+00:00">2026-03-26 10:49 UTC</span></div>
+      </div>
+      <div class="post-body"><strong>Bridging the Gap Between Promise and Performance for Microscaling FP4 Quantization</strong><br><br>Новые 4-битные форматы с плавающей точкой для хранения весов и активаций, которые на уровне железа поддерживают графические процессоры NVIDIA и AMD, обещают заметное ускорение времени инференса LLM без существенной просадки качества.<br><br>Сегодня разберём первое всестороннее исследование FP4-квантизации — <a href="https://arxiv.org/abs/2509.23202" rel="nofollow noopener noreferrer">работу</a>, которую инженеры Yandex Research выполнили совместно с коллегами из Institute of Science and Technology Austria, Red Hat AI и ETH Zürich.<br><br><em>Квантизация — это способ сократить объём памяти, необходимый для хранения массива данных. Например, выбором весов активации из ограниченной сетки значений. </em><br><br>Выбор сетки зависит от того, насколько равномерно распределены ваши данные. Например, у integer сетка между всеми значениями равномерная, а у floating point — более густая около нуля, но чем дальше от него, тем разреженнее. То есть, в теории для равномерного распределения отлично подойдёт integer, а для распределения Стьюдента и других распределений с тяжёлыми хвостами лучше выбрать квантование с плавающей запятой. <br><br>На практике анализ показал, что современные методы чаще всего не справляются с FP4 по двум причинам: <br><br>— Малый размер групп одновременно квантизуемых весов в формате NVFP4, видимо, делает неэффективными традиционные методы уменьшения выбросов.<br><br>— Квантизация скейлов (мультипликативных факторов) MXFP4 к степеням двойки сильно снижает точность представления весов и активаций.<br><br>В работе предлагается улучшенная версия алгоритма квантования GPTQ — MR-GPTQ, адаптированную для форматов FP4: <br><br>1. <strong>Определяем сетку квантования</strong>, эффективную для MSE: попеременно оптимизируем сетку в масштабах каждого блока и тензора. Это позволило добиться значительных улучшений для NVFP4 без вращений. А для MXFP4 с Адамаровыми вращениями некий фиксированный масштаб сетки универсален для всех моделей.<br><br>2. <strong>Изменяем порядок квантизации весов</strong>. Алгоритм GPTQ перед квантизацией переупорядочивает колонки квантизуемого тензора в соответствии с величиной диагонали матрицы Гессе (колонки соответствующие большим диагональным элементами идут первыми). Перестановка повышает точность, но во время инференса приходится ещё раз переупорядочивать каналы в тензоре активаций, что приводит к замедлению на 10-20%.<br><br>Вместо этого предлагаем определять порядок колонок статически, предпосчитывая статистики групп заранее. Так удаётся достичь почти того же качества, что и при динамической перестановке, но без замедления<br><br>3. Вращаем активации во время инференса с помощью блочно-диагональных Адамаровых поворотов. Они, с одной стороны, позволяют уменьшить ошибку кватнизации, с другой — не замедляют время прямого прогона нейронной сети.<br><br>Эти три модификации помогают учесть особенности форматов FP4 и значительно повышают точность квантования по сравнению с предыдущими подходами.<br><br><em>Разбор подготовил </em><em><tg-emoji emoji-id="5224192932302565805">❣</tg-emoji></em><em> Денис Кузнеделев</em><br><br><a href="https://t.me/+A3P9VvxD16VhY2M6" rel="nofollow noopener noreferrer">Душный NLP</a></div>
+      <div class="actions">
+        <span>519 просмотров · 13 реакций</span>
+        <span class="action-links"><a href="https://t.me/stuffyNLP/237" target="_blank" rel="noopener">Открыть в Telegram</a> · <a href="../index.html">К списку постов</a> · <a href="./237.html">Ссылка на этот пост</a></span>
+      </div>
+    </article>
+
+    <div class="pager single-nav">
+      <a id="prevPost" class="nav-link disabled" href="#" style="visibility:hidden">← Более новый</a>
+      <a id="nextPost" class="nav-link" href="./235.html" style="visibility:visible">Более старый →</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <span>based on <a href="https://github.com/ml-brand/tg-to-gh-pages" target="_blank" rel="noopener">tg-to-gh-pages</a> (created by <a href="https://github.com/ml-brand" target="_blank" rel="noopener">ML Brand</a>)</span>
+        <a id="repoLink" href="https://github.com/ml-brand/tg-to-gh-pages" target="_blank" rel="noopener">Do the same with your channel.</a>
+        <span class="footer-links">
+          static copy ·
+          <a href="../../feed.xml" target="_blank" rel="noopener">RSS</a> ·
+          <a href="../../atom.xml" target="_blank" rel="noopener">Atom</a>
+        </span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    window.__STATIC_POSTS = [{"id": 237, "media": []}];
+    window.__STATIC_META = {"title": "Душный NLP", "username": "stuffyNLP", "channel": "stuffyNLP", "last_sync_utc": "2026-03-26T11:37:31Z", "posts_count": 119, "last_seen_message_id": 237, "stats": {"new": 112, "updated": 49, "media_downloaded": 111}, "avatar": "assets/channel_avatar.jpg", "meta_schema_version": "1.0.0", "posts_schema_version": "1.0.0"};
+  </script>
+  <script src="../../common.js"></script>
+  <script src="../../static.js"></script>
+</body>
+</html>
