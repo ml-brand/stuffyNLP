@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Душный NLP — пост #238</title>
+  <meta name="description" content=" Quartet II — обучение в NVFP4 с точными несмещёнными градиентами   В последние годы наблюдается тренд на снижение точности, в которой обучают модели. Если ещё недавно использовали преимущественно BF1" />
+  <link rel="icon" href="../../favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32.png" />
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png" />
+
+  <link rel="canonical" href="https://ml-brand.github.io/stuffyNLP/static/posts/238.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Душный NLP — пост #238" />
+  <meta property="og:description" content=" Quartet II — обучение в NVFP4 с точными несмещёнными градиентами   В последние годы наблюдается тренд на снижение точности, в которой обучают модели. Если ещё недавно использовали преимущественно BF1" />
+  <meta property="og:image" content="https://ml-brand.github.io/stuffyNLP/assets/media/thumbs/238_480.webp" />
+  <meta property="og:image:alt" content="Душный NLP" />
+  <meta property="article:published_time" content="2026-04-06T12:47:06+00:00" />
+  <meta property="article:author" content="Душный NLP" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://ml-brand.github.io/stuffyNLP/assets/media/thumbs/238_480.webp" />
+  <link rel="stylesheet" href="../../style.css" />
+  <script src="../../metrika.js"></script>
+</head>
+<body data-index-href="../index.html">
+  <header class="header">
+    <div class="container">
+      <div class="title-grid single-title">
+        <a class="grid-avatar" href="#" target="_blank" rel="noopener">
+          <img id="channelAvatar" class="channel-avatar" src="../../assets/channel_avatar.jpg" alt="Аватар канала"  />
+        </a>
+        <div class="grid-main">
+          <div class="title-head">
+            <a class="back-link" href="../index.html">← Ко всем постам</a>
+            <a class="badge-chip" id="siteTitleWrap" href="#" target="_blank" rel="noopener"><h1 id="siteTitle">Душный NLP</h1></a>
+            <div class="hero-actions">
+              <a id="subscribeBtn" class="subscribe-btn" href="https://t.me/+1Z41UptsLwszZDE6" target="_blank" rel="noopener" >Подписаться</a>
+              <a class="icon-btn" href="../../post.html?id=238" aria-label="Открыть динамическую страницу поста">↺</a>
+              <button id="themeToggle" class="icon-btn" type="button" aria-label="Переключить тему"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  
+  <div id="promoBanner" class="promo-banner" hidden>
+    <div class="container promo-inner">
+      <span class="promo-text"><a href="https://t.me/addlist/5NH3RoVejEI1MGEy">Подпишись на все наши ML каналы. Они классные, отвечаем!</a></span>
+      <button id="promoClose" class="promo-close" type="button" aria-label="Скрыть плашку">×</button>
+    </div>
+  </div>
+  
+
+  <main class="container single-page">
+    <article id="postContainer" class="post post-page" data-post-id="238">
+      <div class="post-header">
+        <div class="right"><span class="post-date" data-iso-date="2026-04-06T12:47:06+00:00">2026-04-06 12:47 UTC</span></div>
+      </div>
+      <div class="post-body"><strong>Quartet II — обучение в NVFP4 с точными несмещёнными градиентами</strong><br><br>В последние годы наблюдается тренд на снижение точности, в которой обучают модели. Если ещё недавно использовали преимущественно BF16, то в 2024-м, например в DeepSeek-V3 — уже FP8, а в 2025-м переходят и на FP4. Снижение точности, однако, требует применения трюков. Сегодня разберём <a href="https://arxiv.org/abs/2601.22813" rel="nofollow noopener noreferrer">статью</a>, в которой описывается новый метод обучения в NVFP4.<br><br>Прошлым летом мы придумали <a href="https://arxiv.org/abs/2505.14669" rel="nofollow noopener noreferrer">Quartet</a> — первый метод обучения в FP4. Он использовал формат данных MXFP4, который поддерживается на уровне железа в GPU, вроде NVIDIA Blackwell. Quartet использовал случайные вращения тензоров для борьбы с аутлаерами и показал, что FP4 обучение даёт выигрыш при фиксированном бюджете относительно FP8. <br><br>Но есть и другой формат, основанный на FP4, — NVFP4, который NVIDIA создала специально для LLM. Он использует более точные FP8-скейлы. На его основе прошлой осенью NVIDIA предложила собственный, более точный рецепт обучения в FP4. Одной из его фишек было использование стохастического округления (stochastic rounding, SR) на backward pass — методики, которая делает оценки градиентов несмещёнными ценой более высокого уровня их шума. Мы задались вопросом: есть ли способ достичь несмещённых оценок без шумного SR в FP4?<br><br>Оказывается, вращения, которые помогали нам с аутлаерами, могут помочь и с несмещённостью. Квантизуя случайно повёрнутый тензор, мы усредняем ошибку по всем возможным направлениям, и получившаяся оценка будет коллинеарена оригинальному тензору. Отнормировав квантизованный тензор, коллинеарность можно превратить в несмещённость. Но FP8-скейлы не позволят просто так отнормировать квантизованный тензор — они слишком грубые, чтобы впитать точную перенормировку порядка 0,94~1,06.<br><br>Какой выход? Вшить эти скейлы в FP8 с помощью SR. Обратите внимание, что делается это не на каждый FP4-элемент, как в случае с методом NVIDIA, а только в FP8-скейлы, что даёт ошибку в сто раз меньше. В итоге, полная ошибка получается вдвое меньше, чем у простого SR. Мы объединили метод с более точной квантизацией на forward pass и получили Quartet II — SOTA обучения в NVFP4.<br><br>Таким образом, случайные вращения не просто борются с аутлаерами, а служат важным источником несмещённости в оценке градиентов, который уменьшает ошибку и ускоряет сходимость FP4-обучения. К статье прилагаются <a href="https://github.com/IST-DASLab/Quartet-II" rel="nofollow noopener noreferrer">кернелы</a> для 5090 и B200, чтобы можно было попробовать NVFP4 на своих моделях и задачах.<br><br><em>Разбор подготовил Андрей Панфёров, автор канала </em><a href="https://t.me/black_samorez_channel" rel="nofollow noopener noreferrer"><em>black_samorez</em></a><em> </em><br><br><a href="https://t.me/stuffyNLP" rel="nofollow noopener noreferrer">Душный NLP</a><div class="media"><img class="media-img" loading="lazy" src="../../assets/media/thumbs/238_480.webp" srcset="../../assets/media/thumbs/238_480.webp 480w, ../../assets/media/238.jpg 1200w" sizes="(max-width: 768px) 100vw, 800px" alt="" data-post-id="238" data-image-index="0" /></div></div>
+      <div class="actions">
+        <span>739 просмотров · 24 реакций</span>
+        <span class="action-links"><a href="https://t.me/stuffyNLP/238" target="_blank" rel="noopener">Открыть в Telegram</a> · <a href="../index.html">К списку постов</a> · <a href="./238.html">Ссылка на этот пост</a></span>
+      </div>
+    </article>
+
+    <div class="pager single-nav">
+      <a id="prevPost" class="nav-link disabled" href="#" style="visibility:hidden">← Более новый</a>
+      <a id="nextPost" class="nav-link" href="./237.html" style="visibility:visible">Более старый →</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <span>based on <a href="https://github.com/ml-brand/tg-to-gh-pages" target="_blank" rel="noopener">tg-to-gh-pages</a> (created by <a href="https://github.com/ml-brand" target="_blank" rel="noopener">ML Brand</a>)</span>
+        <a id="repoLink" href="https://github.com/ml-brand/tg-to-gh-pages" target="_blank" rel="noopener">Do the same with your channel.</a>
+        <span class="footer-links">
+          static copy ·
+          <a href="../../feed.xml" target="_blank" rel="noopener">RSS</a> ·
+          <a href="../../atom.xml" target="_blank" rel="noopener">Atom</a>
+        </span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    window.__STATIC_POSTS = [{"id": 238, "media": [{"kind": "photo", "path": "../../assets/media/238.jpg", "thumb": "../../assets/media/thumbs/238_480.webp", "size": 85392, "mime": "image/jpeg", "name": null}]}];
+    window.__STATIC_META = {"title": "Душный NLP", "username": "stuffyNLP", "channel": "stuffyNLP", "last_sync_utc": "2026-04-06T14:00:14Z", "posts_count": 120, "last_seen_message_id": 238, "stats": {"new": 112, "updated": 50, "media_downloaded": 112}, "avatar": "assets/channel_avatar.jpg", "meta_schema_version": "1.0.0", "posts_schema_version": "1.0.0"};
+  </script>
+  <script src="../../common.js"></script>
+  <script src="../../static.js"></script>
+</body>
+</html>
