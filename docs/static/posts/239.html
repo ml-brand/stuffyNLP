@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Душный NLP — пост #239</title>
+  <meta name="description" content=" Qwen3-Next, или Как RNN эволюционировали в гибридные linear attention    В эпоху агентов, ризонинга и мультимодальности длинные контексты начинают играть всё более значимую роль. Привычный нам softma" />
+  <link rel="icon" href="../../favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32.png" />
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png" />
+
+  <link rel="canonical" href="https://ml-brand.github.io/stuffyNLP/static/posts/239.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Душный NLP — пост #239" />
+  <meta property="og:description" content=" Qwen3-Next, или Как RNN эволюционировали в гибридные linear attention    В эпоху агентов, ризонинга и мультимодальности длинные контексты начинают играть всё более значимую роль. Привычный нам softma" />
+  <meta property="og:image" content="https://ml-brand.github.io/stuffyNLP/assets/media/thumbs/239_480.webp" />
+  <meta property="og:image:alt" content="Душный NLP" />
+  <meta property="article:published_time" content="2026-04-14T10:52:09+00:00" />
+  <meta property="article:author" content="Душный NLP" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://ml-brand.github.io/stuffyNLP/assets/media/thumbs/239_480.webp" />
+  <link rel="stylesheet" href="../../style.css" />
+  <script src="../../metrika.js"></script>
+</head>
+<body data-index-href="../index.html">
+  <header class="header">
+    <div class="container">
+      <div class="title-grid single-title">
+        <a class="grid-avatar" href="#" target="_blank" rel="noopener">
+          <img id="channelAvatar" class="channel-avatar" src="../../assets/channel_avatar.jpg" alt="Аватар канала"  />
+        </a>
+        <div class="grid-main">
+          <div class="title-head">
+            <a class="back-link" href="../index.html">← Ко всем постам</a>
+            <a class="badge-chip" id="siteTitleWrap" href="#" target="_blank" rel="noopener"><h1 id="siteTitle">Душный NLP</h1></a>
+            <div class="hero-actions">
+              <a id="subscribeBtn" class="subscribe-btn" href="https://t.me/+1Z41UptsLwszZDE6" target="_blank" rel="noopener" >Подписаться</a>
+              <a class="icon-btn" href="../../post.html?id=239" aria-label="Открыть динамическую страницу поста">↺</a>
+              <button id="themeToggle" class="icon-btn" type="button" aria-label="Переключить тему"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  
+  <div id="promoBanner" class="promo-banner" hidden>
+    <div class="container promo-inner">
+      <span class="promo-text"><a href="https://t.me/addlist/5NH3RoVejEI1MGEy">Подпишись на все наши ML каналы. Они классные, отвечаем!</a></span>
+      <button id="promoClose" class="promo-close" type="button" aria-label="Скрыть плашку">×</button>
+    </div>
+  </div>
+  
+
+  <main class="container single-page">
+    <article id="postContainer" class="post post-page" data-post-id="239">
+      <div class="post-header">
+        <div class="right"><span class="post-date" data-iso-date="2026-04-14T10:52:09+00:00">2026-04-14 10:52 UTC</span></div>
+      </div>
+      <div class="post-body"><strong>Qwen3-Next, или Как RNN эволюционировали в гибридные linear attention </strong><br><br>В эпоху агентов, ризонинга и мультимодальности длинные контексты начинают играть всё более значимую роль. Привычный нам softmax attention из-за своей квадратичной зависимости от длины контекста сильнее влияет на эффективность обучения и инференса. <br><br>Для решения проблемы квадратичности попробовали обратиться к RNN. Так появился новый класс аттеншнов — linear attention. Как следует из названия, они зависят от длины контекста линейно, что делает их в разы эффективнее на больших контекстах. Но модели, которые используют только linear attention, плохо справляются с retrieval-задачами (ещё вернёмся к этому вопросу в посте).<br><br>Объединив лучшее из двух подходов, ML-разработчики получили гибриды. Сегодня разберём, как они устроены, на примере одной из самых хайповых современных моделей — <a href="https://qwen.ai/blog?id=4074cca80393150c248e508aa62983f9cb7d27cd&amp;from=research.latest-advancements-list" rel="nofollow noopener noreferrer">Qwen3-Next</a>. <br><br>Вспомним, что представляют из себя современные линейные аттеншны. По сути, это RNN, только вместо векторного состояния — матричное, побольше. Ещё в линейных аттеншнах есть механизмы забывания — гейты. Вместо того, чтобы как полный аттеншн хранить весь прошлый контекст в KV-cache (который растёт с увеличением длины последовательности), линейные аттеншны учатся сжимать весь контекст в стейт фиксированного размера. А гейты помогают лучше регулировать, что запомнить и забыть. <br><br>Но бесплатный сыр бывает только в мышеловке: из-за сжатия контекста в стейт фиксированного размера в линейных аттеншнах нет доступа ко всей исходной последовательности. То есть, точно скопировать рандомный токен не получится. Поэтому-то и страдают задачи retrieval и копирования. Но чтобы справиться с этим, достаточно нескольких слоёв с полным атеншеном.<br><br>Вернёмся к Qwen3-Next. Рассмотреть её архитектуру можно на схеме. Три четверти слоёв — линейный атеншен в лице Gated DeltaNet. 3/4 — довольно распространенная пропорция. Также в этой архитектуре проапгрейдили обычный полный аттеншн с  помощью <a href="https://arxiv.org/pdf/2505.06708" rel="nofollow noopener noreferrer">swiglu-like-гейтинга</a>. Это улучшило качество и решило проблему с attention sink.<br><br>Partial Rope, как следует из названия, «крутит» только часть хидденов головы. В Qwen3-Next только четверть хидденов головы получает информацию о позиции в последовательности. По словам авторов, это позволяет лучше экстраполироваться при увеличении контекста. <br><br>Zero-Centered RMSNorm математически эквивалентен обычному RMSNorm. Единственное отличие — веса инициализируются нулями, а не единицами, и потом на форварде к весу прибавляется 1. Формально это одно и то же, но из-за того, что веса теперь у нуля, где выше гранулярность float’ов, численная стабильность улучшается. Ещё более важно, что это позволяет использовать WD для весов в RMSNorm: некоторые веса становились слишком большими, добавление WD улучшило стабильность обучения.<br><br>Sparsity очень высокая — 1/50. Для масштаба, у DeepSeek она составляет 1/32, у Qwen235B — 1/16. Из 80B параметров активны только 3B. <br><br>Познакомиться с Qwen3-Next поближе можно на <a href="https://huggingface.co/Qwen/Qwen3-Next-80B-A3B-Instruct" rel="nofollow noopener noreferrer">HuggingFace</a>. А ещё недавно вышла новая линейка моделей, основанная на той же архитектуре — <a href="https://qwen.ai/blog?id=qwen3.5" rel="nofollow noopener noreferrer">Qwen3.5</a>. В текущем опенсорсе это SoTA. <br><br><em>Разбор подготовил </em><em><tg-emoji emoji-id="5224192932302565805">❣</tg-emoji></em><em> Даниил Сухой</em><br><br><a href="https://t.me/+A3P9VvxD16VhY2M6" rel="nofollow noopener noreferrer">Душный NLP</a><div class="media"><img class="media-img" loading="lazy" src="../../assets/media/thumbs/239_480.webp" srcset="../../assets/media/thumbs/239_480.webp 480w, ../../assets/media/239.jpg 1200w" sizes="(max-width: 768px) 100vw, 800px" alt="" data-post-id="239" data-image-index="0" /></div></div>
+      <div class="actions">
+        <span>738 просмотров · 16 реакций</span>
+        <span class="action-links"><a href="https://t.me/stuffyNLP/239" target="_blank" rel="noopener">Открыть в Telegram</a> · <a href="../index.html">К списку постов</a> · <a href="./239.html">Ссылка на этот пост</a></span>
+      </div>
+    </article>
+
+    <div class="pager single-nav">
+      <a id="prevPost" class="nav-link disabled" href="#" style="visibility:hidden">← Более новый</a>
+      <a id="nextPost" class="nav-link" href="./238.html" style="visibility:visible">Более старый →</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <span>based on <a href="https://github.com/ml-brand/tg-to-gh-pages" target="_blank" rel="noopener">tg-to-gh-pages</a> (created by <a href="https://github.com/ml-brand" target="_blank" rel="noopener">ML Brand</a>)</span>
+        <a id="repoLink" href="https://github.com/ml-brand/tg-to-gh-pages" target="_blank" rel="noopener">Do the same with your channel.</a>
+        <span class="footer-links">
+          static copy ·
+          <a href="../../feed.xml" target="_blank" rel="noopener">RSS</a> ·
+          <a href="../../atom.xml" target="_blank" rel="noopener">Atom</a>
+        </span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    window.__STATIC_POSTS = [{"id": 239, "media": [{"kind": "photo", "path": "../../assets/media/239.jpg", "thumb": "../../assets/media/thumbs/239_480.webp", "size": 162696, "mime": "image/jpeg", "name": null}]}];
+    window.__STATIC_META = {"title": "Душный NLP", "username": "stuffyNLP", "channel": "stuffyNLP", "last_sync_utc": "2026-04-14T11:43:44Z", "posts_count": 121, "last_seen_message_id": 239, "stats": {"new": 112, "updated": 63, "media_downloaded": 112}, "avatar": "assets/channel_avatar.jpg", "meta_schema_version": "1.0.0", "posts_schema_version": "1.0.0"};
+  </script>
+  <script src="../../common.js"></script>
+  <script src="../../static.js"></script>
+</body>
+</html>
