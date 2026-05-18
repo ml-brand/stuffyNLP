@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Душный NLP — пост #257</title>
+  <meta name="description" content=" Технический отчёт DeepSeek-V4 — часть 2/2   Продолжаем изучать  технический отчёт  DeepSeek-V4. В  прошлый раз  мы разобрали архитектуру модели и поговорили о квантовании. Сегодня речь пойдёт об обуч" />
+  <link rel="icon" href="../../favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32.png" />
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png" />
+
+  <link rel="canonical" href="https://ml-brand.github.io/stuffyNLP/static/posts/257.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Душный NLP — пост #257" />
+  <meta property="og:description" content=" Технический отчёт DeepSeek-V4 — часть 2/2   Продолжаем изучать  технический отчёт  DeepSeek-V4. В  прошлый раз  мы разобрали архитектуру модели и поговорили о квантовании. Сегодня речь пойдёт об обуч" />
+  <meta property="og:image" content="https://ml-brand.github.io/stuffyNLP/assets/media/thumbs/257_480.webp" />
+  <meta property="og:image:alt" content="Душный NLP" />
+  <meta property="article:published_time" content="2026-05-18T09:45:00+00:00" />
+  <meta property="article:author" content="Душный NLP" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://ml-brand.github.io/stuffyNLP/assets/media/thumbs/257_480.webp" />
+  <link rel="stylesheet" href="../../style.css" />
+  <script src="../../metrika.js"></script>
+</head>
+<body data-index-href="../index.html">
+  <header class="header">
+    <div class="container">
+      <div class="title-grid single-title">
+        <a class="grid-avatar" href="#" target="_blank" rel="noopener">
+          <img id="channelAvatar" class="channel-avatar" src="../../assets/channel_avatar.jpg" alt="Аватар канала"  />
+        </a>
+        <div class="grid-main">
+          <div class="title-head">
+            <a class="back-link" href="../index.html">← Ко всем постам</a>
+            <a class="badge-chip" id="siteTitleWrap" href="#" target="_blank" rel="noopener"><h1 id="siteTitle">Душный NLP</h1></a>
+            <div class="hero-actions">
+              <a id="subscribeBtn" class="subscribe-btn" href="https://t.me/+1Z41UptsLwszZDE6" target="_blank" rel="noopener" >Подписаться</a>
+              <a class="icon-btn" href="../../post.html?id=257" aria-label="Открыть динамическую страницу поста">↺</a>
+              <button id="themeToggle" class="icon-btn" type="button" aria-label="Переключить тему"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  
+  <div id="promoBanner" class="promo-banner" hidden>
+    <div class="container promo-inner">
+      <span class="promo-text"><a href="https://t.me/addlist/5NH3RoVejEI1MGEy">Подпишись на все наши ML каналы. Они классные, отвечаем!</a></span>
+      <button id="promoClose" class="promo-close" type="button" aria-label="Скрыть плашку">×</button>
+    </div>
+  </div>
+  
+
+  <main class="container single-page">
+    <article id="postContainer" class="post post-page" data-post-id="257">
+      <div class="post-header">
+        <div class="right"><span class="post-date" data-iso-date="2026-05-18T09:45:00+00:00">2026-05-18 09:45 UTC</span></div>
+      </div>
+      <div class="post-body"><strong>Технический отчёт DeepSeek-V4 — часть 2/2<br></strong><br>Продолжаем изучать <a href="https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro/blob/main/DeepSeek_V4.pdf" rel="nofollow noopener noreferrer">технический отчёт</a> DeepSeek-V4. В <a href="https://t.me/stuffyNLP/255" rel="nofollow noopener noreferrer">прошлый раз</a> мы разобрали архитектуру модели и поговорили о квантовании. Сегодня речь пойдёт об обучении DeepSeek-V4. <br><br>При сборе данных для претрейна фокусируются на датасетах с большими, значимыми контекстами, кодовых и математических наборах. В итоге объём всего датасета составил 32 триллиона токенов. Разработчики отдельно отфильтровывали контент, созданный другими моделями, чтобы он не попал в датасет. <br><br>Любопытна схема претрейна. Для AdamW установили такие гиперпараметры: 𝛽1 = 0,9, 𝛽2 = 0,95, 𝜀 = 10−20. Последний обычно стараются не делать таким низким, потому что это чревато расходимостью модели. <br><br>Размер батча на претрейне — 75 миллионов токенов. Вероятно, такого большого объёма позволил достичь Muon. Само обучение происходит с постоянно растущим размером батча: сперва 16 тысяч токенов, потом — 64 тысячи, а затем — миллион. На первом миллионе токенов модель обучается исключительно с dense-аттеншеном. Ещё какое-то время уходит, чтобы «прогреть» модель под lighting Indexer в CSA. <br><br>В случае нестабильностей модель и роутер обучают отдельно. Если происходит спайк, модель откатывается на несколько шагов назад и учится в специальном режиме. В нём делается дополнительный форвард за dt шагов до сэмпла, чтобы зафиксировать выбранных экспертов. Роутер обучается с «опозданием» как раз на эти dt шагов. Авторы говорят, что такой метод делает обучение модели на триллионы параметров гораздо более стабильным. И это при том, что спайки встречаются не очень часто, поэтому штраф получается небольшим. Для борьбы с резким ростом активаций SwiGLU их ограничивают на отрезке от -10 до 10.<br><br>Что касается посттрейна, то, как и в DeepSeek-V2, на разные домены обучаются разные модели-специалисты. Учат сразу в трёх режимах:<br><br>• non-think — для быстрых, интуитивных ответов, основанных на привычках или простых правилах;<br>• think high — для вдумчивого анализа; медленнее, но точнее, чем предыдущий режим;<br>• tink max — для ризонинга «на полную».<br><br>В последнем случае модели дают системный промпт следующего содержания.<br><br>Ты ОБЯЗАН очень тщательно обдумать задачу и всесторонне разобрать проблему, чтобы выявить ее причины, строго проверяя свою логику на всех возможных ситуациях, пограничных случаях и сценариях. Распиши весь процесс рассуждения, документируя каждый шаг, рассмотренную альтернативу и отвергнутую гипотезу, чтобы не осталось ни одного непроверенного предположения.<br><br>Для задач, у которых нет однозначного решения, параллельно обучают ту же LLM в режиме генеративной реверод-модели. Таким образом модель умеет исполнять две роли: решателя и оценщика. <br><br>Разработчики также создали свою схему тул-коллинга и для этого ввели специальный DMSL-токен, появление которого, по сути, сигнализирует о тул-колле. В качестве формата тул-коллинга используют .xml — говорят, что его более чем достаточно. <br><br>Благодаря большому контекстному окну во время обучения получается держать весь контекст — и в диалоговых сценариях, и при вызове инструментов (схема на изображении). Для промежуточных задач (вроде генерации поисковых запросов или заголовков для пользовательской сессии) используются дополнительные специальные токены.<br><br>Несколько обученных специалистов дистиллируются в отдельную модель через обычную KL-дивергенцию. При этом дистиллируется не только top k логитов, а все. Такая full-vocab-дистилляция потребляет огромное количество памяти — сотни килобайт на каждый токен, — поэтому авторы кэшируют только последний слой скрытых представлений учителя, перед финальным линейным слоем. В момент дистилляции подгружается только линейный слой, а логиты полностью реконструируются на лету. Благодаря этому объём занимаемой памяти снижается до менее чем десяти килобайт на токен. <br><br><em>Разбор подготовил </em><tg-emoji emoji-id="5224192932302565805">❣</tg-emoji> <em>Михаил Хрущев</em><br><br><a href="https://t.me/+xt57km_nQyA3YzIy" rel="nofollow noopener noreferrer">Душный NLP</a><div class="media"><img class="media-img" loading="lazy" src="../../assets/media/thumbs/257_480.webp" srcset="../../assets/media/thumbs/257_480.webp 480w, ../../assets/media/257.jpg 1200w" sizes="(max-width: 768px) 100vw, 800px" alt="" data-post-id="257" data-image-index="0" /></div></div>
+      <div class="actions">
+        <span>640 просмотров · 14 реакций</span>
+        <span class="action-links"><a href="https://t.me/stuffyNLP/257" target="_blank" rel="noopener">Открыть в Telegram</a> · <a href="../index.html">К списку постов</a> · <a href="./257.html">Ссылка на этот пост</a></span>
+      </div>
+    </article>
+
+    <div class="pager single-nav">
+      <a id="prevPost" class="nav-link disabled" href="#" style="visibility:hidden">← Более новый</a>
+      <a id="nextPost" class="nav-link" href="./255.html" style="visibility:visible">Более старый →</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <span>based on <a href="https://github.com/ml-brand/tg-to-gh-pages" target="_blank" rel="noopener">tg-to-gh-pages</a> (created by <a href="https://github.com/ml-brand" target="_blank" rel="noopener">ML Brand</a>)</span>
+        <a id="repoLink" href="https://github.com/ml-brand/tg-to-gh-pages" target="_blank" rel="noopener">Do the same with your channel.</a>
+        <span class="footer-links">
+          static copy ·
+          <a href="../../feed.xml" target="_blank" rel="noopener">RSS</a> ·
+          <a href="../../atom.xml" target="_blank" rel="noopener">Atom</a>
+        </span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    window.__STATIC_POSTS = [{"id": 257, "media": [{"kind": "photo", "path": "../../assets/media/257.jpg", "thumb": "../../assets/media/thumbs/257_480.webp", "size": 55959, "mime": "image/jpeg", "name": null}]}];
+    window.__STATIC_META = {"title": "Душный NLP", "username": "stuffyNLP", "channel": "stuffyNLP", "last_sync_utc": "2026-05-18T10:50:20Z", "posts_count": 132, "last_seen_message_id": 257, "stats": {"new": 119, "updated": 50, "media_downloaded": 119}, "avatar": "assets/channel_avatar.jpg", "meta_schema_version": "1.0.0", "posts_schema_version": "1.0.0"};
+  </script>
+  <script src="../../common.js"></script>
+  <script src="../../static.js"></script>
+</body>
+</html>
