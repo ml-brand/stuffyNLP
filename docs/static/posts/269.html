@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Душный NLP — пост #269</title>
+  <meta name="description" content=" Diffusion Language Models на ICML 2026     Собрали несколько работ о дифффузионных моделях и побеседовали с их авторами.    Residual Context Diffusion Language Models    Известная статья на тему mask" />
+  <link rel="icon" href="../../favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32.png" />
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png" />
+
+  <link rel="canonical" href="https://ml-brand.github.io/stuffyNLP/static/posts/269.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Душный NLP — пост #269" />
+  <meta property="og:description" content=" Diffusion Language Models на ICML 2026     Собрали несколько работ о дифффузионных моделях и побеседовали с их авторами.    Residual Context Diffusion Language Models    Известная статья на тему mask" />
+  <meta property="og:image" content="https://ml-brand.github.io/stuffyNLP/assets/media/thumbs/269_480.webp" />
+  <meta property="og:image:alt" content="Душный NLP" />
+  <meta property="article:published_time" content="2026-07-08T08:41:32+00:00" />
+  <meta property="article:author" content="Душный NLP" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://ml-brand.github.io/stuffyNLP/assets/media/thumbs/269_480.webp" />
+  <link rel="stylesheet" href="../../style.css" />
+  <script src="../../metrika.js"></script>
+</head>
+<body data-index-href="../index.html">
+  <header class="header">
+    <div class="container">
+      <div class="title-grid single-title">
+        <a class="grid-avatar" href="#" target="_blank" rel="noopener">
+          <img id="channelAvatar" class="channel-avatar" src="../../assets/channel_avatar.jpg" alt="Аватар канала"  />
+        </a>
+        <div class="grid-main">
+          <div class="title-head">
+            <a class="back-link" href="../index.html">← Ко всем постам</a>
+            <a class="badge-chip" id="siteTitleWrap" href="#" target="_blank" rel="noopener"><h1 id="siteTitle">Душный NLP</h1></a>
+            <div class="hero-actions">
+              <a id="subscribeBtn" class="subscribe-btn" href="https://t.me/+1Z41UptsLwszZDE6" target="_blank" rel="noopener" >Подписаться</a>
+              <a class="icon-btn" href="../../post.html?id=269" aria-label="Открыть динамическую страницу поста">↺</a>
+              <button id="themeToggle" class="icon-btn" type="button" aria-label="Переключить тему"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  
+  <div id="promoBanner" class="promo-banner" hidden>
+    <div class="container promo-inner">
+      <span class="promo-text"><a href="https://t.me/addlist/5NH3RoVejEI1MGEy">Подпишись на все наши ML каналы. Они классные, отвечаем!</a></span>
+      <button id="promoClose" class="promo-close" type="button" aria-label="Скрыть плашку">×</button>
+    </div>
+  </div>
+  
+
+  <main class="container single-page">
+    <article id="postContainer" class="post post-page" data-post-id="269">
+      <div class="post-header">
+        <div class="right"><span class="post-date" data-iso-date="2026-07-08T08:41:32+00:00">2026-07-08 08:41 UTC</span></div>
+      </div>
+      <div class="post-body"><strong>Diffusion Language Models на ICML 2026</strong><br><strong><br></strong>Собрали несколько работ о дифффузионных моделях и побеседовали с их авторами.<br><br><a href="https://arxiv.org/abs/2601.22954v2" rel="nofollow noopener noreferrer"><strong>Residual Context Diffusion Language Models</strong></a><br><br>Известная статья на тему masked diffusion. Суть в том, чтобы уменьшить потерю подсчитанной информации, которая обычно выбрасывается при низких вероятностях демаскируемых токенов. <br><br>Как работает masked diffusion. На каждом шаге генерации выделяется фрагмент последовательности (блок), который будет демаскироваться одновременно (что и должно приводить к ускорению). Но если сразу размаскировать все токены, качество будет плохим. Поэтому размаскируем только те из них внутри блока, предсказанные вероятности которых высоки. Вероятности других — низкие —выбрасываем и перегенерируем их заново, обуславливаясь на все размаскированные до текущего шага токены. <br><br>Для решения проблемы отброшенных вычислений вероятности непринятых токенов подают на следующий слой через дополнительный residual-вход. Чтобы дообучить модель работать с новым входом, предлагают использовать простую замороженную модель, которая предоставит не очень качественные вероятности. <br><br>Часть о том, что надо обучаться с dummy-моделью, а инфериться на хорошей, — ограничение метода. Автор считает, что его можно минимизировать рекурсивным дообучением, но сдвиг между распределениями никогда не будет нулевым. В целом необходимость делать такие трюки кажется ему фундаментальным ограничением дискретной диффузии, и он верит в скейлинг непрерывных подходов для генерации текстов.<br><br><a href="https://arxiv.org/abs/2603.00045" rel="nofollow noopener noreferrer"><strong>Breaking the Factorization Barrier in Diffusion Language Models<br></strong></a><br>Работа об увеличении репрезентативности masked diffusion. Проблема в том, что помимо самих текстовых знаний модель должна выучить ещё и все возможные комбинации паттернов размаскирования. Это непростая задача, хочется уменьшить комбинаторную сложность в ней. <br><br>Предлагается учить peft-like-добавку определённой структуры, специально направленную на понимание паттернов семплирования. На инференсе будем параллельно вычислять эту добавку и основные веса для получения вероятности размаскирования токенов.<br><br>Использовать метод можно для двух целей. Основная, которую показывают в статье, — увеличение качества при фиксированной скорости. Дополнительная — увеличение скорости (количество размаскируемых токенов за форвард) при сохранении качества. <br><br>Метод поскейлили до LLaDA 8B и показали буст качества относительно LoRA-добавок — правда, померить на этом скейле смогли только ген-перплексию.<br><br><a href="https://arxiv.org/abs/2602.15014" rel="nofollow noopener noreferrer"><strong>Scaling Beyond Masked Diffusion Language Models<br></strong></a><br>Есть несколько конкурирующих подходов к тому, как делать диффузию для текстов. Самый популярный — masked diffusion. Так получилось, потому что на низких масштабах компьюта и размеров моделей было показано, что у этого класса моделей теоретически лучший баланс эффективности и качества в терминах ген-перплексии (что не слишком надёжно).<br><br>Авторы делают честное сравнение разных диффузионных подходов (и авторегрессии как бейзлайна), но теперь скейлят модели до 2B параметров и показывают, что uniform state diffusion — на деле лучший подход.<br><br>На постере и в беседе автор тизерит свою следующую работу, в которой для uniform state diffusion сделали алайн и победили Nemotron 8B и Diffusion Gemma 26B по скорости и качеству на агентских бенчах.<br><br><a href="https://arxiv.org/abs/2512.09106v4" rel="nofollow noopener noreferrer"><strong>Learning Unmasking Policies for Diffusion Language Models<br></strong></a><br>Также удалось пообщаться с автором. Идея — в обучении небольшой полиси-головы поверх замороженной диффузионной тушки. Сама полиси-сетка очевидно выучивает статистики из домен-специфичных данных потому что, по словам автора, для хорошего качества им приходилось учить отдельные политики для кода и математики.<br><br>Также есть параллельная работа, в которой тушку размораживают и дообучают голову вместе с ней. Это дороже, но перспективнее в плане качества. <br><br>Фишка метода из статьи — из-за отдельного обучения головы можно смотреть, какие домен-специфичные паттерны выучиваются. Так, для математики политика выучивает больше всего токенов семплить на последних блоках, что не сработало бы для кода.<br><br><em>Увидел интер</em>е<em>сное </em><em><tg-emoji emoji-id="5224192932302565805">❣</tg-emoji></em><em> </em><a href="https://t.me/c_research" rel="nofollow noopener noreferrer"><em>Сергей Кастрюлин</em></a><br><br>#YaICML2026<br><br><a href="https://t.me/stuffyNLP" rel="nofollow noopener noreferrer">Душный NLP</a><div class="media"><img class="media-img" loading="lazy" src="../../assets/media/thumbs/269_480.webp" srcset="../../assets/media/thumbs/269_480.webp 480w, ../../assets/media/269.jpg 1200w" sizes="(max-width: 768px) 100vw, 800px" alt="" data-post-id="269" data-image-index="0" /><img class="media-img" loading="lazy" src="../../assets/media/thumbs/270_480.webp" srcset="../../assets/media/thumbs/270_480.webp 480w, ../../assets/media/270.jpg 1200w" sizes="(max-width: 768px) 100vw, 800px" alt="" data-post-id="269" data-image-index="1" /><img class="media-img" loading="lazy" src="../../assets/media/thumbs/271_480.webp" srcset="../../assets/media/thumbs/271_480.webp 480w, ../../assets/media/271.jpg 1200w" sizes="(max-width: 768px) 100vw, 800px" alt="" data-post-id="269" data-image-index="2" /><img class="media-img" loading="lazy" src="../../assets/media/thumbs/272_480.webp" srcset="../../assets/media/thumbs/272_480.webp 480w, ../../assets/media/272.jpg 1200w" sizes="(max-width: 768px) 100vw, 800px" alt="" data-post-id="269" data-image-index="3" /></div></div>
+      <div class="actions">
+        <span>677 просмотров · 19 реакций</span>
+        <span class="action-links"><a href="https://t.me/stuffyNLP/269" target="_blank" rel="noopener">Открыть в Telegram</a> · <a href="../index.html">К списку постов</a> · <a href="./269.html">Ссылка на этот пост</a></span>
+      </div>
+    </article>
+
+    <div class="pager single-nav">
+      <a id="prevPost" class="nav-link disabled" href="#" style="visibility:hidden">← Более новый</a>
+      <a id="nextPost" class="nav-link" href="./266.html" style="visibility:visible">Более старый →</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <span>based on <a href="https://github.com/ml-brand/tg-to-gh-pages" target="_blank" rel="noopener">tg-to-gh-pages</a> (created by <a href="https://github.com/ml-brand" target="_blank" rel="noopener">ML Brand</a>)</span>
+        <a id="repoLink" href="https://github.com/ml-brand/tg-to-gh-pages" target="_blank" rel="noopener">Do the same with your channel.</a>
+        <span class="footer-links">
+          static copy ·
+          <a href="../../feed.xml" target="_blank" rel="noopener">RSS</a> ·
+          <a href="../../atom.xml" target="_blank" rel="noopener">Atom</a>
+        </span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    window.__STATIC_POSTS = [{"id": 269, "media": [{"kind": "photo", "path": "../../assets/media/269.jpg", "thumb": "../../assets/media/thumbs/269_480.webp", "size": 227505, "mime": "image/jpeg", "name": null}, {"kind": "photo", "path": "../../assets/media/270.jpg", "thumb": "../../assets/media/thumbs/270_480.webp", "size": 243969, "mime": "image/jpeg", "name": null}, {"kind": "photo", "path": "../../assets/media/271.jpg", "thumb": "../../assets/media/thumbs/271_480.webp", "size": 183651, "mime": "image/jpeg", "name": null}, {"kind": "photo", "path": "../../assets/media/272.jpg", "thumb": "../../assets/media/thumbs/272_480.webp", "size": 208795, "mime": "image/jpeg", "name": null}]}];
+    window.__STATIC_META = {"title": "Душный NLP", "username": "stuffyNLP", "channel": "stuffyNLP", "last_sync_utc": "2026-07-08T10:49:53Z", "posts_count": 140, "last_seen_message_id": 272, "stats": {"new": 126, "updated": 105, "media_downloaded": 126}, "avatar": "assets/channel_avatar.jpg", "meta_schema_version": "1.0.0", "posts_schema_version": "1.0.0"};
+  </script>
+  <script src="../../common.js"></script>
+  <script src="../../static.js"></script>
+</body>
+</html>
