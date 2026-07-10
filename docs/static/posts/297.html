@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Душный NLP — пост #297</title>
+  <meta name="description" content=" LLMs Develop Novel Social Biases Through Adaptive Exploration   Даже если полностью вычистить bias&amp;#x27;ы из данных, модель в агентском цикле  решение → фидбек  вырастит новые с нуля. Даже о группах," />
+  <link rel="icon" href="../../favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32.png" />
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png" />
+
+  <link rel="canonical" href="https://ml-brand.github.io/stuffyNLP/static/posts/297.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Душный NLP — пост #297" />
+  <meta property="og:description" content=" LLMs Develop Novel Social Biases Through Adaptive Exploration   Даже если полностью вычистить bias&amp;#x27;ы из данных, модель в агентском цикле  решение → фидбек  вырастит новые с нуля. Даже о группах," />
+  <meta property="og:image" content="https://ml-brand.github.io/stuffyNLP/assets/media/thumbs/297_480.webp" />
+  <meta property="og:image:alt" content="Душный NLP" />
+  <meta property="article:published_time" content="2026-07-10T12:40:46+00:00" />
+  <meta property="article:author" content="Душный NLP" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://ml-brand.github.io/stuffyNLP/assets/media/thumbs/297_480.webp" />
+  <link rel="stylesheet" href="../../style.css" />
+  <script src="../../metrika.js"></script>
+</head>
+<body data-index-href="../index.html">
+  <header class="header">
+    <div class="container">
+      <div class="title-grid single-title">
+        <a class="grid-avatar" href="#" target="_blank" rel="noopener">
+          <img id="channelAvatar" class="channel-avatar" src="../../assets/channel_avatar.jpg" alt="Аватар канала"  />
+        </a>
+        <div class="grid-main">
+          <div class="title-head">
+            <a class="back-link" href="../index.html">← Ко всем постам</a>
+            <a class="badge-chip" id="siteTitleWrap" href="#" target="_blank" rel="noopener"><h1 id="siteTitle">Душный NLP</h1></a>
+            <div class="hero-actions">
+              <a id="subscribeBtn" class="subscribe-btn" href="https://t.me/+1Z41UptsLwszZDE6" target="_blank" rel="noopener" >Подписаться</a>
+              <a class="icon-btn" href="../../post.html?id=297" aria-label="Открыть динамическую страницу поста">↺</a>
+              <button id="themeToggle" class="icon-btn" type="button" aria-label="Переключить тему"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  
+  <div id="promoBanner" class="promo-banner" hidden>
+    <div class="container promo-inner">
+      <span class="promo-text"><a href="https://t.me/addlist/5NH3RoVejEI1MGEy">Подпишись на все наши ML каналы. Они классные, отвечаем!</a></span>
+      <button id="promoClose" class="promo-close" type="button" aria-label="Скрыть плашку">×</button>
+    </div>
+  </div>
+  
+
+  <main class="container single-page">
+    <article id="postContainer" class="post post-page" data-post-id="297">
+      <div class="post-header">
+        <div class="right"><span class="post-date" data-iso-date="2026-07-10T12:40:46+00:00">2026-07-10 12:40 UTC</span></div>
+      </div>
+      <div class="post-body"><strong>LLMs Develop Novel Social Biases Through Adaptive Exploration</strong><br><br>Даже если полностью вычистить bias&#x27;ы из данных, модель в агентском цикле <strong>решение → фидбек</strong> вырастит новые с нуля. Даже о группах, которых не существует — из случайного шума. Чем новее модель, тем сильнее эффект, а промптом это не лечится, нужно менять целевую функцию.<br><br>Ребята из Принстонского университета привезли на ICML 2026 <a href="https://arxiv.org/abs/2511.06148" rel="nofollow noopener noreferrer">доклад</a>, в котором утверждают, что вычищать существующие стереотипы из LLM недостаточно — модель успешно вырабатывает новые сама, в рантайме.<br><br>В подробностях разобрался наш коллега Александр Краснов.<br><br><blockquote>Сетап эксперимента из психологии: модель играет роль рекрутера и 40 раундов распределяет кандидатов из четырёх выдуманных этносов (<em>Tufa, Aima, Reku, Weki</em>) по профессиям. После каждого найма выносит вердикт: успех или провал. <br><br>Хитрость в том, что вероятность успеха у всех одинаковая — группы идентичны, и любые <em>различия</em> между ними модель может только выдумать. По сути, <em>contextual bandit</em> с шумным фидбеком.<br><br>Модель слишком мало исследует варианты и ранний случайный исход (например, «представитель <em>Aima</em> провалился на профессии учителя») закрепляется как впечатление обо всей группе, и к концу игры этносы разложены по <em>своим</em> профессиям. Вся история при этом есть в контексте, т.е. модель декларативно знает, что n=1 — не выборка, но действует при этом жадно.<br><br>По итогу эксперимента (стратификацию меряют через <em>Stratification Index</em>, т.е. насколько каждая группа загнана в узкий набор профессий):  <br><br>• Все frontier-модели стратифицируют сильнее людей из оригинального эксперимента. У людей SI=0,84, у моделей в среднем 1,39, у o3 и Claude Sonnet — под 1,8.<br><br>• Чем новее модель, тем хуже дела: скор на классическом bias-бенчмарке BBQ обратно коррелирует с сегрегацией в итеративной игре. Сильный <em>in-context learner</em> увереннее делает вывод из трёх наблюдений, и эта уверенность подавляет исследование.<br><br>• В каждом прогоне bias&#x27;ы разные: паттерн рождается из шума внутри запуска, а не из претрейна. <em>Single-turn</em>-бенчмарки такое не ловят в принципе.<br><br>Промпт «будь справедливым» ничего не меняет. Работает только изменение самой цели. К успеху найма добавляют измеримый бонус за разнообразие, и стратификация падает ниже уровня людей и даже случайного распределения.<br><br><strong>Хорошо, но как эта информация поможет обычному пользователю LLM?</strong><br><br>На самом деле это касается не только «социальных» задач. Механизм срабатывает в любой длинной сессии, где модель принимает серию решений и видит исходы. <em>Группой</em> может быть что угодно. Агент один раз обжёгся на гипотезе «<em>проблема в конфиге»</em> и потом перестаёт рассматривать <em>конфиг</em> как класс причин. Вызов либы падает по случайной сетевой причине «<em>библиотека не работает»</em>, дальше — костыли до конца сессии. И чем умнее модель, тем увереннее фиксация.<br><br>На практике абстрактное «<em>будь объективным»</em> не поможет, а сработает конкретика, встроенная в критерий успеха агента: «<em>рассмотри минимум три гипотезы»</em>, «<em>не отбрасывай вариант после одного провала»</em>, гейт в хуке, который не пропускает вывод без перепроверки альтернатив. По сути, мы вручную делаем исследование вариантов условием выигрыша (сам по себе агент не мотивирован). И если сессия накопила уверенные выводы из пары наблюдений, дешевле открыть свежий контекст, чем переубеждать залипшую модель.<br><br><strong>Итого: bias — свойство не только данных, но и самого процесса принятия решений. Защищаться нужно на уровне целевой функции агента, а не датасета.</strong><br><br></blockquote><br><br>#YaICML2026<br><br><a href="https://t.me/stuffyNLP" rel="nofollow noopener noreferrer">Душный NLP</a><div class="media"><img class="media-img" loading="lazy" src="../../assets/media/thumbs/297_480.webp" srcset="../../assets/media/thumbs/297_480.webp 480w, ../../assets/media/297.jpg 1200w" sizes="(max-width: 768px) 100vw, 800px" alt="" data-post-id="297" data-image-index="0" /></div></div>
+      <div class="actions">
+        <span>438 просмотров · 13 реакций</span>
+        <span class="action-links"><a href="https://t.me/stuffyNLP/297" target="_blank" rel="noopener">Открыть в Telegram</a> · <a href="../index.html">К списку постов</a> · <a href="./297.html">Ссылка на этот пост</a></span>
+      </div>
+    </article>
+
+    <div class="pager single-nav">
+      <a id="prevPost" class="nav-link disabled" href="#" style="visibility:hidden">← Более новый</a>
+      <a id="nextPost" class="nav-link" href="./293.html" style="visibility:visible">Более старый →</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <span>based on <a href="https://github.com/ml-brand/tg-to-gh-pages" target="_blank" rel="noopener">tg-to-gh-pages</a> (created by <a href="https://github.com/ml-brand" target="_blank" rel="noopener">ML Brand</a>)</span>
+        <a id="repoLink" href="https://github.com/ml-brand/tg-to-gh-pages" target="_blank" rel="noopener">Do the same with your channel.</a>
+        <span class="footer-links">
+          static copy ·
+          <a href="../../feed.xml" target="_blank" rel="noopener">RSS</a> ·
+          <a href="../../atom.xml" target="_blank" rel="noopener">Atom</a>
+        </span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    window.__STATIC_POSTS = [{"id": 297, "media": [{"kind": "photo", "path": "../../assets/media/297.jpg", "thumb": "../../assets/media/thumbs/297_480.webp", "size": 135873, "mime": "image/jpeg", "name": null}]}];
+    window.__STATIC_META = {"title": "Душный NLP", "username": "stuffyNLP", "channel": "stuffyNLP", "last_sync_utc": "2026-07-10T13:45:46Z", "posts_count": 147, "last_seen_message_id": 297, "stats": {"new": 144, "updated": 49, "media_downloaded": 144}, "avatar": "assets/channel_avatar.jpg", "meta_schema_version": "1.0.0", "posts_schema_version": "1.0.0"};
+  </script>
+  <script src="../../common.js"></script>
+  <script src="../../static.js"></script>
+</body>
+</html>
