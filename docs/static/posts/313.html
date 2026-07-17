@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Душный NLP — пост #313</title>
+  <meta name="description" content=" Тренды из мира бенчмарков на ICML 2026 [1/2]   Работ о бенчмарках на ICML традиционно много. По сравнению с прошлым годом, в 2026 стало заметно больше бенчей для агентов. А ещё начали чаще встречатьс" />
+  <link rel="icon" href="../../favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32.png" />
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png" />
+
+  <link rel="canonical" href="https://ml-brand.github.io/stuffyNLP/static/posts/313.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Душный NLP — пост #313" />
+  <meta property="og:description" content=" Тренды из мира бенчмарков на ICML 2026 [1/2]   Работ о бенчмарках на ICML традиционно много. По сравнению с прошлым годом, в 2026 стало заметно больше бенчей для агентов. А ещё начали чаще встречатьс" />
+  <meta property="og:image" content="https://ml-brand.github.io/stuffyNLP/assets/media/thumbs/313_480.webp" />
+  <meta property="og:image:alt" content="Душный NLP" />
+  <meta property="article:published_time" content="2026-07-17T09:40:03+00:00" />
+  <meta property="article:author" content="Душный NLP" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://ml-brand.github.io/stuffyNLP/assets/media/thumbs/313_480.webp" />
+  <link rel="stylesheet" href="../../style.css" />
+  <script src="../../metrika.js"></script>
+</head>
+<body data-index-href="../index.html">
+  <header class="header">
+    <div class="container">
+      <div class="title-grid single-title">
+        <a class="grid-avatar" href="#" target="_blank" rel="noopener">
+          <img id="channelAvatar" class="channel-avatar" src="../../assets/channel_avatar.jpg" alt="Аватар канала"  />
+        </a>
+        <div class="grid-main">
+          <div class="title-head">
+            <a class="back-link" href="../index.html">← Ко всем постам</a>
+            <a class="badge-chip" id="siteTitleWrap" href="#" target="_blank" rel="noopener"><h1 id="siteTitle">Душный NLP</h1></a>
+            <div class="hero-actions">
+              <a id="subscribeBtn" class="subscribe-btn" href="https://t.me/+1Z41UptsLwszZDE6" target="_blank" rel="noopener" >Подписаться</a>
+              <a class="icon-btn" href="../../post.html?id=313" aria-label="Открыть динамическую страницу поста">↺</a>
+              <button id="themeToggle" class="icon-btn" type="button" aria-label="Переключить тему"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  
+  <div id="promoBanner" class="promo-banner" hidden>
+    <div class="container promo-inner">
+      <span class="promo-text"><a href="https://t.me/addlist/5NH3RoVejEI1MGEy">Подпишись на все наши ML каналы. Они классные, отвечаем!</a></span>
+      <button id="promoClose" class="promo-close" type="button" aria-label="Скрыть плашку">×</button>
+    </div>
+  </div>
+  
+
+  <main class="container single-page">
+    <article id="postContainer" class="post post-page" data-post-id="313">
+      <div class="post-header">
+        <div class="right"><span class="post-date" data-iso-date="2026-07-17T09:40:03+00:00">2026-07-17 09:40 UTC</span></div>
+      </div>
+      <div class="post-body"><strong>Тренды из мира бенчмарков на ICML 2026 [1/2]</strong><br><br>Работ о бенчмарках на ICML традиционно много. По сравнению с прошлым годом, в 2026 стало заметно больше бенчей для агентов. А ещё начали чаще встречаться работы из академии. <br><br>Объяснение простое. Корпорации вкладывают много сил во внутренние бенчи: делают сами, покупают их у data-labeling-компаний (например, Surge, Mercor, Handshake AI, Toloka) — и, как следствие, такие бенчи редко опенсорсят. <br><br>Остальные бенчмарки часто делаются ощутимо меньшими ресурсами. И, как следствие, страдают от типичных проблем: <br><br>• мало человеческой верификации данных, <br>• качество judge&#x27;ей-верификаторов редко полноценно исследуется,<br>• плохо оценивается качество пар <strong>запрос + ground-truth-ответ</strong>, сгенерированных LLM,<br>• редко проверяется контаминация, хотя бенчи собираются из открытых источников.<br><br>Авторы постеров, вошедших в подборку, отметили, что подготовка одного бенча занимает в среднем 3–4 месяца фултайм-работы.<br><br><a href="https://arxiv.org/abs/2506.07982" rel="nofollow noopener noreferrer"><strong>τ²-Bench: Evaluating Conversational Agents in a Dual-Control Environment</strong></a><strong><br></strong><br>Команда τ-бенча продолжает свою работу. В этот раз получили spotlight. Предыдущие версии были single-control: то есть, тулы были доступны только агенту, а пользователь пассивно выдавал текстовый фидбек. В реальном мире пользователь, конечно, взаимодействует со средой. <br><br>Новый бенчмарк сделали на примере телекома: у агента и у симулированного юзера свои БД и инструменты в общем мире. Валидация — не LLM-судьями, а ассертами на состояние мира. <br><br>Получившийся бенч заметно сложнее предыдущих версий: Сlaude-3.7 выбивает только 49%. Авторы используют абляцию, когда всё управление переходит агенту или если агенту дают подробный план, как надо поступать. Один из тейков: для агента важен скилл координации с пользователем, который обычные специализированные бенчи не измеряют вообще.<br><br><a href="https://arxiv.org/abs/2602.20629" rel="nofollow noopener noreferrer"><strong>QEDBench: Quantifying the Alignment Gap in Automated Evaluation of University-Level Math Proofs</strong></a><br><br>Этот бенч фокусируется в первую очередь на оценке надёжности самих судей: насколько LLM judge вообще способен оценивать математические доказательства примерно институтской сложности. <br><br>Авторы попросили экспертов переписать экзаменационные задачи из 10 математических дисциплин так, чтобы избежать контаминации. Также дополнили бенчмарк примерами из экзаменационных задач своего университета. Ответы фронтир-моделей оценивали: <br><br>• кандидаты математических наук по заданной шкале, <br>• LLM-судьи по рубрикам, заранее описанным людьми. <br> <br>Всего авторы собрали 1300+ доказательств и 1000 часов разметки. Ожидаемо, судьи пропускают заметно больше неправильных решений: 38% показал самый лучший judge на GPT-5.2 Pro.<br><br><a href="https://arxiv.org/abs/2506.20664" rel="nofollow noopener noreferrer"><strong>The Decrypto Benchmark for Multi-Agent Reasoning and Theory of Mind</strong></a><br><br>Бенчмарк на Theory of Mind, собранный на основе настолки Decrypto. Alice даёт словесные подсказки к четырём секретным словам так, чтобы код угадал её партнёр Bob, но не угадал перехватчик Eve. <br><br>Сложность в том, чтобы подсказка была достаточно прозрачной для своего и непонятной для чужого — то есть, требует явно моделировать так, чтобы понял один и не распознал другой. Pass — исход игры. <br><br>Преимущество по сравнению со старыми статическими ТоМ-бенчами в том, что можно менять ключевые слова и собирать их в миллиарды комбинаций, избегая переобучения. Авторы проделали довольно подробную работу: предлагают промпты-правила и методики валидации, а также провели валидационные игры между людьми и моделями.<br><br>С игрой плохо справляются даже фронтир-модели: дают примитивные ассоциации (fire → flame, hat → cap), которые легко перехватить. С помощью отдельных тестов из области детской психологии, замерили representational change — понимает ли агент, что его собственное представление изменилось, когда пришла новая информация и изучили false belief — умение приписать ложное убеждение участнику дискуссии. Оба показателя составили менее 10%. Ризонинг не помогает: Llama 3.1-70B обходит и Claude 3.7, и o1.<br><br><em>Исследовала для вас бенчмарки </em><em><tg-emoji emoji-id="5224192932302565805">❣</tg-emoji></em><em> Ирина Барская</em><br><br>#YaICML2026<br><br><a href="https://t.me/stuffyNLP" rel="nofollow noopener noreferrer">Душный NLP</a><div class="media"><img class="media-img" loading="lazy" src="../../assets/media/thumbs/313_480.webp" srcset="../../assets/media/thumbs/313_480.webp 480w, ../../assets/media/313.jpg 1200w" sizes="(max-width: 768px) 100vw, 800px" alt="" data-post-id="313" data-image-index="0" /><img class="media-img" loading="lazy" src="../../assets/media/thumbs/314_480.webp" srcset="../../assets/media/thumbs/314_480.webp 480w, ../../assets/media/314.jpg 1200w" sizes="(max-width: 768px) 100vw, 800px" alt="" data-post-id="313" data-image-index="1" /><img class="media-img" loading="lazy" src="../../assets/media/thumbs/315_480.webp" srcset="../../assets/media/thumbs/315_480.webp 480w, ../../assets/media/315.jpg 1200w" sizes="(max-width: 768px) 100vw, 800px" alt="" data-post-id="313" data-image-index="2" /></div></div>
+      <div class="actions">
+        <span>482 просмотров · 6 реакций</span>
+        <span class="action-links"><a href="https://t.me/stuffyNLP/313" target="_blank" rel="noopener">Открыть в Telegram</a> · <a href="../index.html">К списку постов</a> · <a href="./313.html">Ссылка на этот пост</a></span>
+      </div>
+    </article>
+
+    <div class="pager single-nav">
+      <a id="prevPost" class="nav-link" href="./316.html" style="visibility:visible">← Более новый</a>
+      <a id="nextPost" class="nav-link" href="./306.html" style="visibility:visible">Более старый →</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <span>based on <a href="https://github.com/ml-brand/tg-to-gh-pages" target="_blank" rel="noopener">tg-to-gh-pages</a> (created by <a href="https://github.com/ml-brand" target="_blank" rel="noopener">ML Brand</a>)</span>
+        <a id="repoLink" href="https://github.com/ml-brand/tg-to-gh-pages" target="_blank" rel="noopener">Do the same with your channel.</a>
+        <span class="footer-links">
+          static copy ·
+          <a href="../../feed.xml" target="_blank" rel="noopener">RSS</a> ·
+          <a href="../../atom.xml" target="_blank" rel="noopener">Atom</a>
+        </span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    window.__STATIC_POSTS = [{"id": 313, "media": [{"kind": "photo", "path": "../../assets/media/313.jpg", "thumb": "../../assets/media/thumbs/313_480.webp", "size": 621614, "mime": "image/jpeg", "name": null}, {"kind": "photo", "path": "../../assets/media/314.jpg", "thumb": "../../assets/media/thumbs/314_480.webp", "size": 399644, "mime": "image/jpeg", "name": null}, {"kind": "photo", "path": "../../assets/media/315.jpg", "thumb": "../../assets/media/thumbs/315_480.webp", "size": 492525, "mime": "image/jpeg", "name": null}]}];
+    window.__STATIC_META = {"title": "Душный NLP", "username": "stuffyNLP", "channel": "stuffyNLP", "last_sync_utc": "2026-07-17T11:10:32Z", "posts_count": 152, "last_seen_message_id": 317, "stats": {"new": 159, "updated": 34, "media_downloaded": 159}, "avatar": "assets/channel_avatar.jpg", "meta_schema_version": "1.0.0", "posts_schema_version": "1.0.0"};
+  </script>
+  <script src="../../common.js"></script>
+  <script src="../../static.js"></script>
+</body>
+</html>
