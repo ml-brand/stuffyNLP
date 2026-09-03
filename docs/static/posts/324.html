@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Душный NLP — пост #324</title>
+  <meta name="description" content=" Loop the Loopies!   Сегодня обсудим   статью  , которая посвящена моделям Loopies, построенным на шеринге параметров между разными слоями.   Обычно у трансформерных моделей и свёрточных нейросетей от" />
+  <link rel="icon" href="../../favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32.png" />
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png" />
+
+  <link rel="canonical" href="https://ml-brand.github.io/stuffyNLP/static/posts/324.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Душный NLP — пост #324" />
+  <meta property="og:description" content=" Loop the Loopies!   Сегодня обсудим   статью  , которая посвящена моделям Loopies, построенным на шеринге параметров между разными слоями.   Обычно у трансформерных моделей и свёрточных нейросетей от" />
+  <meta property="og:image" content="https://ml-brand.github.io/stuffyNLP/assets/media/thumbs/324_480.webp" />
+  <meta property="og:image:alt" content="Душный NLP" />
+  <meta property="article:published_time" content="2026-09-03T11:15:47+00:00" />
+  <meta property="article:author" content="Душный NLP" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://ml-brand.github.io/stuffyNLP/assets/media/thumbs/324_480.webp" />
+  <link rel="stylesheet" href="../../style.css" />
+  <script src="../../metrika.js"></script>
+</head>
+<body data-index-href="../index.html">
+  <header class="header">
+    <div class="container">
+      <div class="title-grid single-title">
+        <a class="grid-avatar" href="#" target="_blank" rel="noopener">
+          <img id="channelAvatar" class="channel-avatar" src="../../assets/channel_avatar.jpg" alt="Аватар канала"  />
+        </a>
+        <div class="grid-main">
+          <div class="title-head">
+            <a class="back-link" href="../index.html">← Ко всем постам</a>
+            <a class="badge-chip" id="siteTitleWrap" href="#" target="_blank" rel="noopener"><h1 id="siteTitle">Душный NLP</h1></a>
+            <div class="hero-actions">
+              <a id="subscribeBtn" class="subscribe-btn" href="https://t.me/+1Z41UptsLwszZDE6" target="_blank" rel="noopener" >Подписаться</a>
+              <a class="icon-btn" href="../../post.html?id=324" aria-label="Открыть динамическую страницу поста">↺</a>
+              <button id="themeToggle" class="icon-btn" type="button" aria-label="Переключить тему"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  
+  <div id="promoBanner" class="promo-banner" hidden>
+    <div class="container promo-inner">
+      <span class="promo-text"><a href="https://t.me/addlist/5NH3RoVejEI1MGEy">Подпишись на все наши ML каналы. Они классные, отвечаем!</a></span>
+      <button id="promoClose" class="promo-close" type="button" aria-label="Скрыть плашку">×</button>
+    </div>
+  </div>
+  
+
+  <main class="container single-page">
+    <article id="postContainer" class="post post-page" data-post-id="324">
+      <div class="post-header">
+        <div class="right"><span class="post-date" data-iso-date="2026-09-03T11:15:47+00:00">2026-09-03 11:15 UTC</span></div>
+      </div>
+      <div class="post-body"><strong>Loop the Loopies!</strong><br><br>Сегодня обсудим <a href="https://arxiv.org/abs/2607.16051" rel="nofollow noopener noreferrer"><u>статью</u></a>, которая посвящена моделям Loopies, построенным на шеринге параметров между разными слоями. <br><br>Обычно у трансформерных моделей и свёрточных нейросетей отдельные параметры на каждом блоке, благодаря чему объём вычислений и число параметров масштабируются с глубиной. Это даёт гибкость — каждый блок может выполнять специфические задачи. Но при этом с ростом числа слоёв растёт и количество параметров, а значит, модель становится дороже хранить. <br><br>Выходом из этой ситуации может стать переиспользование весов по несколько раз за форвард — шеринг параметров. Так не нужно хранить много параметров, однако блок может принимать распределение данных с разной глубины, что усложняет задачу оптимизации. <br><br>Перспективность шеринга первым доказал метод <a href="https://arxiv.org/abs/1909.11942" rel="nofollow noopener noreferrer"><u>ALBERT</u></a>. В нём было два механизма: факторизация матрицы эмбеддингов и переиспользование одного трансформенного блока несколько раз. На этом принципе работают looped-модели — hidden state в них прогоняется R раз через один и тот же блок. Число параметров становится меньше, а количество вычислений не меняется. <br><br>Рекуррентность имеет и другие преимущества: hidden state проходит несколько шагов улучшения, эффективная глубина растёт без увеличения размера модели. В перспективе число шагов можно адаптировать под сложность запроса — если он простой, то прогонять один раз, а если сложный, то больше. Рекуррентность хорошо показывает себя на алгебраических задачах и задачах, связанных с пазлами.<br><br>Однако сравнения looped-моделей с не-looped-аналогами были не совсем честными. При том же размере модели делаются R прогонов, а, следовательно, в R раза больше вычислений. Соответственно, и обучать такую модель дольше. В плане оптимальности компьюта looped-модели уступали обычным трансформерам. <br><br>Авторы серии Loopie предлагают две модели: Loopie-20B-A2B и Loopie-6B-A0.6B. Архитектурно это Qwen3. В отличие от решений прошлого, здесь не вся модель прогоняется несколько раз, а каждый слой (<em>верхняя схема на</em> <em>изображении 1</em>). В пределах одного блока активации меняются не так сильно, к тому же это проще для чекпоинтинга. Также такой метод даёт потенциально большую гибкость: можно делать разное количество проходов на каждом слое. <br><br>Подход layer-loop проще для распределённого обучения, потому что повторения слоя остаются в одном pipeline stage, а параметры градиента могут использоваться локально. В то же время model-loop требует, чтобы вычисления синхронизировались внутри всей модели а первый блок должен уметь обрабатывать один или несколько полных проходов через модель. <br><br>Претрейн состоял из двух стадий. Сперва используют датасет Nemotron-CC-v2-HQ, а дальше дообучают на более качественных данных, делая упор на синтетику, STEM, код, математические рассуждения и веб-данные. Так получается базовая Loopie. На неё делают Supervised Pre-Training (SPT). Это похоже на SFT, лосс считается только по target-токенам, однако масштаб — как у претрейна: 2Т токенов. Контекст увеличивают и обучают довольно большими батчами примерно по 128М токенов. SPT, как отмечают авторы, улучшает способность модели к рассуждению. <br><br>На RL сначала делают математику, а потом программирование. Используют GSPO, ассиметричный клиппинг и динамическую фильтрацию промптов. Роллаут увеличивают с 32К до 64К. <br><br>По бенчам Loopie-20B примерно сопоставима с моделями вроде Qwen3, Nemotron 3 Nano и GPT-OSS (<em>изображение 2</em>). Казалось бы, не слишком большое достижение для 2026 года, однако стоит помнить, что у Loopie намного меньше параметров. Loopie-6B в своей «весовой категории» также показывает себя достойно — особенно в задачах, связанных с математикой (<em>изображение 3</em>).<br><br><em>Разбор подготовил </em><em><tg-emoji emoji-id="5224192932302565805">❣</tg-emoji></em><em> Денис Кузнеделев</em><br><br><a href="https://t.me/+A3P9VvxD16VhY2M6" rel="nofollow noopener noreferrer">Душный NLP</a><div class="media"><img class="media-img" loading="lazy" src="../../assets/media/thumbs/324_480.webp" srcset="../../assets/media/thumbs/324_480.webp 480w, ../../assets/media/324.jpg 1200w" sizes="(max-width: 768px) 100vw, 800px" alt="" data-post-id="324" data-image-index="0" /><img class="media-img" loading="lazy" src="../../assets/media/thumbs/325_480.webp" srcset="../../assets/media/thumbs/325_480.webp 480w, ../../assets/media/325.jpg 1200w" sizes="(max-width: 768px) 100vw, 800px" alt="" data-post-id="324" data-image-index="1" /><img class="media-img" loading="lazy" src="../../assets/media/thumbs/326_480.webp" srcset="../../assets/media/thumbs/326_480.webp 480w, ../../assets/media/326.jpg 1200w" sizes="(max-width: 768px) 100vw, 800px" alt="" data-post-id="324" data-image-index="2" /></div></div>
+      <div class="actions">
+        <span>761 просмотров · 18 реакций</span>
+        <span class="action-links"><a href="https://t.me/stuffyNLP/324" target="_blank" rel="noopener">Открыть в Telegram</a> · <a href="../index.html">К списку постов</a> · <a href="./324.html">Ссылка на этот пост</a></span>
+      </div>
+    </article>
+
+    <div class="pager single-nav">
+      <a id="prevPost" class="nav-link disabled" href="#" style="visibility:hidden">← Более новый</a>
+      <a id="nextPost" class="nav-link" href="./322.html" style="visibility:visible">Более старый →</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <span>based on <a href="https://github.com/ml-brand/tg-to-gh-pages" target="_blank" rel="noopener">tg-to-gh-pages</a> (created by <a href="https://github.com/ml-brand" target="_blank" rel="noopener">ML Brand</a>)</span>
+        <a id="repoLink" href="https://github.com/ml-brand/tg-to-gh-pages" target="_blank" rel="noopener">Do the same with your channel.</a>
+        <span class="footer-links">
+          static copy ·
+          <a href="../../feed.xml" target="_blank" rel="noopener">RSS</a> ·
+          <a href="../../atom.xml" target="_blank" rel="noopener">Atom</a>
+        </span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    window.__STATIC_POSTS = [{"id": 324, "media": [{"kind": "photo", "path": "../../assets/media/324.jpg", "thumb": "../../assets/media/thumbs/324_480.webp", "size": 57954, "mime": "image/jpeg", "name": null}, {"kind": "photo", "path": "../../assets/media/325.jpg", "thumb": "../../assets/media/thumbs/325_480.webp", "size": 136222, "mime": "image/jpeg", "name": null}, {"kind": "photo", "path": "../../assets/media/326.jpg", "thumb": "../../assets/media/thumbs/326_480.webp", "size": 112377, "mime": "image/jpeg", "name": null}]}];
+    window.__STATIC_META = {"title": "Душный NLP", "username": "stuffyNLP", "channel": "stuffyNLP", "last_sync_utc": "2026-09-03T14:44:54Z", "posts_count": 158, "last_seen_message_id": 326, "stats": {"new": 161, "updated": 57, "media_downloaded": 161}, "avatar": "assets/channel_avatar.jpg", "meta_schema_version": "1.0.0", "posts_schema_version": "1.0.0"};
+  </script>
+  <script src="../../common.js"></script>
+  <script src="../../static.js"></script>
+</body>
+</html>
