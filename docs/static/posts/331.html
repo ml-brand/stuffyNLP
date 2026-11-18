@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Душный NLP — пост #331</title>
+  <meta name="description" content=" Gumbel Straight Flow: дистилляция авторегрессионных моделей в модели параллельной генерации   Сегодня разберём   статью  , авторы которой предлагают способ ускорения генерации текста, дистиллируя авт" />
+  <link rel="icon" href="../../favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32.png" />
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png" />
+
+  <link rel="canonical" href="https://ml-brand.github.io/stuffyNLP/static/posts/331.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Душный NLP — пост #331" />
+  <meta property="og:description" content=" Gumbel Straight Flow: дистилляция авторегрессионных моделей в модели параллельной генерации   Сегодня разберём   статью  , авторы которой предлагают способ ускорения генерации текста, дистиллируя авт" />
+  
+  <meta property="article:published_time" content="2026-11-18T09:11:00+00:00" />
+  <meta property="article:author" content="Душный NLP" />
+  <meta name="twitter:card" content="summary" />
+  
+  <link rel="stylesheet" href="../../style.css" />
+  <script src="../../metrika.js"></script>
+</head>
+<body data-index-href="../index.html">
+  <header class="header">
+    <div class="container">
+      <div class="title-grid single-title">
+        <a class="grid-avatar" href="#" target="_blank" rel="noopener">
+          <img id="channelAvatar" class="channel-avatar" src="../../assets/channel_avatar.jpg" alt="Аватар канала"  />
+        </a>
+        <div class="grid-main">
+          <div class="title-head">
+            <a class="back-link" href="../index.html">← Ко всем постам</a>
+            <a class="badge-chip" id="siteTitleWrap" href="#" target="_blank" rel="noopener"><h1 id="siteTitle">Душный NLP</h1></a>
+            <div class="hero-actions">
+              <a id="subscribeBtn" class="subscribe-btn" href="https://t.me/+1Z41UptsLwszZDE6" target="_blank" rel="noopener" >Подписаться</a>
+              <a class="icon-btn" href="../../post.html?id=331" aria-label="Открыть динамическую страницу поста">↺</a>
+              <button id="themeToggle" class="icon-btn" type="button" aria-label="Переключить тему"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  
+  <div id="promoBanner" class="promo-banner" hidden>
+    <div class="container promo-inner">
+      <span class="promo-text"><a href="https://t.me/addlist/5NH3RoVejEI1MGEy">Подпишись на все наши ML каналы. Они классные, отвечаем!</a></span>
+      <button id="promoClose" class="promo-close" type="button" aria-label="Скрыть плашку">×</button>
+    </div>
+  </div>
+  
+
+  <main class="container single-page">
+    <article id="postContainer" class="post post-page" data-post-id="331">
+      <div class="post-header">
+        <div class="right"><span class="post-date" data-iso-date="2026-11-18T09:11:00+00:00">2026-11-18 09:11 UTC</span></div>
+      </div>
+      <div class="post-body"><strong>Gumbel Straight Flow: дистилляция авторегрессионных моделей в модели параллельной генерации</strong><br><br>Сегодня разберём <a href="https://arxiv.org/abs/2610.00497" rel="nofollow noopener noreferrer"><u>статью</u></a>, авторы которой предлагают способ ускорения генерации текста, дистиллируя авторегрессионную модель в модель параллельной генерации.<br><br>Авторегрессионные модели показывают хорошее качество, но вынуждены генерировать токены последовательно, а это долго. Дискретная и непрерывная диффузии позволяют делать это параллельно, однако обычно требуют много шагов для уменьшения ошибок дискретизации.<br><br>Обычно авторегрессионная модель выдаёт логиты следующего токена, к которым применяется softmax, после чего происходит семплирование из категориального распределения. Но можно поступить иначе: добавить к каждому логиту независимый шум Гумбеля и взять argmax. Таким образом, отпадает необходимость делать семплирование, а полученный токен будет иметь точно такое же распределение, как и при семплировании. Важное наблюдение заключается в том, что если зафиксировать весь шум, то можно однозначно определить, каким будет сгенерированный текст. <br><br>Теперь вспомним обычный flow matching. Мы берём случайный шум (x_0) и one-hot-представление текста (x_1), после чего обучаем velocity-prediction-модель на линейной интерполяции:<br><br>x_t=(1-t)x_0+tx_1<br><br>Однако если шум и данные семплируются независимо, оптимальные траектории обученной модели обычно получаются кривыми, что вынуждает делать большое количество шагов. Это происходит из-за необходимости усреднять направления движения между разными парами. В сегодняшней статье авторы предлагают использовать связанные пары. Сам flow matching objective при этом не меняется. Меняется только способ формирования обучающих пар.<br><br>Главный теоретический результат статьи состоит в том, что линейные интерполяции, построенные по таким связанным парам шума и данных, не пересекаются при одинаковом значении времени (t&lt;1). Авторы доказывают, что при достаточной выразительности модели оптимальное velocity-поле будет задавать прямые траектории.<br><br>Пары для обучения можно получать через полный авторегрессионный rollout. Но авторы предлагают более эффективный способ: взять готовую последовательность из датасета и семплировать шум Гумбеля из условного распределения, при котором учитель генерирует именно эту последовательность. Для этого достаточно одного teacher-forced forward pass.<br><br>Распределение Гумбеля асимметрично, а flow-архитектуры обычно рассчитаны на гауссовский шум, поэтому авторы преобразуют шум Гумбеля в стандартный гауссовский. Они доказывают, что строго возрастающие обратимые преобразования сохраняют прямолинейность оптимальных траекторий. В экспериментах переход к гауссовскому шуму улучшает результаты.<br><br>Также авторы перепараметризуют время на основе decoding error rate — вероятности несовпадения argmax промежуточного состояния с целевым токеном. В обычном flow matching ошибка резко уменьшается на небольшом участке траектории, а при Gumbel-coupling — более равномерно, поскольку шум уже содержит информацию о целевых токенах. Поэтому расписание GSF ближе к линейному, что удобно для генерации за небольшое число шагов.<br><br>Реальная GSF-FM-модель, однако, не избегает ошибки аппроксимации. В экспериментах авторов мера отклонения от прямой составляет около 0,70 против 1,82 у обычной Flow Language Model (FLM). Это заметное улучшение, но для качественной одношаговой генерации его недостаточно.<br><br>Поэтому авторы используют Flow Map Language Model (FMLM) — подход, в котором обучается не мгновенная скорость, а отображение между двумя произвольными моментами времени. Переход через промежуточную точку должен давать тот же результат, что и прямой переход. Лосс состоит из диагонального слагаемого, которое задает правильное направление движения, и недиагонального, обеспечивающего согласованность переходов.<br><br>Основные эксперименты проводятся на OpenWebText. Авторы сравнивают GSF с FMLM и Gumbel Distillation, используя generative perplexity, энтропию и Gradient Moment (GM). При одношаговой генерации GSF получает GM 0,94 и generative perplexity 114,9. Для сравнения, FMLM показывает perplexity 168,3, а воспроизведенная авторами конфигурация FMLM — 140,0.<br><br>При четырёх шагах perplexity GSF снижается до 99,7, а энтропия составляет 5,32. Однако авторегрессионный учитель имеет perplexity 46,5, поэтому разрыв по качеству остается значительным. Похожие улучшения наблюдаются на LM1B и TinyStories. <br><br>Инициализация студента весами авторегрессионной модели также полезна: при случайной инициализации perplexity увеличивается со 114,9 до 145,4. Интересно, что использование Gumbel-coupling также в недиагональном слагаемом улучшает perplexity до 108,4 и GM до 0,89, но немного снижает энтропию. Поэтому в базовом варианте авторы оставляют независимое семплирование.<br><br><em>Разбор подготовил </em><em><tg-emoji emoji-id="5224192932302565805">❣</tg-emoji></em><em> Илья Судаков<br></em><br><a href="https://t.me/+A3P9VvxD16VhY2M6" rel="nofollow noopener noreferrer">Душный NLP</a></div>
+      <div class="actions">
+        <span>935 просмотров · 15 реакций</span>
+        <span class="action-links"><a href="https://t.me/stuffyNLP/331" target="_blank" rel="noopener">Открыть в Telegram</a> · <a href="../index.html">К списку постов</a> · <a href="./331.html">Ссылка на этот пост</a></span>
+      </div>
+    </article>
+
+    <div class="pager single-nav">
+      <a id="prevPost" class="nav-link disabled" href="#" style="visibility:hidden">← Более новый</a>
+      <a id="nextPost" class="nav-link" href="./330.html" style="visibility:visible">Более старый →</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <span>based on <a href="https://github.com/ml-brand/tg-to-gh-pages" target="_blank" rel="noopener">tg-to-gh-pages</a> (created by <a href="https://github.com/ml-brand" target="_blank" rel="noopener">ML Brand</a>)</span>
+        <a id="repoLink" href="https://github.com/ml-brand/tg-to-gh-pages" target="_blank" rel="noopener">Do the same with your channel.</a>
+        <span class="footer-links">
+          static copy ·
+          <a href="../../feed.xml" target="_blank" rel="noopener">RSS</a> ·
+          <a href="../../atom.xml" target="_blank" rel="noopener">Atom</a>
+        </span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    window.__STATIC_POSTS = [{"id": 331, "media": []}];
+    window.__STATIC_META = {"title": "Душный NLP", "username": "stuffyNLP", "channel": "stuffyNLP", "last_sync_utc": "2026-11-18T13:30:00Z", "posts_count": 163, "last_seen_message_id": 331, "stats": {"new": 161, "updated": 71, "media_downloaded": 160}, "avatar": "assets/channel_avatar.jpg", "meta_schema_version": "1.0.0", "posts_schema_version": "1.0.0"};
+  </script>
+  <script src="../../common.js"></script>
+  <script src="../../static.js"></script>
+</body>
+</html>
